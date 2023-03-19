@@ -66,7 +66,7 @@ class _testPageState extends State<testPage> {
         backgroundColor: Colors.transparent,
         title: Text(
           "จองคิวเช็คสภาพแบตเตอรี่",
-          style: GoogleFonts.prompt(fontSize: 20, fontWeight: FontWeight.bold),
+          style: GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
@@ -421,7 +421,7 @@ class _testPageState extends State<testPage> {
                         nextScreenReplace(context, const confirmCheck());
                       },
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor),
+                          backgroundColor: Colors.green),
                       child: Text("ยืนยัน",
                           style:
                               GoogleFonts.prompt(fontWeight: FontWeight.w500)),

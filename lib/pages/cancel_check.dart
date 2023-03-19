@@ -1,4 +1,3 @@
-import 'package:chat_test/pages/cancel_check.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -7,14 +6,14 @@ import 'package:google_fonts/google_fonts.dart';
 import '../widgets/widgets.dart';
 import 'home_page.dart';
 
-class confirmCheck extends StatefulWidget {
-  const confirmCheck({super.key});
+class cancelCheck extends StatefulWidget {
+  const cancelCheck({super.key});
 
   @override
-  State<confirmCheck> createState() => _confirmCheckState();
+  State<cancelCheck> createState() => _cancelCheckState();
 }
 
-class _confirmCheckState extends State<confirmCheck> {
+class _cancelCheckState extends State<cancelCheck> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,12 +101,12 @@ class _confirmCheckState extends State<confirmCheck> {
                 const Center(
                   child: Icon(
                     Icons.battery_saver_rounded,
-                    color: Colors.green,
+                    color: Colors.red,
                     size: 45,
                   ),
                 ),
                 Text(
-                  "ดำเนินการเสร็จสิ้น",
+                  "ยกเลิกเสร็จสิ้น",
                   style: GoogleFonts.prompt(
                       color: const Color.fromARGB(255, 41, 41, 41),
                       fontSize: 22,
@@ -224,25 +223,20 @@ class _confirmCheckState extends State<confirmCheck> {
                       children: [
                         Column(
                           children: [
-                            Text(
-                              "*หมายเหตุ สามารถยกเลิกได้ก่อน 1 วันทำการ*",
-                              style: GoogleFonts.prompt(
-                                  color: Colors.red, fontSize: 12),
-                            ),
                             GestureDetector(
                               onTap: () {
-                                popUpDialog(context);
+                                nextScreenReplace(context, const HomePage());
                               },
                               child: Container(
                                 height: 40,
-                                width: 90,
+                                width: 120,
                                 decoration: const BoxDecoration(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10)),
-                                    color: Colors.red),
+                                    color: Color.fromARGB(255, 41, 41, 41)),
                                 child: Center(
                                   child: Text(
-                                    "ยกเลิก",
+                                    "หน้าหลัก",
                                     style: GoogleFonts.prompt(
                                         fontSize: 16,
                                         color: Colors.white,
@@ -263,58 +257,5 @@ class _confirmCheckState extends State<confirmCheck> {
         )
       ]),
     );
-  }
-
-  popUpDialog(BuildContext context) {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(builder: ((context, setState) {
-            return AlertDialog(
-              title: Text(
-                "ยกเลิกการจองคิว",
-                textAlign: TextAlign.center,
-                style: GoogleFonts.prompt(fontWeight: FontWeight.bold),
-              ),
-              actions: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        nextScreenReplace(context, const cancelCheck());
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20))),
-                      child: Text(
-                        "ยืนยัน",
-                        style: GoogleFonts.prompt(),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 40,
-                    ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        Navigator.of(context).pop();
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20))),
-                      child: Text(
-                        "ยกเลิก",
-                        style: GoogleFonts.prompt(),
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            );
-          }));
-        });
   }
 }

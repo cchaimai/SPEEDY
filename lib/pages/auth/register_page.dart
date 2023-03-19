@@ -132,7 +132,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   TextStyle(color: Colors.white, fontSize: 16),
                             ),
                             onPressed: () {
-                              register();
+                              //register();
                             },
                           ),
                         ),
@@ -162,28 +162,28 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  register() async {
-    if (formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
-      await authService
-          .registerUserWithEmailandPassword(fullName, email, password)
-          .then((value) async {
-        if (value == true) {
-          // saving the shared preference state
-          await HelperFunction.saveUserLoggedInStatus(true);
-          await HelperFunction.saveUserEmailSF(email);
-          await HelperFunction.saveUserNameSF(fullName);
-          // ignore: use_build_context_synchronously
-          nextScreenReplace(context, const HomePage());
-        } else {
-          showSnackbar(context, Colors.red, value);
-          setState(() {
-            _isLoading = false;
-          });
-        }
-      });
-    }
-  }
+  // register() async {
+  //   if (formKey.currentState!.validate()) {
+  //     setState(() {
+  //       _isLoading = true;
+  //     });
+  //     await authService
+  //         .registerUserWithEmailandPassword(fullName, email, password)
+  //         .then((value) async {
+  //       if (value == true) {
+  //         // saving the shared preference state
+  //         await HelperFunction.saveUserLoggedInStatus(true);
+  //         await HelperFunction.saveUserEmailSF(email);
+  //         await HelperFunction.saveUserNameSF(fullName);
+  //         // ignore: use_build_context_synchronously
+  //         nextScreenReplace(context, const HomePage());
+  //       } else {
+  //         showSnackbar(context, Colors.red, value);
+  //         setState(() {
+  //           _isLoading = false;
+  //         });
+  //       }
+  //     });
+  //   }
+  // }
 }

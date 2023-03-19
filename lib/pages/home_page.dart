@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    gettingUserData();
+    //gettingUserData();
     fetchCarouselImages();
   }
 
@@ -47,26 +47,18 @@ class _HomePageState extends State<HomePage> {
     return res.substring(res.indexOf("_") + 1);
   }
 
-  gettingUserData() async {
-    await HelperFunction.getUserEmailFromSF().then((value) {
-      setState(() {
-        email = value!;
-      });
-    });
-    await HelperFunction.getUserNameFromSF().then((val) {
-      setState(() {
-        userName = val!;
-      });
-    });
-    // getting the list of snapshots in our stream
-    await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
-        .getUserGroups()
-        .then((snapshot) {
-      setState(() {
-        groups = snapshot;
-      });
-    });
-  }
+  // gettingUserData() async {
+  //   await HelperFunction.getUserEmailFromSF().then((value) {
+  //     setState(() {
+  //       email = value!;
+  //     });
+  //   });
+  //   await HelperFunction.getUserNameFromSF().then((val) {
+  //     setState(() {
+  //       userName = val!;
+  //     });
+  //   });
+  // }
 
   final List<String> _carouselImages = [];
   var _dotPosition = 0;
@@ -88,6 +80,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {}, icon: const Icon(Icons.notifications_active)),
         actions: [
           IconButton(
               onPressed: () {
@@ -95,6 +89,7 @@ class _HomePageState extends State<HomePage> {
               },
               icon: const Icon(
                 Icons.account_circle,
+                size: 30,
               )),
         ],
         toolbarHeight: 100,
@@ -120,122 +115,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      drawer: Drawer(
-          child: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 50),
-        children: <Widget>[
-          Icon(
-            Icons.account_circle,
-            size: 150,
-            color: Colors.grey[700],
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Text(
-            userName,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          const Divider(
-            height: 2,
-          ),
-          ListTile(
-            onTap: () {
-              nextScreenReplace(context, ProfileScreen());
-            },
-            selectedColor: Theme.of(context).primaryColor,
-            selected: true,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            leading: const Icon(
-              Icons.home,
-              size: 30,
-            ),
-            title: const Text(
-              "Home",
-              style: TextStyle(color: Colors.black),
-            ),
-          ),
-          ListTile(
-            onTap: () {
-              nextScreenReplace(context, const HomeChat());
-            },
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            leading: const Icon(Icons.chat_bubble),
-            title: const Text(
-              "Chat",
-              style: TextStyle(color: Colors.black),
-            ),
-          ),
-          ListTile(
-            onTap: () {
-              nextScreenReplace(
-                  context,
-                  ProfilePage(
-                    userName: userName,
-                    email: email,
-                  ));
-            },
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            leading: const Icon(Icons.group),
-            title: const Text(
-              "Profile",
-              style: TextStyle(color: Colors.black),
-            ),
-          ),
-          ListTile(
-            onTap: () async {
-              showDialog(
-                  barrierDismissible: false,
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text("Logout"),
-                      content: const Text("Are you sure you want to logout?"),
-                      actions: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(
-                            Icons.cancel,
-                            color: Colors.red,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () async {
-                            await authService.signOut();
-                            // ignore: use_build_context_synchronously
-                            Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (context) => const LoginPage()),
-                                (route) => false);
-                          },
-                          icon: const Icon(
-                            Icons.done,
-                            color: Colors.green,
-                          ),
-                        ),
-                      ],
-                    );
-                  });
-            },
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            leading: const Icon(Icons.exit_to_app),
-            title: const Text(
-              "Logout",
-              style: TextStyle(color: Colors.black),
-            ),
-          )
-        ],
-      )),
       body: SafeArea(
           child: GestureDetector(
               child: Column(
@@ -290,7 +169,7 @@ class _HomePageState extends State<HomePage> {
               alignment: Alignment.bottomCenter,
               child: Container(
                 width: 395,
-                height: 370,
+                height: 420,
                 decoration: const BoxDecoration(
                   color: Color.fromARGB(255, 217, 217, 217),
                   borderRadius: BorderRadius.only(
@@ -302,14 +181,14 @@ class _HomePageState extends State<HomePage> {
                 child: Stack(
                   children: [
                     Align(
-                      alignment: const AlignmentDirectional(-0.6, -0.65),
+                      alignment: const AlignmentDirectional(-0.8, -0.65),
                       child: GestureDetector(
                         onTap: () {
                           nextScreenReplace(context, const testPage());
                         },
                         child: SizedBox(
-                          width: 120,
-                          height: 130,
+                          width: 160,
+                          height: 170,
                           child: DecoratedBox(
                             decoration: const BoxDecoration(
                                 color: Colors.white,
@@ -320,7 +199,7 @@ class _HomePageState extends State<HomePage> {
                               children: const [
                                 Icon(
                                   Icons.bolt,
-                                  size: 55,
+                                  size: 70,
                                   color: Colors.green,
                                 ),
                                 Text(
@@ -337,10 +216,10 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Align(
-                      alignment: const AlignmentDirectional(-0.6, 0.65),
+                      alignment: const AlignmentDirectional(-0.8, 0.85),
                       child: SizedBox(
-                        width: 120,
-                        height: 130,
+                        width: 160,
+                        height: 170,
                         child: DecoratedBox(
                           decoration: const BoxDecoration(
                               color: Colors.white,
@@ -367,10 +246,10 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Align(
-                      alignment: const AlignmentDirectional(0.6, -0.65),
+                      alignment: const AlignmentDirectional(0.8, -0.65),
                       child: SizedBox(
-                        width: 120,
-                        height: 130,
+                        width: 160,
+                        height: 170,
                         child: DecoratedBox(
                           decoration: const BoxDecoration(
                               color: Colors.white,
@@ -397,10 +276,10 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Align(
-                      alignment: const AlignmentDirectional(0.6, 0.65),
+                      alignment: const AlignmentDirectional(0.8, 0.85),
                       child: SizedBox(
-                        width: 120,
-                        height: 130,
+                        width: 160,
+                        height: 170,
                         child: DecoratedBox(
                           decoration: const BoxDecoration(
                               color: Colors.white,
@@ -430,7 +309,7 @@ class _HomePageState extends State<HomePage> {
                       alignment: const AlignmentDirectional(-0.75, -0.95),
                       child: Text("สวัสดี, คุณ$userName!",
                           style: GoogleFonts.prompt(
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w500,
                             fontSize: 20,
                           )),
                     ),

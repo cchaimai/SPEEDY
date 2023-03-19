@@ -141,7 +141,6 @@ class _BankPageState extends State<BankPage> {
               child: CircularProgressIndicator(),
             );
           }
-
           return SafeArea(
               child: Column(children: [
             Row(

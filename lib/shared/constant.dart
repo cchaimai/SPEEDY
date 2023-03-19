@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Constant {
-  static String appId = "1:613681618029:web:2153e4c98ed367fd863364";
-  static String apiKey = "AIzaSyCnGS7mEqMNRtK8OOQRIH5SIQT2LSY-NQ8";
-  static String messageSenderId = "613681618029";
-  static String projectId = "chat-test-6fb9a";
+  static String appId = "1:790324960864:android:06459f0aca9820943e6d05";
+  static String apiKey = "AIzaSyBPdxqdvq9uCVFA6DRPyE_7cLpmOJewHqI";
+  static String messageSenderId = "790324960864";
+  static String projectId = "speedy-35a25";
   final primaryColor = Colors.green;
 }

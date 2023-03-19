@@ -110,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                             style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
                           onPressed: () {
-                            login();
+                            //login();
                           },
                         ),
                       ),
@@ -141,31 +141,31 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  login() async {
-    if (formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
-      await authService
-          .loginWithUserNameandPassword(email, password)
-          .then((value) async {
-        if (value == true) {
-          QuerySnapshot snapshot =
-              await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
-                  .gettingUserData(email);
-          // saving the values to our shared preferences
-          await HelperFunction.saveUserLoggedInStatus(true);
-          await HelperFunction.saveUserEmailSF(email);
-          await HelperFunction.saveUserNameSF(snapshot.docs[0]['fullName']);
-          // ignore: use_build_context_synchronously
-          nextScreenReplace(context, const HomePage());
-        } else {
-          showSnackbar(context, Colors.red, value);
-          setState(() {
-            _isLoading = false;
-          });
-        }
-      });
-    }
-  }
+  // login() async {
+  //   if (formKey.currentState!.validate()) {
+  //     setState(() {
+  //       _isLoading = true;
+  //     });
+  //     await authService
+  //         .loginWithUserNameandPassword(email, password)
+  //         .then((value) async {
+  //       if (value == true) {
+  //         QuerySnapshot snapshot =
+  //             await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+  //                 .gettingUserData(email);
+  //         // saving the values to our shared preferences
+  //         await HelperFunction.saveUserLoggedInStatus(true);
+  //         await HelperFunction.saveUserEmailSF(email);
+  //         await HelperFunction.saveUserNameSF(snapshot.docs[0]['fullName']);
+  //         // ignore: use_build_context_synchronously
+  //         nextScreenReplace(context, const HomePage());
+  //       } else {
+  //         showSnackbar(context, Colors.red, value);
+  //         setState(() {
+  //           _isLoading = false;
+  //         });
+  //       }
+  //     });
+  //   }
+  // }
 }

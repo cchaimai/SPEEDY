@@ -174,7 +174,7 @@ class _HomeChatState extends State<HomeChat> {
                         ),
                         IconButton(
                           onPressed: () async {
-                            await authService.signOut();
+                            //await authService.signOut();
                             // ignore: use_build_context_synchronously
                             Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
