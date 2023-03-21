@@ -36,7 +36,7 @@ class _AddCardState extends State<AddCard> {
   @override
   void initState() {
     super.initState();
-    gettingUserData();
+    //gettingUserData();
   }
 
   String getId(String res) {
@@ -52,26 +52,26 @@ class _AddCardState extends State<AddCard> {
   final CollectionReference _cardCollection =
       FirebaseFirestore.instance.collection("cards");
 
-  gettingUserData() async {
-    await HelperFunction.getUserEmailFromSF().then((value) {
-      setState(() {
-        email = value!;
-      });
-    });
-    await HelperFunction.getUserNameFromSF().then((val) {
-      setState(() {
-        userName = val!;
-      });
-    });
-    // getting the list of snapshots in our stream
-    await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
-        .getUserGroups()
-        .then((snapshot) {
-      setState(() {
-        cards = snapshot;
-      });
-    });
-  }
+  // gettingUserData() async {
+  //   await HelperFunction.getUserEmailFromSF().then((value) {
+  //     setState(() {
+  //       email = value!;
+  //     });
+  //   });
+  //   await HelperFunction.getUserNameFromSF().then((val) {
+  //     setState(() {
+  //       userName = val!;
+  //     });
+  //   });
+  //   // getting the list of snapshots in our stream
+  //   await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+  //       .getUserGroups()
+  //       .then((snapshot) {
+  //     setState(() {
+  //       cards = snapshot;
+  //     });
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -338,7 +338,7 @@ class _AddCardState extends State<AddCard> {
                       width: 250,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            primary: Theme.of(context).primaryColor,
+                            backgroundColor: Colors.green,
                             elevation: 0,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15))),

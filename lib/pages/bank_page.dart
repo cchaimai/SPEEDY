@@ -27,7 +27,6 @@ class _BankPageState extends State<BankPage> {
 
   Future<void> gettingCardData() async {
     try {
-      // ignore: unnecessary_cast
       DocumentSnapshot documentSnapshot = (await FirebaseFirestore.instance
           .collection('cards')
           .get()) as DocumentSnapshot<Object?>;
@@ -54,7 +53,7 @@ class _BankPageState extends State<BankPage> {
   Future<void> _fetchUserCards() async {
     // Get the current user's data
     final userRef =
-        FirebaseFirestore.instance.collection('users').doc(widget.userId);
+        FirebaseFirestore.instance.collection('mUsers').doc(widget.userId);
     final userData = await userRef.get();
 
     // Get the array of card document names from the user's data

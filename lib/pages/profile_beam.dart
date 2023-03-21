@@ -1,3 +1,4 @@
+import 'package:chat_test/pages/auth/login.social.dart';
 import 'package:chat_test/pages/bank_page.dart';
 import 'package:chat_test/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,11 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../helper/helper_function.dart';
+import '../service/auth_service.dart';
 
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
   final userId = FirebaseAuth.instance.currentUser!.uid;
+  AuthService authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -206,21 +209,61 @@ class ProfileScreen extends StatelessWidget {
                   //   MaterialPageRoute(builder: (context) => const LogOut()),
                   // );
                 },
-                child: Row(
-                  // ignore: prefer_const_literals_to_create_immutables
-                  children: [
-                    const Icon(
-                      Icons.logout_outlined,
-                      size: 22,
-                      color: Colors.black,
-                    ),
-                    const SizedBox(width: 20),
-                    const Expanded(
-                        child: Text(
-                      "Log Out",
-                      style: TextStyle(color: Colors.black),
-                    )),
-                  ],
+                child: GestureDetector(
+                  onTap: () async {
+                    showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text("Logout"),
+                            content:
+                                const Text("Are you sure you want to logout?"),
+                            actions: [
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: const Icon(
+                                  Icons.cancel,
+                                  color: Colors.red,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () async {
+                                  await authService.signOut();
+                                  // ignore: use_build_context_synchronously
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const LoginSocial()),
+                                      (route) => false);
+                                },
+                                icon: const Icon(
+                                  Icons.done,
+                                  color: Colors.green,
+                                ),
+                              ),
+                            ],
+                          );
+                        });
+                  },
+                  child: Row(
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: [
+                      const Icon(
+                        Icons.logout_outlined,
+                        size: 22,
+                        color: Colors.black,
+                      ),
+                      const SizedBox(width: 20),
+                      const Expanded(
+                          child: Text(
+                        "Log Out",
+                        style: TextStyle(color: Colors.black),
+                      )),
+                    ],
+                  ),
                 ),
               ),
             ),

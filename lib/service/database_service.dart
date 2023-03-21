@@ -6,7 +6,7 @@ class DatabaseService {
 
   // reference for our collections
   final CollectionReference userCollection =
-      FirebaseFirestore.instance.collection("users");
+      FirebaseFirestore.instance.collection("mUsers");
   final CollectionReference groupCollection =
       FirebaseFirestore.instance.collection("groups");
   final CollectionReference cardCollection =
@@ -28,9 +28,9 @@ class DatabaseService {
   }
 
   // getting user data
-  Future gettingUserData(String email) async {
+  Future gettingUserData(String phone) async {
     QuerySnapshot snapshot =
-        await userCollection.where("email", isEqualTo: email).get();
+        await userCollection.where("phoneNumber", isEqualTo: phone).get();
     return snapshot;
   }
 
@@ -68,7 +68,7 @@ class DatabaseService {
   Future createCard(String userName, String id, String cardNum, String fname,
       String lname, String valid, String cvv) async {
     DocumentReference cardDocumentReference = await cardCollection.add({
-      "owner": "${id}_$userName",
+      "owner": "$id",
       "fname": fname,
       "lname": lname,
       "cardNum": cardNum,

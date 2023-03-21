@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> {
           ),
           splashTransition: SplashTransition.fadeTransition,
           backgroundColor: Colors.white,
-          nextScreen: const LoginSocial(),
+          nextScreen: _isSignedIn ? const HomePage() : const LoginSocial(),
         ),
         debugShowCheckedModeBanner: false,
       ),

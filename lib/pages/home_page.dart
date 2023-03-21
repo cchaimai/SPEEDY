@@ -1,5 +1,10 @@
+import 'dart:math';
+import 'dart:developer';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chat_test/pages/bank_page.dart';
+import 'package:chat_test/pages/change_queue.dart';
+import 'package:chat_test/pages/confirm_change.dart';
 import 'package:chat_test/pages/profile_beam.dart';
 import 'package:chat_test/pages/home_chat.dart';
 import 'package:chat_test/pages/test.dart';
@@ -35,8 +40,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    //gettingUserData();
     fetchCarouselImages();
+    gettingUserData();
   }
 
   String getId(String res) {
@@ -47,18 +52,13 @@ class _HomePageState extends State<HomePage> {
     return res.substring(res.indexOf("_") + 1);
   }
 
-  // gettingUserData() async {
-  //   await HelperFunction.getUserEmailFromSF().then((value) {
-  //     setState(() {
-  //       email = value!;
-  //     });
-  //   });
-  //   await HelperFunction.getUserNameFromSF().then((val) {
-  //     setState(() {
-  //       userName = val!;
-  //     });
-  //   });
-  // }
+  gettingUserData() async {
+    await HelperFunction.getUserPhoneFromSF().then((value) {
+      setState(() {
+        userName = value!;
+      });
+    });
+  }
 
   final List<String> _carouselImages = [];
   var _dotPosition = 0;
@@ -75,6 +75,13 @@ class _HomePageState extends State<HomePage> {
     });
     return qn.docs;
   }
+
+  // getUsername() async {
+  //   var firestoreInstance = FirebaseFirestore.instance;
+  //   DocumentSnapshot userDoc =
+  //       await firestoreInstance.collection("mUsers").doc(userId).get();
+  //   String? val = userDoc['fisrtName'];
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -115,211 +122,231 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: SafeArea(
-          child: GestureDetector(
-              child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: AspectRatio(
-              aspectRatio: 16 / 9,
-              child: CarouselSlider(
-                  items: _carouselImages
-                      .map((item) => Padding(
-                            padding: const EdgeInsets.only(left: 3, right: 3),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: NetworkImage(item),
-                                      fit: BoxFit.fitWidth)),
-                            ),
-                          ))
-                      .toList(),
-                  options: CarouselOptions(
-                      autoPlay: true,
-                      enlargeCenterPage: true,
-                      enlargeFactor: 0.3,
-                      viewportFraction: 0.8,
-                      enlargeStrategy: CenterPageEnlargeStrategy.height,
-                      onPageChanged: (val, carouselPageChangedReason) {
-                        setState(() {
-                          _dotPosition = val;
-                        });
-                      })),
-            ),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          DotsIndicator(
-            dotsCount: _carouselImages.isEmpty ? 1 : _carouselImages.length,
-            position: _dotPosition.toDouble(),
-            decorator: const DotsDecorator(
-              activeColor: Colors.green,
-              color: Colors.grey,
-              spacing: EdgeInsets.all(2),
-              activeSize: Size(8, 8),
-              size: Size(6, 8),
-            ),
-          ),
-          Expanded(
-              child: Stack(children: [
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                width: 395,
-                height: 420,
-                decoration: const BoxDecoration(
-                  color: Color.fromARGB(255, 217, 217, 217),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25),
+      body: StreamBuilder<Object>(
+          stream: null,
+          builder: (context, snapshot) {
+            return SafeArea(
+                child: GestureDetector(
+                    child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: CarouselSlider(
+                        items: _carouselImages
+                            .map((item) => Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 3, right: 3),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image: NetworkImage(item),
+                                            fit: BoxFit.fitWidth)),
+                                  ),
+                                ))
+                            .toList(),
+                        options: CarouselOptions(
+                            autoPlay: true,
+                            enlargeCenterPage: true,
+                            enlargeFactor: 0.3,
+                            viewportFraction: 0.8,
+                            enlargeStrategy: CenterPageEnlargeStrategy.height,
+                            onPageChanged: (val, carouselPageChangedReason) {
+                              setState(() {
+                                _dotPosition = val;
+                              });
+                            })),
                   ),
                 ),
-                alignment: const AlignmentDirectional(0, 0),
-                child: Stack(
-                  children: [
-                    Align(
-                      alignment: const AlignmentDirectional(-0.8, -0.65),
-                      child: GestureDetector(
-                        onTap: () {
-                          nextScreenReplace(context, const testPage());
-                        },
-                        child: SizedBox(
-                          width: 160,
-                          height: 170,
-                          child: DecoratedBox(
-                            decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15))),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: const [
-                                Icon(
-                                  Icons.bolt,
-                                  size: 70,
-                                  color: Colors.green,
+                const SizedBox(
+                  height: 5,
+                ),
+                DotsIndicator(
+                  dotsCount:
+                      _carouselImages.isEmpty ? 1 : _carouselImages.length,
+                  position: _dotPosition.toDouble(),
+                  decorator: const DotsDecorator(
+                    activeColor: Colors.green,
+                    color: Colors.grey,
+                    spacing: EdgeInsets.all(2),
+                    activeSize: Size(8, 8),
+                    size: Size(6, 8),
+                  ),
+                ),
+                Expanded(
+                    child: Stack(children: [
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      width: 395,
+                      height: 420,
+                      decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 217, 217, 217),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(25),
+                          topRight: Radius.circular(25),
+                        ),
+                      ),
+                      alignment: const AlignmentDirectional(0, 0),
+                      child: Stack(
+                        children: [
+                          Align(
+                            alignment: const AlignmentDirectional(-0.8, -0.65),
+                            child: GestureDetector(
+                              onTap: () {
+                                print(userName);
+                              },
+                              child: SizedBox(
+                                width: 160,
+                                height: 170,
+                                child: DecoratedBox(
+                                  decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(15))),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: const [
+                                      Icon(
+                                        Icons.bolt,
+                                        size: 70,
+                                        color: Colors.green,
+                                      ),
+                                      Text(
+                                        "CHARGE",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.green,
+                                            fontSize: 18),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                Text(
-                                  "CHARGE",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.green,
-                                      fontSize: 18),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: const AlignmentDirectional(-0.8, 0.85),
-                      child: SizedBox(
-                        width: 160,
-                        height: 170,
-                        child: DecoratedBox(
-                          decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: const [
-                              Icon(
-                                Icons.task,
-                                size: 55,
-                                color: Colors.green,
+                          Align(
+                            alignment: const AlignmentDirectional(-0.8, 0.85),
+                            child: GestureDetector(
+                              onTap: () {
+                                nextScreenReplace(context, const testPage());
+                              },
+                              child: SizedBox(
+                                width: 160,
+                                height: 170,
+                                child: DecoratedBox(
+                                  decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(15))),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: const [
+                                      Icon(
+                                        Icons.task,
+                                        size: 55,
+                                        color: Colors.green,
+                                      ),
+                                      Text(
+                                        "CHECK",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.green,
+                                            fontSize: 18),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              Text(
-                                "CHECK",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.green,
-                                    fontSize: 18),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: const AlignmentDirectional(0.8, -0.65),
-                      child: SizedBox(
-                        width: 160,
-                        height: 170,
-                        child: DecoratedBox(
-                          decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: const [
-                              Icon(
-                                Icons.change_circle_rounded,
-                                size: 55,
-                                color: Colors.green,
+                          Align(
+                            alignment: const AlignmentDirectional(0.8, -0.65),
+                            child: GestureDetector(
+                              onTap: () {
+                                nextScreenReplace(context, const changeQueue());
+                              },
+                              child: SizedBox(
+                                width: 160,
+                                height: 170,
+                                child: DecoratedBox(
+                                  decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(15))),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: const [
+                                      Icon(
+                                        Icons.change_circle_rounded,
+                                        size: 55,
+                                        color: Colors.green,
+                                      ),
+                                      Text(
+                                        "CHANGE",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.green,
+                                            fontSize: 18),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              Text(
-                                "CHANGE",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.green,
-                                    fontSize: 18),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: const AlignmentDirectional(0.8, 0.85),
-                      child: SizedBox(
-                        width: 160,
-                        height: 170,
-                        child: DecoratedBox(
-                          decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: const [
-                              Icon(
-                                Icons.electric_car,
-                                size: 55,
-                                color: Colors.green,
+                          Align(
+                            alignment: const AlignmentDirectional(0.8, 0.85),
+                            child: SizedBox(
+                              width: 160,
+                              height: 170,
+                              child: DecoratedBox(
+                                decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15))),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: const [
+                                    Icon(
+                                      Icons.electric_car,
+                                      size: 55,
+                                      color: Colors.green,
+                                    ),
+                                    Text(
+                                      "MY CAR",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.green,
+                                          fontSize: 18),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              Text(
-                                "MY CAR",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.green,
-                                    fontSize: 18),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
+                          Align(
+                            alignment: const AlignmentDirectional(-0.75, -0.95),
+                            child: Text("สวัสดี, คุณ$userName!",
+                                style: GoogleFonts.prompt(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20,
+                                )),
+                          ),
+                        ],
                       ),
                     ),
-                    Align(
-                      alignment: const AlignmentDirectional(-0.75, -0.95),
-                      child: Text("สวัสดี, คุณ$userName!",
-                          style: GoogleFonts.prompt(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          )),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ]))
-        ],
-      ))),
+                  ),
+                ]))
+              ],
+            )));
+          }),
     );
   }
 }

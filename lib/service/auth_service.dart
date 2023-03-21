@@ -96,7 +96,7 @@ class AuthService extends ChangeNotifier {
 
   Future<bool> checkExistingUser() async {
     DocumentSnapshot snapshot =
-        await _firebaseFirestore.collection("users").doc(_uid).get();
+        await _firebaseFirestore.collection("mUsers").doc(_uid).get();
     if (snapshot.exists) {
       print("USER EXISTS");
       return true;
@@ -125,7 +125,7 @@ class AuthService extends ChangeNotifier {
       });
       _userModel = userModel;
       await _firebaseFirestore
-          .collection("users")
+          .collection("mUsers")
           .doc(_uid)
           .set(userModel.toMap())
           .then((value) {
@@ -151,6 +151,16 @@ class AuthService extends ChangeNotifier {
   Future saveUserDataToSP() async {
     SharedPreferences s = await SharedPreferences.getInstance();
     await s.setString("user_model", jsonEncode(userModel.toMap()));
+  }
+
+  Future signOut() async {
+    try {
+      await HelperFunction.saveUserLoggedInStatus(false);
+      await HelperFunction.saveUserPhoneSF("");
+      await _firebaseAuth.signOut();
+    } catch (e) {
+      return null;
+    }
   }
 
   // Future loginWithUserNameandPassword(String email, String password) async {
