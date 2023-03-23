@@ -1,4 +1,3 @@
-import 'package:chat_test/pages/auth/login.speedy.dart';
 import 'package:chat_test/pages/auth/register/register.speedy.agreement.dart';
 import 'package:chat_test/pages/home_page.dart';
 import 'package:chat_test/service/auth_service.dart';
@@ -8,6 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:chat_test/pages/auth/login_phone.dart';
 
+import '../../helper/helper_function.dart';
+import '../../widgets/global.color.dart';
 import '../../widgets/widgets.dart';
 
 class LoginSocial extends StatefulWidget {
@@ -30,6 +31,7 @@ class _LoginSocialState extends State<LoginSocial> {
   void signInAnon() async {
     User? user = (await auth.signInAnonymously()).user;
     if (user != null && user.isAnonymous == true) {
+      await HelperFunction.saveUserUidSF(user.uid);
       setState(() {
         nextScreenReplace(context, const HomePage());
         print('Sign In Anonymously');
@@ -94,7 +96,7 @@ class _LoginSocialState extends State<LoginSocial> {
                         height: 55,
                         width: 300,
                         decoration: BoxDecoration(
-                          color: Colors.grey,
+                          color: GlobalColors.speedyGreyColor,
                           borderRadius: BorderRadius.circular(15),
                           border: Border.all(width: 1, color: Colors.grey),
                           boxShadow: [
@@ -125,7 +127,8 @@ class _LoginSocialState extends State<LoginSocial> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
+                
                 //Skip
                 InkWell(
                   onTap: () => signInAnon(),
@@ -158,7 +161,7 @@ class _LoginSocialState extends State<LoginSocial> {
                                 color: Colors.white,
                               ),
                             ),
-                            Icon(
+                            const Icon(
                               Icons.skip_next,
                               color: Colors.white,
                             )

@@ -1,14 +1,11 @@
+import 'package:chat_test/pages/auth/login.social.dart';
 import 'package:chat_test/pages/home_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:pinput/pinput.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../helper/helper_function.dart';
-import 'package:chat_test/pages/auth/login.social.dart';
 import '../../widgets/widgets.dart';
 
 class LoginPhonePage extends StatefulWidget {
@@ -21,8 +18,8 @@ class LoginPhonePageState extends State<LoginPhonePage> {
   final _phoneController = TextEditingController();
   final _codeController = TextEditingController();
   bool _codeSent = false;
+
   String _verificationId = '';
-  String? otpCode;
 
   Country country = Country(
     phoneCode: "66",
@@ -40,20 +37,21 @@ class LoginPhonePageState extends State<LoginPhonePage> {
   @override
   void dispose() {
     _phoneController.dispose();
-    _codeController.dispose();
     super.dispose();
   }
 
   Future<void> _verifyPhoneNumber() async {
     final String phoneNumber = _phoneController.text.trim();
     await _auth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        // Sign in with the auto-retrieved credential
-        await _auth.signInWithCredential(credential);
-
-        // Show a success message
-        Fluttertoast.showToast(msg: 'Logged in successfully');
+      phoneNumber: '+66$phoneNumber',
+      timeout: const Duration(seconds: 60),
+      verificationCompleted: (AuthCredential authCredential) async {
+        // Sign in with the credential
+        UserCredential result =
+            await _auth.signInWithCredential(authCredential);
+        Fluttertoast.showToast(
+            msg:
+                'User logged in with phone number: ${result.user!.phoneNumber}');
       },
       verificationFailed: (FirebaseAuthException e) {
         // Handle verification failure
@@ -71,23 +69,27 @@ class LoginPhonePageState extends State<LoginPhonePage> {
   }
 
   Future<void> _signInWithPhoneNumber() async {
-    final String smsCode = _codeController.text.trim();
-    final PhoneAuthCredential credential = PhoneAuthProvider.credential(
+    String smsCode = _codeController.text.trim();
+    AuthCredential credential = PhoneAuthProvider.credential(
       verificationId: _verificationId,
       smsCode: smsCode,
     );
+
     await _auth.signInWithCredential(credential).then((value) async {
       // saving the values to our shared preferences
-      // QuerySnapshot snapshot =
-      //     await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
-      //         .gettingUserData(_phoneController.text);
       await HelperFunction.saveUserLoggedInStatus(true);
       await HelperFunction.saveUserPhoneSF(_phoneController.text);
-      //await HelperFunction.saveUserNameSF(snapshot.docs[0]['fisrtName']);
-      // ignore: use_build_context_synchronously
-      nextScreenReplace(context, const HomePage());
+
+      // Navigate to the HomePage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    }).catchError((e){
+      print(e);
+      Fluttertoast.showToast(msg: 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ');
     });
-    Fluttertoast.showToast(msg: 'Logged in successfully');
+    Fluttertoast.showToast(msg: 'การเข้าสู่ระบบเสร็จสิ้น!');
   }
 
   @override
@@ -173,11 +175,8 @@ class LoginPhonePageState extends State<LoginPhonePage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const SizedBox(
-          height: 10,
-        ),
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(25.0),
           child: TextFormField(
             cursorColor: Colors.green,
             controller: _phoneController,
@@ -190,6 +189,12 @@ class LoginPhonePageState extends State<LoginPhonePage> {
             decoration: InputDecoration(
               hintText: 'Enter your phone number',
               hintStyle: const TextStyle(color: Colors.grey),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                  color: Colors.black.withOpacity(0.1),
+                ),
+              ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide: const BorderSide(
@@ -249,6 +254,9 @@ class LoginPhonePageState extends State<LoginPhonePage> {
             ),
           ),
         ),
+        const SizedBox(
+          height: 10,
+        ),
         InkWell(
           onTap: () => _verifyPhoneNumber(),
           child: Center(
@@ -285,31 +293,32 @@ class LoginPhonePageState extends State<LoginPhonePage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const SizedBox(height: 20),
-        Pinput(
-          length: 6,
-          showCursor: true,
-          defaultPinTheme: PinTheme(
-            width: 50,
-            height: 65,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: Colors.green.shade800,
+        Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: TextFormField(
+            controller: _codeController,
+            keyboardType: TextInputType.phone,
+            decoration: InputDecoration(
+              hintText: 'OTP Code',
+              hintStyle: const TextStyle(color: Colors.grey),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(
+                  color: Colors.black12,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(
+                  color: Colors.black12,
+                ),
               ),
             ),
-            textStyle:
-                const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            onEditingComplete: _signInWithPhoneNumber,
           ),
-          onCompleted: (value) {
-            setState(() {
-              otpCode = value;
-            });
-          },
         ),
-        const SizedBox(height: 20),
         InkWell(
-          onTap: () => _signInWithPhoneNumber(),
+          onTap: _signInWithPhoneNumber,
           child: Center(
             child: Container(
               alignment: Alignment.center,

@@ -1,12 +1,8 @@
 import 'dart:math';
-import 'dart:developer';
 
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:chat_test/pages/bank_page.dart';
 import 'package:chat_test/pages/change_queue.dart';
-import 'package:chat_test/pages/confirm_change.dart';
 import 'package:chat_test/pages/profile_beam.dart';
-import 'package:chat_test/pages/home_chat.dart';
 import 'package:chat_test/pages/test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dots_indicator/dots_indicator.dart';
@@ -16,11 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../helper/helper_function.dart';
 import '../service/auth_service.dart';
-import '../service/database_service.dart';
 import '../widgets/widgets.dart';
-
-import 'auth/login_page.dart';
-import 'auth/profile_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -53,11 +45,37 @@ class _HomePageState extends State<HomePage> {
   }
 
   gettingUserData() async {
-    await HelperFunction.getUserPhoneFromSF().then((value) {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection('mUsers').doc(uid);
+    final doc = await docRef.get();
+    if (doc.exists) {
+      final data = doc.data()!;
+      final firstName = data['firstName'] as String?;
+      final showName = '$firstName';
       setState(() {
-        userName = value!;
+        userName = showName;
       });
-    });
+    }
+  }
+
+  // gettingUserData() async {
+  //   final phone = await HelperFunction.getUserPhoneFromSF();
+  //   if (phone != null) {
+  //     setState(() {
+  //       userName = phone;
+  //     });
+  //   }
+  // }
+
+  gettingAnonData() async {
+    final userUid = await HelperFunction.getUserUidFromSF();
+    if (userUid != null) {
+      setState(() {
+        userName = userUid;
+      });
+      // print('User uid: $userUid');
+    }
   }
 
   final List<String> _carouselImages = [];
@@ -333,7 +351,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Align(
                             alignment: const AlignmentDirectional(-0.75, -0.95),
-                            child: Text("สวัสดี, คุณ$userName!",
+                            child: Text("สวัสดี, คุณ $userName!",
                                 style: GoogleFonts.prompt(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 20,

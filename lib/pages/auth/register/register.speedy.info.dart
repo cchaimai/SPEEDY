@@ -5,14 +5,15 @@ import 'package:chat_test/service/auth_service.dart';
 import 'package:chat_test/widgets/user.model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:chat_test/widgets/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../login.social.dart';
 
 class RegisterInformation extends StatefulWidget {
   const RegisterInformation({super.key, required this.phone});
   final String phone;
+  
   @override
   State<RegisterInformation> createState() => _RegisterInformationState();
 }
@@ -239,18 +240,6 @@ class _RegisterInformationState extends State<RegisterInformation> {
                                             inputType: TextInputType.name,
                                             maxLines: 1,
                                             controller: emailController),
-                                        textFeld(
-                                            hintText: "Passwrd",
-                                            icon: Icons.password_outlined,
-                                            inputType: TextInputType.name,
-                                            maxLines: 1,
-                                            controller: passwordController),
-                                        textFeld(
-                                            hintText: "Confirm Passwrd",
-                                            icon: Icons.password_outlined,
-                                            inputType: TextInputType.name,
-                                            maxLines: 1,
-                                            controller: passwordController),
                                       ],
                                     ),
                                   ),
@@ -350,7 +339,7 @@ class _RegisterInformationState extends State<RegisterInformation> {
   void storeData() async {
     final ap = Provider.of<AuthService>(context, listen: false);
     UserModel userModel = UserModel(
-      fisrtName: fnameController.text.trim(),
+      firstName: fnameController.text.trim(),
       lastName: lnameController.text.trim(),
       email: emailController.text.trim(),
       profilePic: "",

@@ -45,4 +45,14 @@ class HelperFunction {
     SharedPreferences sf = await SharedPreferences.getInstance();
     return sf.getString(userNameKey);
   }
+
+  static Future<void> saveUserUidSF(String uid) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userUid', uid);
+  }
+
+  static Future<String?> getUserUidFromSF() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('userUid');
+  }
 }
