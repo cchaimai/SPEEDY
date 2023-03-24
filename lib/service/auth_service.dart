@@ -1,6 +1,8 @@
+import 'package:chat_test/pages/auth/login_phone.dart';
 import 'package:chat_test/pages/auth/register/register.speedy.otp.dart';
 import 'package:chat_test/service/database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../helper/helper_function.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -26,8 +28,44 @@ class AuthService extends ChangeNotifier {
   final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
-  AuthProvider() {
-    checkSignIn();
+  Future<bool> checkUserLoginStatus(BuildContext context) async {
+    User? user = _firebaseAuth.currentUser;
+    if (user != null && user.isAnonymous == false) {
+      await HelperFunction.saveUserUidSF(user.uid);
+      return true;
+    } else {
+      signInAnon(context);
+      return false;
+    }
+  }
+
+  Future<void> _showLoginReminderDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Please Login'),
+          content: Text('You need to login to access this page'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void signInAnon(BuildContext context) async {
+    User? user = (await _firebaseAuth.signInAnonymously()).user;
+    if (user != null && user.isAnonymous == true) {
+      await HelperFunction.saveUserUidSF(user.uid);
+      nextScreenReplace(context, LoginPhonePage());
+      Fluttertoast.showToast(msg: 'Please Login');
+    } else {
+      Fluttertoast.showToast(msg: 'Login fail!');
+    }
   }
 
   void checkSignIn() async {

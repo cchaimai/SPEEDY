@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:chat_test/pages/auth/login.social.dart';
+import 'package:chat_test/pages/auth/login_phone.dart';
 import 'package:chat_test/pages/change_queue.dart';
 import 'package:chat_test/pages/profile_beam.dart';
 import 'package:chat_test/pages/test.dart';
@@ -8,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../helper/helper_function.dart';
@@ -28,12 +31,15 @@ class _HomePageState extends State<HomePage> {
   final userId = FirebaseAuth.instance.currentUser!.uid;
   Stream? groups;
   String groupName = "";
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool isUserLoggedIn = false;
 
   @override
   void initState() {
     super.initState();
     fetchCarouselImages();
     gettingUserData();
+    gettingAnonData();
   }
 
   String getId(String res) {
@@ -68,15 +74,39 @@ class _HomePageState extends State<HomePage> {
   //   }
   // }
 
+  Future<void> _showLoginReminderDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Please Login'),
+          content: Text('You need to login to access this page'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   gettingAnonData() async {
-    final userUid = await HelperFunction.getUserUidFromSF();
-    if (userUid != null) {
+  final userUid = await HelperFunction.getUserUidFromSF();
+  if (userUid != null) {
+    if (FirebaseAuth.instance.currentUser!.isAnonymous) {
+      setState(() {
+        userName = 'Anonymous';
+      });
+    } else {
       setState(() {
         userName = userUid;
       });
-      // print('User uid: $userUid');
     }
   }
+}
+
 
   final List<String> _carouselImages = [];
   var _dotPosition = 0;
@@ -84,13 +114,15 @@ class _HomePageState extends State<HomePage> {
   fetchCarouselImages() async {
     var firestoreInstance = FirebaseFirestore.instance;
     QuerySnapshot qn = await firestoreInstance.collection("banners").get();
-    setState(() {
-      for (int i = 0; i < qn.docs.length; i++) {
-        _carouselImages.add(
-          qn.docs[i]["image"],
-        );
-      }
-    });
+    if (mounted) {
+      setState(() {
+        for (int i = 0; i < qn.docs.length; i++) {
+          _carouselImages.add(
+            qn.docs[i]["image"],
+          );
+        }
+      });
+    }
     return qn.docs;
   }
 
@@ -109,8 +141,15 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {}, icon: const Icon(Icons.notifications_active)),
         actions: [
           IconButton(
-              onPressed: () {
-                nextScreen(context, ProfileScreen());
+              onPressed: () async {
+                bool isLoggedIn =
+                    await AuthService().checkUserLoginStatus(context);
+                if (isLoggedIn) {
+                  nextScreenReplace(context, ProfileScreen());
+                } else {
+                  await _showLoginReminderDialog(context);
+                  nextScreenReplace(context, LoginSocial());
+                }
               },
               icon: const Icon(
                 Icons.account_circle,
@@ -213,8 +252,15 @@ class _HomePageState extends State<HomePage> {
                           Align(
                             alignment: const AlignmentDirectional(-0.8, -0.65),
                             child: GestureDetector(
-                              onTap: () {
-                                print(userName);
+                              onTap: () async {
+                                bool isLoggedIn = await AuthService()
+                                    .checkUserLoginStatus(context);
+                                if (isLoggedIn) {
+                                  print(userName);
+                                } else {
+                                  await _showLoginReminderDialog(context);
+                                  nextScreenReplace(context, LoginSocial());
+                                }
                               },
                               child: SizedBox(
                                 width: 160,
@@ -249,8 +295,15 @@ class _HomePageState extends State<HomePage> {
                           Align(
                             alignment: const AlignmentDirectional(-0.8, 0.85),
                             child: GestureDetector(
-                              onTap: () {
-                                nextScreenReplace(context, const testPage());
+                              onTap: () async {
+                                bool isLoggedIn = await AuthService()
+                                    .checkUserLoginStatus(context);
+                                if (isLoggedIn) {
+                                  nextScreenReplace(context, const testPage());
+                                } else {
+                                  await _showLoginReminderDialog(context);
+                                  nextScreenReplace(context, LoginSocial());
+                                }
                               },
                               child: SizedBox(
                                 width: 160,
@@ -285,8 +338,16 @@ class _HomePageState extends State<HomePage> {
                           Align(
                             alignment: const AlignmentDirectional(0.8, -0.65),
                             child: GestureDetector(
-                              onTap: () {
-                                nextScreenReplace(context, const changeQueue());
+                              onTap: () async {
+                                bool isLoggedIn = await AuthService()
+                                    .checkUserLoginStatus(context);
+                                if (isLoggedIn) {
+                                  nextScreenReplace(
+                                      context, const changeQueue());
+                                } else {
+                                  await _showLoginReminderDialog(context);
+                                  nextScreenReplace(context, LoginSocial());
+                                }
                               },
                               child: SizedBox(
                                 width: 160,
