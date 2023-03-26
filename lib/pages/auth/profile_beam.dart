@@ -1,19 +1,51 @@
 import 'package:chat_test/pages/auth/login.social.dart';
 import 'package:chat_test/pages/bank_page.dart';
 import 'package:chat_test/widgets/widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../helper/helper_function.dart';
-import '../service/auth_service.dart';
+import '../../helper/helper_function.dart';
+import '../../service/auth_service.dart';
+import '../home_page.dart';
 
-class ProfileScreen extends StatelessWidget {
-  ProfileScreen({super.key});
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
   final userId = FirebaseAuth.instance.currentUser!.uid;
   AuthService authService = AuthService();
+
+  String userName = "";
+
+  @override
+  void initState() {
+    super.initState();
+    gettingUserData();
+  }
+
+  gettingUserData() async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection('mUsers').doc(uid);
+    final doc = await docRef.get();
+    if (doc.exists) {
+      final data = doc.data()!;
+      final firstName = data['firstName'] as String?;
+      final lastName = data['lastName'] as String?;
+      final showName = '$firstName $lastName';
+      setState(() {
+        userName = showName;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +60,16 @@ class ProfileScreen extends StatelessWidget {
           shape: const RoundedRectangleBorder(
               borderRadius:
                   BorderRadius.vertical(bottom: Radius.circular(23.0))),
+          leading: IconButton(
+              onPressed: () {
+                nextScreenReplace(context, const HomePage());
+              },
+              icon: const Icon(Icons.home)),
           actions: <Widget>[
             //แจ้งเตือน
             IconButton(
               icon: const Icon(Icons.notifications),
-              onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => const NoificaTion()),
-                // );
-              },
+              onPressed: () {},
             ),
           ],
         ),
@@ -60,31 +92,29 @@ class ProfileScreen extends StatelessWidget {
                 Column(
                   // ignore: prefer_const_literals_to_create_immutables
                   children: [
-                    Text("โอ เฉย",
+                    // ignore: unnecessary_string_interpolations
+                    Text("$userName",
                         style: GoogleFonts.prompt(
                             fontSize: 20, color: Colors.black))
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 115, top: 10, right: 10),
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                        padding: const EdgeInsets.all(15),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        backgroundColor:
-                            const Color.fromARGB(255, 255, 255, 255)),
-                    onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => EditProfile()),
-                      // );
-                    },
-                    child: const Icon(
-                      Icons.navigate_next_rounded,
-                      size: 40,
-                      color: Colors.black,
-                    ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                      padding: const EdgeInsets.all(15),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      backgroundColor:
+                          const Color.fromARGB(255, 255, 255, 255)),
+                  onPressed: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => EditProfile()),
+                    // );
+                  },
+                  child: const Icon(
+                    Icons.navigate_next_rounded,
+                    size: 40,
+                    color: Colors.black,
                   ),
                 ),
               ],
@@ -178,10 +208,13 @@ class ProfileScreen extends StatelessWidget {
                 child: Row(
                   // ignore: prefer_const_literals_to_create_immutables
                   children: [
-                    const Icon(
-                      Icons.help_outline,
-                      size: 22,
-                      color: Colors.black,
+                    GestureDetector(
+                      onTap: () {},
+                      child: const Icon(
+                        Icons.help_outline,
+                        size: 22,
+                        color: Colors.black,
+                      ),
                     ),
                     const SizedBox(width: 20),
                     const Expanded(

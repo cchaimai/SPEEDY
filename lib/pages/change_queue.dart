@@ -1,19 +1,16 @@
-import 'package:chat_test/pages/confirm_check.dart';
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:firebase_core/firebase_core.dart';
-import '../service/auth_service.dart';
 import '../service/database_service.dart';
 import '../widgets/widgets.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
-import 'confirm_change.dart';
 import 'home_page.dart';
 
 class changeQueue extends StatefulWidget {
@@ -23,22 +20,53 @@ class changeQueue extends StatefulWidget {
   State<changeQueue> createState() => _changeQueueState();
 }
 
+// ignore: camel_case_types
 class _changeQueueState extends State<changeQueue> {
   DateTime _focusedDay = DateTime.now();
   final DateTime _firstDay =
       DateTime.now().subtract(const Duration(days: 1000));
   final DateTime _lastDay = DateTime.now().add(const Duration(days: 1000));
   late DateTime _selectedDay;
+  DateTime _selectedDateTime = DateTime.now();
+  Map<String, List> mySelectedEvents = {};
+  final formkey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
+  String type = "Change";
   String model = "";
   String carId = "";
-  bool public = false;
   late DateTime date;
 
   @override
   initState() {
     super.initState();
     _selectedDay = DateTime.now();
+  }
+
+  List _listofDayEvents(DateTime dateTime) {
+    if (mySelectedEvents[DateFormat('yyyy-MM-dd').format(dateTime)] != null) {
+      return mySelectedEvents[DateFormat('yyyy-MM-dd').format(dateTime)]!;
+    } else {
+      return [];
+    }
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(_selectedDateTime),
+    );
+    if (time != null) {
+      setState(() {
+        _selectedDateTime = DateTime(
+          _selectedDateTime.year,
+          _selectedDateTime.month,
+          _selectedDateTime.day,
+          time.hour,
+          time.minute,
+        );
+      });
+    }
   }
 
   @override
@@ -118,7 +146,23 @@ class _changeQueueState extends State<changeQueue> {
                     selectedDecoration: BoxDecoration(
                         color: Colors.green, shape: BoxShape.circle),
                     weekendTextStyle: TextStyle(color: Colors.red)),
+                eventLoader: _listofDayEvents,
               ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "จองเวลา ${DateFormat('HH:mm').format(_selectedDateTime)}",
+                  style: GoogleFonts.prompt(fontSize: 20),
+                ),
+                const SizedBox(height: 20),
+                IconButton(
+                  onPressed: () => _selectTime(context),
+                  color: Colors.grey,
+                  icon: const Icon(Icons.schedule, size: 20),
+                ),
+              ],
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -137,14 +181,23 @@ class _changeQueueState extends State<changeQueue> {
                     color: Colors.green,
                     child: Center(
                         child: Text(
-                      "Press",
+                      "จองคิว",
                       style: GoogleFonts.prompt(
                           color: Colors.white,
-                          fontSize: 16,
+                          fontSize: 18,
                           fontWeight: FontWeight.w500),
                     )),
                   ),
                 ),
+              ),
+            ),
+            ..._listofDayEvents(_selectedDay!).map(
+              (myEvents) => ListTile(
+                leading: const Icon(
+                  Icons.event_busy_rounded,
+                  color: Colors.red,
+                ),
+                title: Text('Time:   ${myEvents['time']}'),
               ),
             ),
           ],
@@ -172,102 +225,127 @@ class _changeQueueState extends State<changeQueue> {
         child: SizedBox(
           height: 75,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MaterialButton(
-                    minWidth: 10,
-                    onPressed: () {
-                      setState(() {
-                        // currentScreen = Dashbord();
-                        // currentTab = 0;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            nextScreenReplace(context, const HomePage());
-                          },
-                          child: const Icon(
-                            Icons.house,
-                            color: Colors.green,
-                          ),
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              InkWell(
+                onTap: () {},
+                child: SizedBox(
+                  width: 60,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.house_outlined,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        'หน้าหลัก',
+                        style: GoogleFonts.prompt(
+                          // ignore: prefer_const_constructors
+                          textStyle: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                              fontSize: 11),
                         ),
-                        Text(
-                          'หน้าหลัก',
-                          style: GoogleFonts.prompt(color: Colors.green),
-                        ),
-                      ],
-                    ),
+                      )
+                    ],
                   ),
-                  MaterialButton(
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {});
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.task,
-                          color: Colors.green,
-                        ),
-                        Text(
-                          'เช็ค',
-                          style: GoogleFonts.prompt(color: Colors.green),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MaterialButton(
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {});
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.change_circle,
-                          color: Colors.green,
+              InkWell(
+                onTap: () {},
+                child: SizedBox(
+                  width: 60,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // ignore: prefer_const_constructors
+                      Icon(
+                        Icons.fact_check_outlined,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        'เช็ค',
+                        style: GoogleFonts.prompt(
+                          // ignore: prefer_const_constructors
+                          textStyle: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                              fontSize: 11),
                         ),
-                        Text(
-                          'เปลี่ยน',
-                          style: GoogleFonts.prompt(color: Colors.green),
-                        ),
-                      ],
-                    ),
+                      )
+                    ],
                   ),
-                  MaterialButton(
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {});
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.account_circle,
-                          color: Colors.green,
+                ),
+              ),
+              SizedBox(
+                width: 60,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Text(
+                        'Charge',
+                        style: GoogleFonts.prompt(
+                          textStyle: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.green,
+                              fontSize: 17),
                         ),
-                        Text(
-                          'โปรไฟล์',
-                          style: GoogleFonts.prompt(color: Colors.green),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              InkWell(
+                onTap: () {},
+                child: SizedBox(
+                  width: 60,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.change_circle_outlined,
+                        color: Colors.green,
+                      ),
+                      Text(
+                        'เปลี่ยน',
+                        style: GoogleFonts.prompt(
+                          textStyle: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.green,
+                              fontSize: 11),
                         ),
-                      ],
-                    ),
+                      )
+                    ],
                   ),
-                ],
-              )
+                ),
+              ),
+              InkWell(
+                onTap: () {},
+                child: SizedBox(
+                  width: 60,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.account_circle_outlined,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        'โปรไฟล์',
+                        style: GoogleFonts.prompt(
+                          textStyle: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                              fontSize: 11),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -277,149 +355,206 @@ class _changeQueueState extends State<changeQueue> {
 
   popUpDialog(BuildContext context) {
     showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(builder: ((context, setState) {
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: ((context, setState) {
             return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 100),
-                child: AlertDialog(
-                  title: Text(
-                    "book your appointment!",
-                    textAlign: TextAlign.left,
-                    style: GoogleFonts.prompt(),
-                  ),
-                  content: FormBuilder(
-                      child: Column(
-                    children: [
-                      FormBuilderTextField(
-                        name: "model",
-                        decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.directions_car,
-                              color: Colors.green),
-                          border: InputBorder.none,
-                          hintText: "รุ่นรถยนต์",
-                          hintStyle: GoogleFonts.prompt(fontSize: 16),
-                        ),
-                        onSaved: (val) {
-                          model = val!;
-                        },
-                        validator: (val) {
-                          if (val!.isNotEmpty) {
-                            return null;
-                          } else {
-                            return "กรอกรุ่นรถ";
-                          }
-                        },
-                      ),
-                      const Divider(),
-                      FormBuilderTextField(
-                        name: "carId",
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: "ทะเบียนรถ",
-                          hintStyle: GoogleFonts.prompt(fontSize: 16),
-                          prefixIcon:
-                              const Icon(Icons.wysiwyg, color: Colors.green),
-                        ),
-                        onSaved: (val) {
-                          carId = val!;
-                        },
-                        validator: (val) {
-                          if (val!.isNotEmpty) {
-                            return null;
-                          } else {
-                            return "กรอกทะเบียนรถ";
-                          }
-                        },
-                      ),
-                      const Divider(),
-                      FormBuilderDropdown(
-                        name: 'time',
-                        // ignore: deprecated_member_use
-                        hint: Text(
-                          'เลือกเวลา',
-                          style: GoogleFonts.prompt(fontSize: 16),
-                        ),
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          prefixIcon: Icon(
-                            Icons.book,
-                            color: Colors.green,
-                          ),
-                        ),
-                        // ignore: deprecated_member_use
-                        allowClear: true,
-                        items: ['9:00', '11:00', '13:00', '15:00', '17:00']
-                            .map((service) => DropdownMenuItem(
-                                  value: service,
-                                  child: Text(service),
-                                ))
-                            .toList(),
-                        style: GoogleFonts.prompt(color: Colors.black),
-                      ),
-                      FormBuilderSwitch(
-                        name: "public",
-                        title: const Text("public"),
-                        initialValue: false,
-                        controlAffinity: ListTileControlAffinity.leading,
-                        decoration:
-                            const InputDecoration(border: InputBorder.none),
-                        onSaved: (val) {
-                          public = val!;
-                        },
-                      ),
-                      const Divider(),
-                      FormBuilderDateTimePicker(
-                        name: "date",
-                        initialValue: _selectedDay,
-                        initialDate: _selectedDay,
-                        fieldHintText: "Add Date",
-                        inputType: InputType.date,
-                        format: DateFormat("EEEE, MMMM d, yyyy"),
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          prefixIcon: Icon(
-                            Icons.calendar_today_sharp,
-                            color: Colors.green,
-                          ),
-                        ),
-                        style: GoogleFonts.prompt(),
-                        onSaved: (val) {
-                          date = val!;
-                        },
-                      ),
-                    ],
-                  )),
-                  actions: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      style:
-                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                      child: Text(
-                        "ยกเลิก",
-                        style: GoogleFonts.prompt(fontWeight: FontWeight.w500),
-                      ),
+              child: Form(
+                key: formkey,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 100),
+                  child: AlertDialog(
+                    title: Text(
+                      "จองคิวเปลี่ยนแบตเตอรี่",
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.prompt(),
                     ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        //submit();
-                        nextScreenReplace(context, const confirmChange());
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green),
-                      child: Text("ยืนยัน",
+                    content: Column(
+                      children: [
+                        SizedBox(
+                            width: 250,
+                            child: TextFormField(
+                              onSaved: (val) {
+                                model = val!;
+                              },
+                              validator: (val) {
+                                if (val!.isNotEmpty) {
+                                  return null;
+                                } else {
+                                  return "กรุณากรอกรุ่นรถยนต์";
+                                }
+                              },
+                              decoration: InputDecoration(
+                                hintText: "รุ่นรถยนต์",
+                                hintStyle: GoogleFonts.prompt(
+                                    color: Colors.grey.shade400),
+                                border: InputBorder.none,
+                                prefixIcon: const Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 5), // add padding to adjust icon
+                                  child: Icon(
+                                    Icons.directions_car,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ),
+                            )),
+                        const Divider(),
+                        SizedBox(
+                            width: 250,
+                            child: TextFormField(
+                              onSaved: (val) {
+                                carId = val!;
+                              },
+                              validator: (val) {
+                                if (val!.isNotEmpty) {
+                                  return null;
+                                } else {
+                                  return "กรุณากรอกทะเบียนรถยนต์";
+                                }
+                              },
+                              decoration: InputDecoration(
+                                hintText: "ทะเบียนรถยนต์",
+                                hintStyle: GoogleFonts.prompt(
+                                    color: Colors.grey.shade400),
+                                border: InputBorder.none,
+                                prefixIcon: const Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 5), // add padding to adjust icon
+                                  child: Icon(
+                                    Icons.wysiwyg,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ),
+                            )),
+                        const Divider(),
+                        FormBuilderDateTimePicker(
+                          name: "date",
+                          initialValue: _selectedDay,
+                          initialDate: _selectedDay,
+                          fieldHintText: "Add Date",
+                          inputType: InputType.date,
+                          format: DateFormat("EEEE, MMMM d, yyyy"),
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            prefixIcon: Icon(
+                              Icons.calendar_today_sharp,
+                              color: Colors.green,
+                            ),
+                          ),
+                          style: GoogleFonts.prompt(),
+                          onSaved: (val) {
+                            date = val!;
+                          },
+                        ),
+                        const Divider(),
+                        FormBuilderDateTimePicker(
+                          name: "time",
+                          initialValue: _selectedDateTime,
+                          initialDate: _selectedDateTime,
+                          fieldHintText: "Select Time",
+                          inputType: InputType.time,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            prefixIcon: Icon(
+                              Icons.schedule_rounded,
+                              color: Colors.green,
+                            ),
+                          ),
+                          onSaved: (val) {
+                            _selectedDateTime = val!;
+                          },
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red),
+                        child: Text(
+                          "ยกเลิก",
                           style:
-                              GoogleFonts.prompt(fontWeight: FontWeight.w500)),
-                    )
-                  ],
+                              GoogleFonts.prompt(fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (formkey.currentState!.validate()) {
+                            formkey.currentState!.save();
+                            submit();
+                          }
+                          //nextScreenReplace(context, const confirmChange());
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green),
+                        child: Text("ยืนยัน",
+                            style: GoogleFonts.prompt(
+                                fontWeight: FontWeight.w500)),
+                      )
+                    ],
+                  ),
                 ),
               ),
             );
-          }));
+          }),
+        );
+      },
+    );
+  }
+
+  submit() async {
+    String selectedTime =
+        DateFormat('HH:mm').format(_selectedDateTime).toString();
+    String selectedDay =
+        DateFormat("yyyy-MM-dd").format(_selectedDay).toString();
+
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference collectionReference = firestore.collection('date');
+
+    QuerySnapshot querySnapshot = await collectionReference
+        .where('date', isEqualTo: DateFormat('yyyy-MM-dd').format(_selectedDay))
+        .get();
+
+    for (var document in querySnapshot.docs) {
+      // List<dynamic> times = List.from(document.data['time']);
+      // times.forEach((time) {
+      //   if (mySelectedEvents[DateFormat('yyyy-MM-dd').format(_selectedDay)] !=
+      //       null) {
+      //     mySelectedEvents[DateFormat('yyyy-MM-dd').format(_selectedDay)]
+      //         ?.add({'time': time});
+      //   } else {
+      //     mySelectedEvents[DateFormat('yyyy-MM-dd').format(_selectedDay)] = [
+      //       {'time': time}
+      //     ];
+      //   }
+      // });
+    }
+
+    if (formkey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      formkey.currentState!.save();
+      await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+          .addDateTime(FirebaseAuth.instance.currentUser!.uid, type,
+              selectedDay, selectedTime)
+          .whenComplete(() {
+        setState(() {
+          _isLoading = false;
         });
+        showSnackbar(context, Colors.green, "Booking successfully.");
+        Navigator.of(context).pop();
+      });
+    }
+    // ignore: avoid_print
+    print("New Event for backend developer ${json.encode(mySelectedEvents)}");
+    selectedTime = "";
+    return;
   }
 }

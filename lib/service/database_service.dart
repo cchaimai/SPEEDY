@@ -13,6 +13,8 @@ class DatabaseService {
       FirebaseFirestore.instance.collection("cards");
   final CollectionReference eventCollection =
       FirebaseFirestore.instance.collection("events");
+  final CollectionReference dateCollection =
+      FirebaseFirestore.instance.collection("date");
 
   // saving the userdata
   Future savingUserData(String fullName, String email) async {
@@ -23,7 +25,7 @@ class DatabaseService {
       "profilePic": "",
       "uid": uid,
       "cards": [],
-      "Events": [],
+      "events": [],
     });
   }
 
@@ -88,19 +90,31 @@ class DatabaseService {
     });
   }
 
-  Future createEvent(
-      String model, String carId, bool public, DateTime date) async {
+  Future addDateTime(String id, String type, String date, String time) async {
+    DocumentReference dateDocumentReference = await dateCollection.doc(date);
+    DocumentSnapshot dateDocumentSnapshot = await dateDocumentReference.get();
+    if (!dateDocumentSnapshot.exists) {
+      await dateDocumentReference.set({
+        "dateId": "",
+        "date": date,
+        "time": [],
+      });
+    }
+
     DocumentReference eventDocumentReference = await eventCollection.add({
-      "model": model,
-      //"id": "${id}_$carId",
-      "carId": carId,
-      "public": public,
+      "timeId": "",
+      "time": time,
       "date": date,
-      "eventId": "",
+      "owner": '$id',
+      "type": type,
     });
 
     await eventDocumentReference.update({
-      "eventId": eventDocumentReference.id,
+      "timeId": eventDocumentReference.id,
+    });
+
+    await dateDocumentReference.update({
+      "time": FieldValue.arrayUnion(["${eventDocumentReference.id}"]),
     });
 
     DocumentReference userDocumentReference = userCollection.doc(uid);

@@ -4,7 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chat_test/pages/auth/login.social.dart';
 import 'package:chat_test/pages/auth/login_phone.dart';
 import 'package:chat_test/pages/change_queue.dart';
-import 'package:chat_test/pages/profile_beam.dart';
+import 'package:chat_test/pages/auth/profile_beam.dart';
 import 'package:chat_test/pages/test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dots_indicator/dots_indicator.dart';
@@ -79,12 +79,12 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Please Login'),
-          content: Text('You need to login to access this page'),
+          title: const Text('Please Login'),
+          content: const Text('You need to login to access this page'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -93,20 +93,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   gettingAnonData() async {
-  final userUid = await HelperFunction.getUserUidFromSF();
-  if (userUid != null) {
-    if (FirebaseAuth.instance.currentUser!.isAnonymous) {
-      setState(() {
-        userName = 'Anonymous';
-      });
-    } else {
-      setState(() {
-        userName = userUid;
-      });
+    final userUid = await HelperFunction.getUserUidFromSF();
+    if (userUid != null) {
+      if (FirebaseAuth.instance.currentUser!.isAnonymous) {
+        setState(() {
+          userName = 'Guest';
+        });
+      } else {
+        setState(() {
+          userName = userUid;
+        });
+      }
     }
   }
-}
-
 
   final List<String> _carouselImages = [];
   var _dotPosition = 0;
@@ -145,10 +144,13 @@ class _HomePageState extends State<HomePage> {
                 bool isLoggedIn =
                     await AuthService().checkUserLoginStatus(context);
                 if (isLoggedIn) {
+                  // ignore: use_build_context_synchronously
                   nextScreenReplace(context, ProfileScreen());
                 } else {
+                  // ignore: use_build_context_synchronously
                   await _showLoginReminderDialog(context);
-                  nextScreenReplace(context, LoginSocial());
+                  // ignore: use_build_context_synchronously
+                  nextScreenReplace(context, const LoginSocial());
                 }
               },
               icon: const Icon(
@@ -258,8 +260,11 @@ class _HomePageState extends State<HomePage> {
                                 if (isLoggedIn) {
                                   print(userName);
                                 } else {
+                                  // ignore: use_build_context_synchronously
                                   await _showLoginReminderDialog(context);
-                                  nextScreenReplace(context, LoginSocial());
+                                  // ignore: use_build_context_synchronously
+                                  nextScreenReplace(
+                                      context, const LoginSocial());
                                 }
                               },
                               child: SizedBox(

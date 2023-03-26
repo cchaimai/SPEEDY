@@ -13,7 +13,7 @@ import '../login.social.dart';
 class RegisterInformation extends StatefulWidget {
   const RegisterInformation({super.key, required this.phone});
   final String phone;
-  
+
   @override
   State<RegisterInformation> createState() => _RegisterInformationState();
 }
@@ -338,6 +338,9 @@ class _RegisterInformationState extends State<RegisterInformation> {
 
   void storeData() async {
     final ap = Provider.of<AuthService>(context, listen: false);
+    List<String> cards = [];
+    List<String> events = [];
+    List<String> groups = [];
     UserModel userModel = UserModel(
       firstName: fnameController.text.trim(),
       lastName: lnameController.text.trim(),
@@ -346,20 +349,27 @@ class _RegisterInformationState extends State<RegisterInformation> {
       uid: "",
       phoneNumber: "",
       createAt: "",
+      cards: [],
+      events: [],
+      groups: [],
     );
     if (image != null) {
       ap.saveUserDataToFirebase(
-          context: context,
-          userModel: userModel,
-          profilePic: image!,
-          onSuccess: () {
-            ap.saveUserDataToSP().then((value) => ap.setSignIn().then((value) =>
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const RegisterFinish()),
-                    (route) => false)));
-          });
+        context: context,
+        userModel: userModel,
+        profilePic: image!,
+        onSuccess: () {
+          ap.saveUserDataToSP().then((value) => ap.setSignIn().then((value) =>
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const RegisterFinish()),
+                  (route) => false)));
+        },
+        cards: cards.toList(),
+        events: events.toList(),
+        groups: groups.toList(),
+      );
     } else {
       print("Please upload your profile photo");
     }

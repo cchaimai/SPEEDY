@@ -1,7 +1,7 @@
 import 'package:chat_test/pages/addbank.dart';
 import 'package:chat_test/pages/addcard.dart';
 import 'package:chat_test/pages/home_page.dart';
-import 'package:chat_test/pages/profile_beam.dart';
+import 'package:chat_test/pages/auth/profile_beam.dart';
 import 'package:chat_test/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -52,8 +52,7 @@ class _BankPageState extends State<BankPage> {
 
   Future<void> _fetchUserCards() async {
     // Get the current user's data
-    final userRef =
-        FirebaseFirestore.instance.collection('mUsers').doc(widget.userId);
+    final userRef = FirebaseFirestore.instance.collection('mUsers').doc(userId);
     final userData = await userRef.get();
 
     // Get the array of card document names from the user's data
@@ -146,7 +145,7 @@ class _BankPageState extends State<BankPage> {
               children: <Widget>[
                 GestureDetector(
                   onTap: () {
-                    nextScreenReplace(context, ProfileScreen());
+                    nextScreenReplace(context, const ProfileScreen());
                   },
                   child: const Padding(
                     padding: EdgeInsets.all(20),
@@ -169,23 +168,26 @@ class _BankPageState extends State<BankPage> {
               indent: 20,
               endIndent: 20,
             ),
-            Row(
-              children: <Widget>[
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(40, 10, 0, 0),
-                  child: Icon(
-                    Icons.credit_card,
-                    color: Colors.green,
-                    size: 20,
+            GestureDetector(
+              onTap: () {},
+              child: Row(
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(40, 10, 0, 0),
+                    child: Icon(
+                      Icons.credit_card,
+                      color: Colors.green,
+                      size: 20,
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-                  child: Text("บัตรเครดิต/บัตรเดบิต",
-                      style: GoogleFonts.prompt(
-                          fontWeight: FontWeight.w400, fontSize: 16)),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
+                    child: Text("บัตรเครดิต/บัตรเดบิต",
+                        style: GoogleFonts.prompt(
+                            fontWeight: FontWeight.w400, fontSize: 16)),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(
               height: 10,
@@ -201,7 +203,7 @@ class _BankPageState extends State<BankPage> {
                             itemBuilder: (context, index) {
                               final card = _cards[index];
                               final docUser = FirebaseFirestore.instance
-                                  .collection('users')
+                                  .collection('mUsers')
                                   .doc(userId);
                               return Container(
                                 width: 300,

@@ -148,6 +148,9 @@ class AuthService extends ChangeNotifier {
     required BuildContext context,
     required UserModel userModel,
     required File profilePic,
+    required List<String> cards,
+    required List<String> events,
+    required List<String> groups, // รับข้อมูล cards เป็น List<String>
     required Function onSuccess,
   }) async {
     _isLoading = true;
@@ -157,6 +160,10 @@ class AuthService extends ChangeNotifier {
       await storeFileDataToStorage("profilePic/$_uid", profilePic)
           .then((value) {
         userModel.profilePic = value;
+        userModel.cards =
+            cards; // กำหนดค่าของ cards จาก parameter ให้กับ userModel
+        userModel.events = events;
+        userModel.groups = groups;
         userModel.createAt = DateTime.now().millisecondsSinceEpoch.toString();
         userModel.phoneNumber = _firebaseAuth.currentUser!.phoneNumber!;
         userModel.uid = _firebaseAuth.currentUser!.uid;
