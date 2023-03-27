@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -5,9 +7,23 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets/widgets.dart';
 import 'home_page.dart';
+import 'dart:developer';
 
 class cancelChange extends StatefulWidget {
-  const cancelChange({super.key});
+  final String eventsId;
+  final String model;
+  final String carId;
+  final String date;
+  final String time;
+  final String type;
+  const cancelChange(
+      {super.key,
+      required this.eventsId,
+      required this.model,
+      required this.carId,
+      required this.date,
+      required this.time,
+      required this.type});
 
   @override
   State<cancelChange> createState() => _cancelChangeState();
@@ -15,6 +31,14 @@ class cancelChange extends StatefulWidget {
 
 // ignore: camel_case_types
 class _cancelChangeState extends State<cancelChange> {
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+  bool _deleteDate = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,7 +138,14 @@ class _cancelChangeState extends State<cancelChange> {
                       fontWeight: FontWeight.w600),
                 ),
                 Text(
-                  "?? \n??",
+                  widget.model,
+                  style: GoogleFonts.prompt(
+                      color: const Color.fromARGB(255, 41, 41, 41),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500),
+                ),
+                Text(
+                  widget.carId,
                   style: GoogleFonts.prompt(
                       color: const Color.fromARGB(255, 41, 41, 41),
                       fontSize: 14,
@@ -176,7 +207,7 @@ class _cancelChangeState extends State<cancelChange> {
                       height: 5,
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Column(
                           children: [
@@ -186,7 +217,7 @@ class _cancelChangeState extends State<cancelChange> {
                               size: 40,
                             ),
                             Text(
-                              "??/??/??",
+                              widget.date,
                               style: GoogleFonts.prompt(),
                             )
                           ],
@@ -198,7 +229,7 @@ class _cancelChangeState extends State<cancelChange> {
                               color: Color.fromARGB(255, 41, 41, 41),
                               size: 40,
                             ),
-                            Text("??:??", style: GoogleFonts.prompt())
+                            Text(widget.time, style: GoogleFonts.prompt())
                           ],
                         ),
                         Column(
@@ -209,7 +240,7 @@ class _cancelChangeState extends State<cancelChange> {
                               size: 40,
                             ),
                             Text(
-                              "?????",
+                              widget.type,
                               style: GoogleFonts.prompt(),
                             )
                           ],
@@ -226,7 +257,7 @@ class _cancelChangeState extends State<cancelChange> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                nextScreenReplace(context, const HomePage());
+                                delete();
                               },
                               child: Container(
                                 height: 40,
@@ -258,5 +289,24 @@ class _cancelChangeState extends State<cancelChange> {
         )
       ]),
     );
+  }
+
+  delete() async {
+    DocumentReference dateDocRef =
+        FirebaseFirestore.instance.collection('events').doc(widget.eventsId);
+    DocumentSnapshot dateDocSnapshot = await dateDocRef.get();
+    String dateId = dateDocSnapshot.get('date');
+
+    FirebaseFirestore.instance
+        .collection('events')
+        .doc(widget.eventsId)
+        .delete();
+    FirebaseFirestore.instance.collection('mUsers').doc(userId).update({
+      'events': FieldValue.arrayRemove([widget.eventsId])
+    });
+    FirebaseFirestore.instance.collection('date').doc(dateId).update({
+      'time': FieldValue.arrayRemove([widget.eventsId])
+    });
+    nextScreenReplace(context, HomePage());
   }
 }

@@ -90,12 +90,12 @@ class DatabaseService {
     });
   }
 
-  Future addDateTime(String id, String type, String date, String time) async {
+  Future addDateTime(String id, String type, String date, String time,
+      String model, String carId) async {
     DocumentReference dateDocumentReference = await dateCollection.doc(date);
     DocumentSnapshot dateDocumentSnapshot = await dateDocumentReference.get();
     if (!dateDocumentSnapshot.exists) {
       await dateDocumentReference.set({
-        "dateId": "",
         "date": date,
         "time": [],
       });
@@ -107,6 +107,8 @@ class DatabaseService {
       "date": date,
       "owner": '$id',
       "type": type,
+      "model": model,
+      "carId": carId,
     });
 
     await eventDocumentReference.update({
@@ -118,9 +120,10 @@ class DatabaseService {
     });
 
     DocumentReference userDocumentReference = userCollection.doc(uid);
-    return await userDocumentReference.update({
+    await userDocumentReference.update({
       "events": FieldValue.arrayUnion(["${eventDocumentReference.id}"])
     });
+    return eventDocumentReference.id;
   }
 
   // getting the chats

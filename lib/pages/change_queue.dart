@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:chat_test/pages/confirm_change.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../service/database_service.dart';
@@ -37,15 +40,18 @@ class _changeQueueState extends State<changeQueue> {
   String carId = "";
   late DateTime date;
 
+  Map<String, List> events = {};
+
   @override
   initState() {
     super.initState();
     _selectedDay = DateTime.now();
+    _fetchEvent().then((value) => log(events.toString()));
   }
 
   List _listofDayEvents(DateTime dateTime) {
-    if (mySelectedEvents[DateFormat('yyyy-MM-dd').format(dateTime)] != null) {
-      return mySelectedEvents[DateFormat('yyyy-MM-dd').format(dateTime)]!;
+    if (events[DateFormat('yyyy-MM-dd').format(dateTime).toString()] != null) {
+      return events[DateFormat('yyyy-MM-dd').format(dateTime).toString()]!;
     } else {
       return [];
     }
@@ -67,6 +73,28 @@ class _changeQueueState extends State<changeQueue> {
         );
       });
     }
+  }
+
+  Future<Map<String, List>> _fetchEvent() async {
+    final dateRef = FirebaseFirestore.instance.collection('date');
+    final dateSnapshot = await dateRef.get();
+
+    for (var dateDoc in dateSnapshot.docs) {
+      final dateStr = dateDoc.id.toString();
+      final eventsId = dateDoc.get('time') as List<dynamic>;
+
+      for (var eventId in eventsId) {
+        final eventRef =
+            FirebaseFirestore.instance.collection('events').doc(eventId);
+        final eventData = await eventRef.get();
+
+        if (eventData.exists) {
+          final time = eventData['time'] as String;
+          events.putIfAbsent(dateStr, () => []).add({'time': time});
+        }
+      }
+    }
+    return events;
   }
 
   @override
@@ -191,7 +219,7 @@ class _changeQueueState extends State<changeQueue> {
                 ),
               ),
             ),
-            ..._listofDayEvents(_selectedDay!).map(
+            ..._listofDayEvents(_selectedDay).map(
               (myEvents) => ListTile(
                 leading: const Icon(
                   Icons.event_busy_rounded,
@@ -514,46 +542,31 @@ class _changeQueueState extends State<changeQueue> {
     String selectedDay =
         DateFormat("yyyy-MM-dd").format(_selectedDay).toString();
 
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    CollectionReference collectionReference = firestore.collection('date');
-
-    QuerySnapshot querySnapshot = await collectionReference
-        .where('date', isEqualTo: DateFormat('yyyy-MM-dd').format(_selectedDay))
-        .get();
-
-    for (var document in querySnapshot.docs) {
-      // List<dynamic> times = List.from(document.data['time']);
-      // times.forEach((time) {
-      //   if (mySelectedEvents[DateFormat('yyyy-MM-dd').format(_selectedDay)] !=
-      //       null) {
-      //     mySelectedEvents[DateFormat('yyyy-MM-dd').format(_selectedDay)]
-      //         ?.add({'time': time});
-      //   } else {
-      //     mySelectedEvents[DateFormat('yyyy-MM-dd').format(_selectedDay)] = [
-      //       {'time': time}
-      //     ];
-      //   }
-      // });
-    }
-
     if (formkey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
       });
       formkey.currentState!.save();
-      await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
-          .addDateTime(FirebaseAuth.instance.currentUser!.uid, type,
-              selectedDay, selectedTime)
-          .whenComplete(() {
+      String eventId =
+          await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+              .addDateTime(FirebaseAuth.instance.currentUser!.uid, type,
+                  selectedDay, selectedTime, model, carId)
+              .whenComplete(() async {
         setState(() {
           _isLoading = false;
         });
+        // ignore: use_build_context_synchronously
         showSnackbar(context, Colors.green, "Booking successfully.");
-        Navigator.of(context).pop();
+        // ignore: use_build_context_synchronously
       });
+      // ignore: use_build_context_synchronously
+      nextScreenReplace(
+          context,
+          confirmChange(
+            eventsId: eventId,
+          ));
     }
-    // ignore: avoid_print
-    print("New Event for backend developer ${json.encode(mySelectedEvents)}");
+    //log("New Event for backend developer ${json.encode(events)}");
     selectedTime = "";
     return;
   }
