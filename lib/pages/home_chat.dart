@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:chat_test/pages/home_page.dart';
 import 'package:chat_test/pages/search_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../helper/helper_function.dart';
 import '../service/auth_service.dart';
@@ -19,12 +23,13 @@ class HomeChat extends StatefulWidget {
 }
 
 class _HomeChatState extends State<HomeChat> {
-  String userName = "";
-  String email = "";
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+
   AuthService authService = AuthService();
   Stream? groups;
   bool _isLoading = false;
   String groupName = "";
+  String userName = "";
 
   @override
   void initState() {
@@ -42,17 +47,18 @@ class _HomeChatState extends State<HomeChat> {
   }
 
   gettingUserData() async {
-    await HelperFunction.getUserEmailFromSF().then((value) {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection('mUsers').doc(uid);
+    final doc = await docRef.get();
+    if (doc.exists) {
+      final data = doc.data()!;
+      final firstName = data['firstName'] as String?;
+      final showName = '$firstName';
       setState(() {
-        email = value!;
+        userName = showName;
       });
-    });
-    await HelperFunction.getUserNameFromSF().then((val) {
-      setState(() {
-        userName = val!;
-      });
-    });
-    // getting the list of snapshots in our stream
+    }
     await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
         .getUserGroups()
         .then((snapshot) {
@@ -66,6 +72,11 @@ class _HomeChatState extends State<HomeChat> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              nextScreenReplace(context, const HomePage());
+            },
+            icon: const Icon(Icons.home)),
         actions: [
           IconButton(
               onPressed: () {
@@ -73,140 +84,38 @@ class _HomeChatState extends State<HomeChat> {
               },
               icon: const Icon(
                 Icons.search,
-              ))
+              )),
         ],
-        elevation: 0,
+        toolbarHeight: 100,
+        elevation: 0.0,
         centerTitle: true,
-        backgroundColor: Theme.of(context).primaryColor,
-        title: const Text(
-          "Groups",
-          style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 27),
+        backgroundColor: Colors.transparent,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/logo white.png',
+              fit: BoxFit.contain,
+              height: 80,
+            ),
+          ],
+        ),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(23),
+                bottomRight: Radius.circular(23)),
+            color: Color.fromARGB(255, 31, 31, 31),
+          ),
         ),
       ),
-      drawer: Drawer(
-          child: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 50),
-        children: <Widget>[
-          Icon(
-            Icons.account_circle,
-            size: 150,
-            color: Colors.grey[700],
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Text(
-            userName,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          const Divider(
-            height: 2,
-          ),
-          ListTile(
-            onTap: () {
-              nextScreenReplace(context, const HomePage());
-            },
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            leading: const Icon(
-              Icons.home,
-              size: 30,
-            ),
-            title: const Text(
-              "Home",
-              style: TextStyle(color: Colors.black),
-            ),
-          ),
-          ListTile(
-            onTap: () {
-              nextScreenReplace(context, const HomeChat());
-            },
-            selectedColor: Theme.of(context).primaryColor,
-            selected: true,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            leading: const Icon(Icons.chat_bubble),
-            title: const Text(
-              "Chat",
-              style: TextStyle(color: Colors.black),
-            ),
-          ),
-          ListTile(
-            onTap: () {
-              nextScreenReplace(
-                  context,
-                  ProfilePage(
-                    userName: userName,
-                    email: email,
-                  ));
-            },
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            leading: const Icon(Icons.group),
-            title: const Text(
-              "Profile",
-              style: TextStyle(color: Colors.black),
-            ),
-          ),
-          ListTile(
-            onTap: () async {
-              showDialog(
-                  barrierDismissible: false,
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text("Logout"),
-                      content: const Text("Are you sure you want to logout?"),
-                      actions: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(
-                            Icons.cancel,
-                            color: Colors.red,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () async {
-                            //await authService.signOut();
-                            // ignore: use_build_context_synchronously
-                            Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (context) => const LoginPage()),
-                                (route) => false);
-                          },
-                          icon: const Icon(
-                            Icons.done,
-                            color: Colors.green,
-                          ),
-                        ),
-                      ],
-                    );
-                  });
-            },
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            leading: const Icon(Icons.exit_to_app),
-            title: const Text(
-              "Logout",
-              style: TextStyle(color: Colors.black),
-            ),
-          )
-        ],
-      )),
       body: groupList(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           popUpDialog(context);
         },
         elevation: 0,
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Colors.green,
         child: const Icon(
           Icons.add,
           color: Colors.white,
@@ -223,17 +132,17 @@ class _HomeChatState extends State<HomeChat> {
         builder: (context) {
           return StatefulBuilder(builder: ((context, setState) {
             return AlertDialog(
-              title: const Text(
-                "Create a group",
+              title: Text(
+                "Create a group!",
+                style: GoogleFonts.prompt(),
                 textAlign: TextAlign.left,
               ),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   _isLoading == true
-                      ? Center(
-                          child: CircularProgressIndicator(
-                              color: Theme.of(context).primaryColor),
+                      ? const Center(
+                          child: CircularProgressIndicator(color: Colors.green),
                         )
                       : TextField(
                           onChanged: (val) {
@@ -244,16 +153,16 @@ class _HomeChatState extends State<HomeChat> {
                           style: const TextStyle(color: Colors.black),
                           decoration: InputDecoration(
                               enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context).primaryColor),
+                                  borderSide: const BorderSide(
+                                      color: Color.fromARGB(255, 31, 31, 31)),
                                   borderRadius: BorderRadius.circular(20)),
                               errorBorder: OutlineInputBorder(
                                   borderSide:
                                       const BorderSide(color: Colors.red),
                                   borderRadius: BorderRadius.circular(20)),
                               focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context).primaryColor),
+                                  borderSide: const BorderSide(
+                                      color: Color.fromARGB(255, 31, 31, 31)),
                                   borderRadius: BorderRadius.circular(20))),
                         ),
                 ],
@@ -263,9 +172,11 @@ class _HomeChatState extends State<HomeChat> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  style: ElevatedButton.styleFrom(
-                      primary: Theme.of(context).primaryColor),
-                  child: const Text("CANCEL"),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                  child: Text(
+                    "CANCEL",
+                    style: GoogleFonts.prompt(),
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () async {
@@ -285,9 +196,9 @@ class _HomeChatState extends State<HomeChat> {
                           context, Colors.green, "Group created successfully.");
                     }
                   },
-                  style: ElevatedButton.styleFrom(
-                      primary: Theme.of(context).primaryColor),
-                  child: const Text("CREATE"),
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                  child: Text("CREATE", style: GoogleFonts.prompt()),
                 )
               ],
             );
@@ -310,7 +221,7 @@ class _HomeChatState extends State<HomeChat> {
                   return GroupTile(
                       groupId: getId(snapshot.data['groups'][reverseIndex]),
                       groupName: getName(snapshot.data['groups'][reverseIndex]),
-                      userName: snapshot.data['fullName']);
+                      userName: snapshot.data['firstName']);
                 },
               );
             } else {

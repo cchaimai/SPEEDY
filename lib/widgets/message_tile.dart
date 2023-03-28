@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MessageTile extends StatefulWidget {
   final String message;
@@ -44,18 +45,16 @@ class _MessageTileState extends State<MessageTile> {
                     topRight: Radius.circular(20),
                     bottomRight: Radius.circular(20),
                   ),
-            color: widget.sentByMe
-                ? Theme.of(context).primaryColor
-                : Colors.grey[700]),
+            color: widget.sentByMe ? Colors.green : Colors.grey[700]),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               widget.sender.toUpperCase(),
               textAlign: TextAlign.start,
-              style: const TextStyle(
+              style: GoogleFonts.prompt(
                   fontSize: 13,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   color: Colors.white,
                   letterSpacing: -0.5),
             ),
@@ -64,7 +63,7 @@ class _MessageTileState extends State<MessageTile> {
             ),
             Text(widget.message,
                 textAlign: TextAlign.start,
-                style: const TextStyle(fontSize: 16, color: Colors.white))
+                style: GoogleFonts.prompt(fontSize: 16, color: Colors.white))
           ],
         ),
       ),

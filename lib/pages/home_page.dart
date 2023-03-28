@@ -5,6 +5,7 @@ import 'package:chat_test/pages/auth/login.social.dart';
 import 'package:chat_test/pages/auth/login_phone.dart';
 import 'package:chat_test/pages/change_queue.dart';
 import 'package:chat_test/pages/auth/profile_beam.dart';
+import 'package:chat_test/pages/home_chat.dart';
 import 'package:chat_test/pages/test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dots_indicator/dots_indicator.dart';
@@ -26,7 +27,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String userName = "";
-  String email = "";
   AuthService authService = AuthService();
   final userId = FirebaseAuth.instance.currentUser!.uid;
   Stream? groups;
@@ -125,13 +125,6 @@ class _HomePageState extends State<HomePage> {
     return qn.docs;
   }
 
-  // getUsername() async {
-  //   var firestoreInstance = FirebaseFirestore.instance;
-  //   DocumentSnapshot userDoc =
-  //       await firestoreInstance.collection("mUsers").doc(userId).get();
-  //   String? val = userDoc['fisrtName'];
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                     await AuthService().checkUserLoginStatus(context);
                 if (isLoggedIn) {
                   // ignore: use_build_context_synchronously
-                  nextScreenReplace(context, ProfileScreen());
+                  nextScreenReplace(context, const ProfileScreen());
                 } else {
                   // ignore: use_build_context_synchronously
                   await _showLoginReminderDialog(context);
@@ -255,17 +248,7 @@ class _HomePageState extends State<HomePage> {
                             alignment: const AlignmentDirectional(-0.8, -0.65),
                             child: GestureDetector(
                               onTap: () async {
-                                bool isLoggedIn = await AuthService()
-                                    .checkUserLoginStatus(context);
-                                if (isLoggedIn) {
-                                  print(userName);
-                                } else {
-                                  // ignore: use_build_context_synchronously
-                                  await _showLoginReminderDialog(context);
-                                  // ignore: use_build_context_synchronously
-                                  nextScreenReplace(
-                                      context, const LoginSocial());
-                                }
+                                nextScreenReplace(context, const HomeChat());
                               },
                               child: SizedBox(
                                 width: 160,
@@ -347,11 +330,15 @@ class _HomePageState extends State<HomePage> {
                                 bool isLoggedIn = await AuthService()
                                     .checkUserLoginStatus(context);
                                 if (isLoggedIn) {
+                                  // ignore: use_build_context_synchronously
                                   nextScreenReplace(
                                       context, const changeQueue());
                                 } else {
+                                  // ignore: use_build_context_synchronously
                                   await _showLoginReminderDialog(context);
-                                  nextScreenReplace(context, LoginSocial());
+                                  // ignore: use_build_context_synchronously
+                                  nextScreenReplace(
+                                      context, const LoginSocial());
                                 }
                               },
                               child: SizedBox(

@@ -1,10 +1,14 @@
+import 'package:chat_test/pages/search_page.dart';
 import 'package:chat_test/widgets/message_tile.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../service/database_service.dart';
+import '../widgets/widgets.dart';
+import 'home_page.dart';
 
 // recent messages ไม่ขึ้นดีเลย์อันนึง
 class ChatPage extends StatefulWidget {
@@ -50,18 +54,6 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          centerTitle: true,
-          elevation: 0,
-          title: Text(
-            widget.userName,
-            style: const TextStyle(fontSize: 24),
-          ),
-          bottom: const PreferredSize(
-            preferredSize: Size.zero,
-            child: Text("KY6969   Toyota Vios",
-                style: TextStyle(color: Colors.white)),
-          ),
-          backgroundColor: Theme.of(context).primaryColor,
           actions: [
             IconButton(
                 onPressed: () {
@@ -69,6 +61,23 @@ class _ChatPageState extends State<ChatPage> {
                 },
                 icon: const Icon(Icons.call))
           ],
+          toolbarHeight: 100,
+          elevation: 0.0,
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
+          title: Text(
+            widget.groupName,
+            style:
+                GoogleFonts.prompt(fontWeight: FontWeight.w600, fontSize: 22),
+          ),
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(23),
+                  bottomRight: Radius.circular(23)),
+              color: Color.fromARGB(255, 31, 31, 31),
+            ),
+          ),
         ),
         body: Stack(
           children: <Widget>[
@@ -85,10 +94,11 @@ class _ChatPageState extends State<ChatPage> {
                     Expanded(
                         child: TextFormField(
                       controller: messageController,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
+                      style: GoogleFonts.prompt(color: Colors.white),
+                      decoration: InputDecoration(
                         hintText: "Send a message...",
-                        hintStyle: TextStyle(color: Colors.white, fontSize: 16),
+                        hintStyle: GoogleFonts.prompt(
+                            color: Colors.white, fontSize: 16),
                         border: InputBorder.none,
                       ),
                     )),
@@ -103,7 +113,7 @@ class _ChatPageState extends State<ChatPage> {
                         height: 50,
                         width: 50,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
+                          color: Colors.green,
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: const Center(

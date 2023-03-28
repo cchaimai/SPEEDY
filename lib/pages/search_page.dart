@@ -1,8 +1,9 @@
-import 'package:chat_test/helper/helper_function.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
+import '../helper/helper_function.dart';
 import '../service/database_service.dart';
 import '../widgets/widgets.dart';
 import 'chat_page.dart';
@@ -30,11 +31,18 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   getCurrentUserIdandName() async {
-    await HelperFunction.getUserNameFromSF().then((value) {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection('mUsers').doc(uid);
+    final doc = await docRef.get();
+    if (doc.exists) {
+      final data = doc.data()!;
+      final firstName = data['firstName'] as String?;
+      final showName = '$firstName';
       setState(() {
-        userName = value!;
+        userName = showName;
       });
-    });
+    }
     user = FirebaseAuth.instance.currentUser;
   }
 
@@ -50,30 +58,36 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Theme.of(context).primaryColor,
-        title: const Text(
+        toolbarHeight: 100,
+        elevation: 0.0,
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        title: Text(
           "Search",
-          style: TextStyle(
-              fontSize: 27, fontWeight: FontWeight.bold, color: Colors.white),
+          style: GoogleFonts.prompt(),
+        ),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            color: Color.fromARGB(255, 31, 31, 31),
+          ),
         ),
       ),
       body: Column(
         children: [
           Container(
-            color: Theme.of(context).primaryColor,
+            color: Color.fromARGB(255, 31, 31, 31),
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             child: Row(
               children: [
                 Expanded(
                   child: TextField(
                     controller: searchController,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Search groups....",
-                        hintStyle:
-                            TextStyle(color: Colors.white, fontSize: 16)),
+                    style: GoogleFonts.prompt(color: Colors.white),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Search groups....",
+                      hintStyle: GoogleFonts.prompt(color: Colors.white),
+                    ),
                   ),
                 ),
                 GestureDetector(
@@ -159,7 +173,7 @@ class _SearchPageState extends State<SearchPage> {
       contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       leading: CircleAvatar(
         radius: 30,
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Colors.green,
         child: Text(
           groupName.substring(0, 1).toUpperCase(),
           style: const TextStyle(color: Colors.white),
@@ -196,25 +210,25 @@ class _SearchPageState extends State<SearchPage> {
             ? Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.black,
+                  color: Colors.green,
                   border: Border.all(color: Colors.white, width: 1),
                 ),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: const Text(
+                child: Text(
                   "Joined",
-                  style: TextStyle(color: Colors.white),
+                  style: GoogleFonts.prompt(color: Colors.white),
                 ),
               )
             : Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Theme.of(context).primaryColor,
+                  color: const Color.fromARGB(255, 31, 31, 31),
                 ),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: const Text("Join Now",
-                    style: TextStyle(color: Colors.white)),
+                child: Text("Join Now",
+                    style: GoogleFonts.prompt(color: Colors.white)),
               ),
       ),
     );
