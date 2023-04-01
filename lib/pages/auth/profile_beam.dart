@@ -1,5 +1,7 @@
 import 'package:chat_test/pages/auth/login.social.dart';
 import 'package:chat_test/pages/bank_page.dart';
+import 'package:chat_test/pages/coupon.dart';
+import 'package:chat_test/pages/edit_profile.dart';
 import 'package:chat_test/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -36,6 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final firestore = FirebaseFirestore.instance;
     final docRef = firestore.collection('mUsers').doc(uid);
     final doc = await docRef.get();
+
     if (doc.exists) {
       final data = doc.data()!;
       final firstName = data['firstName'] as String?;
@@ -81,15 +84,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Container(
                   height: 70,
                   width: 70,
-                  margin: const EdgeInsets.only(left: 30, right: 30),
+                  margin: const EdgeInsets.only(),
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
+
                     // image: DecorationImage(
                     //     fit: BoxFit.cover,
                     //     image: AssetImage("assets/images/Profile Pic.png"))
                   ),
                 ),
-                Column(
+                Row(
                   // ignore: prefer_const_literals_to_create_immutables
                   children: [
                     // ignore: unnecessary_string_interpolations
@@ -100,16 +104,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 TextButton(
                   style: TextButton.styleFrom(
-                      padding: const EdgeInsets.all(15),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      backgroundColor:
-                          const Color.fromARGB(255, 255, 255, 255)),
+                    padding: const EdgeInsets.all(15),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                  ),
                   onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => EditProfile()),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EditProfile()),
+                    );
                   },
                   child: const Icon(
                     Icons.navigate_next_rounded,
@@ -122,14 +125,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             //บัญชีธนาคาร
             const SizedBox(height: 20),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
               child: TextButton(
                 style: TextButton.styleFrom(
-                    textStyle: GoogleFonts.prompt(color: Colors.black),
-                    padding: const EdgeInsets.all(20),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15)),
-                    backgroundColor: const Color(0xFFF5F6F9)),
+                  textStyle: GoogleFonts.prompt(color: Colors.black),
+                  padding: const EdgeInsets.all(20),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                ),
                 onPressed: () {
                   nextScreenReplace(
                       context,
@@ -157,19 +160,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             //โค้ดส่วนลด
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
               child: TextButton(
                 style: TextButton.styleFrom(
-                    textStyle: GoogleFonts.prompt(color: Colors.black),
-                    padding: const EdgeInsets.all(20),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15)),
-                    backgroundColor: const Color(0xFFF5F6F9)),
+                  textStyle: GoogleFonts.prompt(color: Colors.black),
+                  padding: const EdgeInsets.all(20),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                ),
                 onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => const CouPon()),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const CouPon()),
+                  );
                 },
                 child: Row(
                   // ignore: prefer_const_literals_to_create_immutables
@@ -191,14 +194,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             //ศูนย์ช่วยเหลือ
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
               child: TextButton(
                 style: TextButton.styleFrom(
-                    textStyle: GoogleFonts.prompt(color: Colors.black),
-                    padding: const EdgeInsets.all(20),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15)),
-                    backgroundColor: const Color(0xFFF5F6F9)),
+                  textStyle: GoogleFonts.prompt(color: Colors.black),
+                  padding: const EdgeInsets.all(20),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                ),
                 onPressed: () {
                   // Navigator.push(
                   //   context,
@@ -228,14 +231,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             //Log Out
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
               child: TextButton(
                 style: TextButton.styleFrom(
-                    textStyle: GoogleFonts.prompt(color: Colors.black),
-                    padding: const EdgeInsets.all(20),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15)),
-                    backgroundColor: const Color(0xFFF5F6F9)),
+                  textStyle: GoogleFonts.prompt(color: Colors.black),
+                  padding: const EdgeInsets.all(20),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                ),
                 onPressed: () {
                   // Navigator.push(
                   //   context,
