@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chat_test/pages/auth/login.social.dart';
 import 'package:chat_test/pages/auth/login_phone.dart';
-import 'package:chat_test/pages/change_queue.dart';
 import 'package:chat_test/pages/auth/profile_beam.dart';
 import 'package:chat_test/pages/home_chat.dart';
 import 'package:chat_test/pages/test.dart';
@@ -17,6 +16,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../helper/helper_function.dart';
 import '../service/auth_service.dart';
 import '../widgets/widgets.dart';
+import 'change_test.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -332,7 +332,7 @@ class _HomePageState extends State<HomePage> {
                                 if (isLoggedIn) {
                                   // ignore: use_build_context_synchronously
                                   nextScreenReplace(
-                                      context, const changeQueue());
+                                      context, const changeTest());
                                 } else {
                                   // ignore: use_build_context_synchronously
                                   await _showLoginReminderDialog(context);
