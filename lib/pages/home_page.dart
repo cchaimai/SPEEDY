@@ -5,6 +5,7 @@ import 'package:chat_test/pages/auth/login.social.dart';
 import 'package:chat_test/pages/auth/login_phone.dart';
 import 'package:chat_test/pages/auth/profile_beam.dart';
 import 'package:chat_test/pages/home_chat.dart';
+import 'package:chat_test/pages/map.dart';
 import 'package:chat_test/pages/test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dots_indicator/dots_indicator.dart';
@@ -248,7 +249,7 @@ class _HomePageState extends State<HomePage> {
                             alignment: const AlignmentDirectional(-0.8, -0.65),
                             child: GestureDetector(
                               onTap: () async {
-                                nextScreenReplace(context, const HomeChat());
+                                nextScreenReplace(context, const MapSample());
                               },
                               child: SizedBox(
                                 width: 160,
