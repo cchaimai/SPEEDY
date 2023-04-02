@@ -1,3 +1,5 @@
+import 'package:chat_test/pages/finalpayment.dart';
+import 'package:chat_test/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -207,6 +209,7 @@ class _PaymentState extends State<Payment> {
                           InkWell(
                             onTap: () {
                               print('kuy earth na heeeeeeeeee');
+                              nextScreenReplace(context, Fpayment());
                             },
                             child: Column(
                               children: [

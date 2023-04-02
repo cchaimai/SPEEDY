@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'package:chat_test/pages/chargedetail.dart';
+import 'package:chat_test/pages/home_page.dart';
 import 'package:chat_test/pages/process.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geocoding/geocoding.dart';
@@ -93,19 +96,47 @@ class MapSampleState extends State<MapSample> {
     }
   }
 
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+  String name = '';
+
+  Future<void> getUserData() async {
+    DocumentReference userDocRef =
+        FirebaseFirestore.instance.collection('mUsers').doc(userId);
+
+    DocumentSnapshot userDocSnapshot = await userDocRef.get();
+    name = userDocSnapshot.get('firstName');
+    setState(() {});
+  }
+
+  int? randomworkID;
+  String? workID;
+  int? inputenergy;
+  int? energy;
+  int? price;
+
   Future<String> _getLocation() async {
     Lo.Location location = Lo.Location();
     print("earth na heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
     final Lo.LocationData _locationResult = await location.getLocation();
+    randomworkID = Random().nextInt(900000) + 100000;
+    workID = randomworkID as String;
+    energy = 90;
+    price = 10 * energy!;
+
     DocumentReference requestDocumentReference =
         await FirebaseFirestore.instance.collection('requests').add({
-      'latitude': _locationResult.latitude,
-      'longitude': _locationResult.longitude,
-      'name': 'john',
+      'Ulatitude': _locationResult.latitude,
+      'Ulongitude': _locationResult.longitude,
+      'Uname': '$name',
       'status': 'Wait',
-      'reId': ''
+      'reId': '',
+      'workID': '$workID',
+      'chargetype': 'type1',
+      'energy': '$energy',
+      'price': '$price',
+      'cartype': 'car1',
+      'UcarID': '1234',
     });
-
     await requestDocumentReference.update({
       "reId": requestDocumentReference.id,
     });
@@ -137,6 +168,7 @@ class MapSampleState extends State<MapSample> {
 
   @override
   void initState() {
+    getUserData();
     getCurrentLocation();
     getPolyPoint();
     super.initState();
@@ -270,14 +302,16 @@ class MapSampleState extends State<MapSample> {
           child: FloatingActionButton(
             backgroundColor: Colors.green,
             onPressed: () async {
-              _getLocation();
-              String uid = await _getLocation();
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Waiting(
-                            uid: uid,
-                          )));
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => ChargeDetail()));
+              // _getLocation();
+              // String uid = await _getLocation();
+              // Navigator.pushReplacement(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (context) => Waiting(
+              //               uid: uid,
+              //             )));
             },
             child: const Icon(
               Icons.bolt,
@@ -299,6 +333,8 @@ class MapSampleState extends State<MapSample> {
               InkWell(
                 onTap: () {
                   print("kuy peng na hee");
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
                 },
                 child: Container(
                   width: 60,

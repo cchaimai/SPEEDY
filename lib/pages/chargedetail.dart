@@ -1,3 +1,4 @@
+import 'package:chat_test/pages/map.dart';
 import 'package:chat_test/pages/payment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -16,24 +17,22 @@ class _ChargeDetailState extends State<ChargeDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        shape: ContinuousRectangleBorder(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(30),
-            bottomRight: Radius.circular(30),
-          ),
-        ),
-        title: Center(
-          child: Text(
-            'Charge',
-            style: GoogleFonts.prompt(
-              textStyle: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                  fontSize: 25),
-            ),
-          ),
-        ),
+        title: Text('Charge',
+            style:
+                GoogleFonts.prompt(fontSize: 25, fontWeight: FontWeight.w500)),
         backgroundColor: const Color.fromARGB(255, 31, 31, 31),
+        toolbarHeight: 84,
+        centerTitle: true,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(23.0))),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () {
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => MapSample()));
+            // ฟังก์ชันที่จะทำงานเมื่อกดปุ่มย้อนกลับ
+          },
+        ),
       ),
       floatingActionButton: Container(
         height: 70,
