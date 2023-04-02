@@ -1,6 +1,6 @@
 import 'package:chat_test/pages/auth/login.social.dart';
 import 'package:chat_test/pages/bank_page.dart';
-import 'package:chat_test/pages/coupon.dart';
+import 'package:chat_test/pages/coupon_screen.dart';
 import 'package:chat_test/pages/edit_profile.dart';
 import 'package:chat_test/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,13 +8,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../helper/helper_function.dart';
 import '../../service/auth_service.dart';
 import '../home_page.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -43,6 +44,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final data = doc.data()!;
       final firstName = data['firstName'] as String?;
       final lastName = data['lastName'] as String?;
+
       final showName = '$firstName $lastName';
       setState(() {
         userName = showName;
@@ -90,7 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     // image: DecorationImage(
                     //     fit: BoxFit.cover,
-                    //     image: AssetImage("assets/images/Profile Pic.png"))
+                    //     image: showprofilePic)
                   ),
                 ),
                 Row(
@@ -171,7 +173,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const CouPon()),
+                    MaterialPageRoute(builder: (context) => CouPonScreen()),
                   );
                 },
                 child: Row(

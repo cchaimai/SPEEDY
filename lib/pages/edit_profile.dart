@@ -13,14 +13,14 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  bool showPassword = true;
-  bool isPasswordTextField = true;
-
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
   final userId = FirebaseAuth.instance.currentUser!.uid;
+
   AuthService authService = AuthService();
 
   String userName = "";
+  String email = "";
+  String phoneNumber = "";
 
   @override
   void initState() {
@@ -37,9 +37,14 @@ class _EditProfileState extends State<EditProfile> {
       final data = doc.data()!;
       final firstName = data['firstName'] as String?;
       final lastName = data['lastName'] as String?;
+      final showemail = data['email'];
+      final showephoneNumber = data['phoneNumber'];
+
       final showName = '$firstName $lastName';
       setState(() {
         userName = showName;
+        email = showemail;
+        phoneNumber = showephoneNumber;
       });
     }
   }
@@ -153,7 +158,7 @@ class _EditProfileState extends State<EditProfile> {
                           fontSize: 16),
                     ),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    hintText: "0123456789",
+                    hintText: phoneNumber,
                     hintStyle: GoogleFonts.prompt(
                       textStyle: TextStyle(
                           fontSize: 16,
@@ -180,7 +185,7 @@ class _EditProfileState extends State<EditProfile> {
                           fontSize: 16),
                     ),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    hintText: "ao12@gmail.com",
+                    hintText: email,
                     hintStyle: GoogleFonts.prompt(
                       textStyle: TextStyle(
                           fontSize: 16,
@@ -190,7 +195,7 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                 ),
               ),
-              Padding(
+              /*Padding(
                 padding: const EdgeInsets.only(bottom: 35.0),
                 child: TextField(
                   obscureText: isPasswordTextField ? showPassword : false,
@@ -230,7 +235,7 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                   ),
                 ),
-              ),
+              ),*/
               const SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
