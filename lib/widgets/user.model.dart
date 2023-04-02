@@ -5,7 +5,6 @@ class UserModel {
   String profilePic;
   String uid;
   String phoneNumber;
-  String createAt;
   List<String> cards;
   List<String> events;
   List<String> groups;
@@ -17,7 +16,6 @@ class UserModel {
     required this.profilePic,
     required this.uid,
     required this.phoneNumber,
-    required this.createAt,
     required this.cards,
     required this.events,
     required this.groups,
@@ -32,7 +30,6 @@ class UserModel {
       profilePic: map['profilePic'] ?? '',
       uid: map['uid'] ?? '',
       phoneNumber: map['phoneNumber'] ?? '',
-      createAt: map['createAt'] ?? '',
       cards: List<String>.from(map['cards'] ?? []),
       events: List<String>.from(map['events'] ?? []),
       groups: List<String>.from(map['groups'] ?? []),
@@ -48,7 +45,6 @@ class UserModel {
       "profilePic": profilePic,
       "uid": uid,
       "phoneNumber": phoneNumber,
-      "createAt": createAt,
       "cards": cards,
       "events": events,
       "groups": groups,

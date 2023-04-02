@@ -6,6 +6,7 @@ import 'package:chat_test/pages/auth/login_phone.dart';
 import 'package:chat_test/pages/auth/profile_beam.dart';
 import 'package:chat_test/pages/home_chat.dart';
 import 'package:chat_test/pages/map.dart';
+import 'package:chat_test/pages/mycar.dart';
 import 'package:chat_test/pages/test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dots_indicator/dots_indicator.dart';
@@ -374,31 +375,48 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Align(
                             alignment: const AlignmentDirectional(0.8, 0.85),
-                            child: SizedBox(
-                              width: 160,
-                              height: 170,
-                              child: DecoratedBox(
-                                decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(15))),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: const [
-                                    Icon(
-                                      Icons.electric_car,
-                                      size: 55,
-                                      color: Colors.green,
-                                    ),
-                                    Text(
-                                      "MY CAR",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.green,
-                                          fontSize: 18),
-                                    ),
-                                  ],
+                            child: GestureDetector(
+                              onTap: () async {
+                                bool isLoggedIn = await AuthService()
+                                    .checkUserLoginStatus(context);
+                                if (isLoggedIn) {
+                                  // ignore: use_build_context_synchronously
+                                  nextScreenReplace(
+                                      context, const myCarScreen());
+                                } else {
+                                  // ignore: use_build_context_synchronously
+                                  await _showLoginReminderDialog(context);
+                                  // ignore: use_build_context_synchronously
+                                  nextScreenReplace(
+                                      context, const LoginSocial());
+                                }
+                              },
+                              child: SizedBox(
+                                width: 160,
+                                height: 170,
+                                child: DecoratedBox(
+                                  decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(15))),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: const [
+                                      Icon(
+                                        Icons.electric_car,
+                                        size: 55,
+                                        color: Colors.green,
+                                      ),
+                                      Text(
+                                        "MY CAR",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.green,
+                                            fontSize: 18),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),

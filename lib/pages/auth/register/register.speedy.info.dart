@@ -348,7 +348,6 @@ class _RegisterInformationState extends State<RegisterInformation> {
       profilePic: "",
       uid: "",
       phoneNumber: "",
-      createAt: "",
       cards: [],
       events: [],
       groups: [],
