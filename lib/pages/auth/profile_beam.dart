@@ -2,6 +2,7 @@ import 'package:chat_test/pages/auth/login.social.dart';
 import 'package:chat_test/pages/bank_page.dart';
 import 'package:chat_test/pages/coupon_screen.dart';
 import 'package:chat_test/pages/edit_profile.dart';
+import 'package:chat_test/pages/show_profile.dart';
 import 'package:chat_test/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,8 +26,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final Future<FirebaseApp> firebase = Firebase.initializeApp();
   final userId = FirebaseAuth.instance.currentUser!.uid;
   AuthService authService = AuthService();
+  final FirebaseStorage storage = FirebaseStorage.instance;
 
   String userName = "";
+  String profilePic = "";
 
   @override
   void initState() {
@@ -44,10 +47,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final data = doc.data()!;
       final firstName = data['firstName'] as String?;
       final lastName = data['lastName'] as String?;
-
+      final showprofilePic = data['profilePic'].toString();
       final showName = '$firstName $lastName';
       setState(() {
         userName = showName;
+        profilePic = showprofilePic;
       });
     }
   }
@@ -82,18 +86,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             //รูปภาพโปรไฟล์และชื่อ
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                SizedBox(height: 100),
                 Container(
                   height: 70,
                   width: 70,
-                  margin: const EdgeInsets.only(),
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-
-                    // image: DecorationImage(
-                    //     fit: BoxFit.cover,
-                    //     image: showprofilePic)
-                  ),
+                  margin: const EdgeInsets.only(left: 30, right: 20),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          image: NetworkImage(
+                            profilePic,
+                          ),
+                          fit: BoxFit.cover)),
                 ),
                 Row(
                   // ignore: prefer_const_literals_to_create_immutables
@@ -113,7 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => EditProfile()),
+                      MaterialPageRoute(builder: (context) => ShowProfile()),
                     );
                   },
                   child: const Icon(
@@ -125,7 +131,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
             //บัญชีธนาคาร
-            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
               child: TextButton(
