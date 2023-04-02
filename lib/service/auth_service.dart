@@ -164,7 +164,6 @@ class AuthService extends ChangeNotifier {
             cards; // กำหนดค่าของ cards จาก parameter ให้กับ userModel
         userModel.events = events;
         userModel.groups = groups;
-        userModel.createAt = DateTime.now().millisecondsSinceEpoch.toString();
         userModel.phoneNumber = _firebaseAuth.currentUser!.phoneNumber!;
         userModel.uid = _firebaseAuth.currentUser!.uid;
       });
