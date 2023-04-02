@@ -71,6 +71,7 @@ dependencies:
   flutter_polyline_points: ^1.0.0
   google_maps_flutter: ^2.1.7
   location: ^4.4.0
+  equatable: ^2.0.5
 
 dependency_overrides:
   firebase_core_platform_interface: 4.5.3

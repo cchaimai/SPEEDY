@@ -89,13 +89,21 @@ class DatabaseService {
   }
 
   Future addDateTime(String id, String type, String date, String time,
-      String model, String carId) async {
+      String model, String carId, String fname, String lname) async {
     DocumentReference dateDocumentReference = await dateCollection.doc(date);
     DocumentSnapshot dateDocumentSnapshot = await dateDocumentReference.get();
     if (!dateDocumentSnapshot.exists) {
       await dateDocumentReference.set({
         "date": date,
-        "time": [],
+        "09:00": [],
+        "10:00": [],
+        "11:00": [],
+        "12:00": [],
+        "13:00": [],
+        "14:00": [],
+        "15:00": [],
+        "16:00": [],
+        "17:00": [],
       });
     }
 
@@ -103,7 +111,8 @@ class DatabaseService {
       "timeId": "",
       "time": time,
       "date": date,
-      "owner": '$id',
+      "firstName": fname,
+      "lastName": lname,
       "type": type,
       "model": model,
       "carId": carId,
@@ -114,7 +123,7 @@ class DatabaseService {
     });
 
     await dateDocumentReference.update({
-      "time": FieldValue.arrayUnion(["${eventDocumentReference.id}"]),
+      "$time": FieldValue.arrayUnion(["${eventDocumentReference.id}"]),
     });
 
     DocumentReference userDocumentReference = userCollection.doc(uid);
