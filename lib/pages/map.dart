@@ -248,39 +248,6 @@ class MapSampleState extends State<MapSample> {
               //     ),
               //   ),
               // )
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 100),
-                child: TextFormField(
-                  controller: _controller,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: const InputDecoration(
-                      filled: true,
-                      fillColor: Color.fromARGB(150, 0, 0, 0),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white, width: 3),
-                          borderRadius: BorderRadius.all(Radius.circular(30))),
-                      hintText: 'Find Your Location',
-                      hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
-                      prefixIcon: Icon(Icons.search),
-                      prefixIconColor: Colors.white),
-                ),
-              ),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 160),
-                  child: ListView.builder(
-                      itemCount: _placesList.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          onTap: () async {
-                            List<Location> currentLocation =
-                                await locationFromAddress(
-                                    _placesList[index]['description']);
-                          },
-                          title: Text(_placesList[index]['description']),
-                        );
-                      }))
             ]),
       floatingActionButton: Container(
         height: 70,

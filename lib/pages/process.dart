@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -35,6 +37,14 @@ class WaitingState extends State<Waiting> {
   List<LatLng> polyLinecoordinates = [];
   Lo.LocationData? currentLocation;
   StreamSubscription<Lo.LocationData>? _locationSubscription;
+
+  double calculateDistance(lat1, lon1, lat2, lon2) {
+    var p = 0.017453292519943295;
+    var a = 0.5 -
+        cos((lat2 - lat1) * p) / 2 +
+        cos(lat1 * p) * cos(lat2 * p) * (1 - cos((lon2 - lon1) * p)) / 2;
+    return 12742 * asin(sqrt(a));
+  }
 
   Future<void> getCurrentLocation() async {
     Lo.Location location = Lo.Location();
@@ -164,8 +174,9 @@ class WaitingState extends State<Waiting> {
                 .singleWhere((doc) => doc.id == widget.uid)['status'];
             if (status == 'Accepted') {
               return currentLocation == null
-                  ? const Center(
-                      child: Text("Loading"),
+                  ? Center(
+                      child: Text(snapshot.data!.docs
+                          .singleWhere((doc) => doc.id == widget.uid)['dName']),
                     )
                   : Stack(children: <Widget>[
                       GoogleMap(
@@ -189,7 +200,12 @@ class WaitingState extends State<Waiting> {
                           ),
                           Marker(
                             markerId: MarkerId("Source"),
-                            position: sourceLocation,
+                            position: LatLng(
+                              snapshot.data!.docs.singleWhere(
+                                  (doc) => doc.id == widget.uid)['dlatitude'],
+                              snapshot.data!.docs.singleWhere(
+                                  (doc) => doc.id == widget.uid)['dlongitude'],
+                            ),
                           ),
                           Marker(
                             markerId: MarkerId("Destination"),
@@ -215,7 +231,8 @@ class WaitingState extends State<Waiting> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'ธนวัฒน์ ช้างขนุน',
+                                snapshot.data!.docs.singleWhere(
+                                    (doc) => doc.id == widget.uid)['dName'],
                                 style: GoogleFonts.prompt(
                                   textStyle: TextStyle(
                                     fontSize: 22,
@@ -223,7 +240,7 @@ class WaitingState extends State<Waiting> {
                                 ),
                               ),
                               Text(
-                                'ทะเบียน: ??',
+                                'ทะเบียน: ${snapshot.data!.docs.singleWhere((doc) => doc.id == widget.uid)['dCarID']}',
                                 style: GoogleFonts.prompt(
                                   textStyle: TextStyle(
                                     fontSize: 18,
@@ -231,7 +248,7 @@ class WaitingState extends State<Waiting> {
                                 ),
                               ),
                               Text(
-                                'ระยะทาง: ??',
+                                'ระยะทาง: ${calculateDistance(currentLocation!.latitude!, currentLocation!.longitude!, snapshot.data!.docs.singleWhere((doc) => doc.id == widget.uid)['dlatitude'], snapshot.data!.docs.singleWhere((doc) => doc.id == widget.uid)['dlongitude']).toStringAsFixed(2)} กม.',
                                 style: GoogleFonts.prompt(
                                   textStyle: TextStyle(
                                     fontSize: 18,
@@ -361,7 +378,8 @@ class WaitingState extends State<Waiting> {
                                 ),
                               ),
                               Text(
-                                'ธนวัฒน์ ช้างขนุน',
+                                snapshot.data!.docs.singleWhere(
+                                    (doc) => doc.id == widget.uid)['dName'],
                                 style: GoogleFonts.prompt(
                                   textStyle: TextStyle(
                                     fontSize: 22,
@@ -369,21 +387,14 @@ class WaitingState extends State<Waiting> {
                                 ),
                               ),
                               Text(
-                                'ทะเบียน: ??',
+                                'ทะเบียน: ${snapshot.data!.docs.singleWhere((doc) => doc.id == widget.uid)['dCarID']}',
                                 style: GoogleFonts.prompt(
                                   textStyle: TextStyle(
                                     fontSize: 18,
                                   ),
                                 ),
                               ),
-                              Text(
-                                'ระยะทาง: ??',
-                                style: GoogleFonts.prompt(
-                                  textStyle: TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ),
+
                               // Row(
                               //   mainAxisAlignment: MainAxisAlignment.center,
                               //   children: [
