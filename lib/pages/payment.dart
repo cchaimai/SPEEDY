@@ -21,8 +21,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image/image.dart' as Im;
 
 class Payment extends StatefulWidget {
-  const Payment({super.key});
-
+  const Payment({super.key, required this.price, required this.ID});
+  final String price;
+  final String ID;
   @override
   State<Payment> createState() => _PaymentState();
 }
@@ -209,7 +210,12 @@ class _PaymentState extends State<Payment> {
                           InkWell(
                             onTap: () {
                               print('kuy earth na heeeeeeeeee');
-                              nextScreenReplace(context, Fpayment());
+                              nextScreenReplace(
+                                  context,
+                                  Fpayment(
+                                    price: widget.price,
+                                    ID: widget.ID,
+                                  ));
                             },
                             child: Column(
                               children: [
@@ -295,7 +301,7 @@ class _PaymentState extends State<Payment> {
                       ),
 
                       Text(
-                        '500 บาท',
+                        widget.price.toString(),
                         style: GoogleFonts.prompt(
                           textStyle: TextStyle(
                             fontSize: 38,
@@ -337,6 +343,7 @@ class _PaymentState extends State<Payment> {
         width: 70,
         child: FittedBox(
           child: FloatingActionButton(
+            backgroundColor: Colors.green,
             onPressed: () {
               _sendLocation();
             },

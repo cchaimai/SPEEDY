@@ -12,10 +12,32 @@ import 'addcar.dart';
 import 'mycar.dart';
 
 class ChargeDetail extends StatefulWidget {
-  const ChargeDetail({super.key});
-
+  const ChargeDetail({
+    super.key,
+    required this.ID,
+  });
+  final String ID;
   @override
   State<ChargeDetail> createState() => _ChargeDetailState();
+}
+
+final energyController = TextEditingController();
+num? energy;
+num? price;
+
+Future<void> _getchargedetail(String cartype, String UcarID, String chargetype,
+    String province, String ID) async {
+  energy = num.parse(energyController.text);
+  price = 10 * energy!;
+
+  await FirebaseFirestore.instance.collection('requests').doc(ID).set({
+    'chargetype': chargetype,
+    'energy': energyController.text,
+    'price': price,
+    'cartype': cartype,
+    'UcarID': UcarID,
+    'province': province,
+  }, SetOptions(merge: true));
 }
 
 class _ChargeDetailState extends State<ChargeDetail> {
@@ -116,13 +138,32 @@ class _ChargeDetailState extends State<ChargeDetail> {
                         margin: const EdgeInsets.fromLTRB(35, 10, 10, 10),
                         child: Column(
                           children: [
-                            Column(
-                              children: [
-                                Image.asset(
-                                  "assets/images/car.png",
-                                  width: 260,
-                                ),
-                              ],
+                            InkWell(
+                              onTap: () {
+                                print('----------${widget.ID}----------');
+
+                                _getchargedetail(
+                                        snapshot.data!.docs[index]['brand'],
+                                        snapshot.data!.docs[index]['carId'],
+                                        snapshot.data!.docs[index]
+                                            ['chargeType'],
+                                        snapshot.data!.docs[index]['provinces'],
+                                        widget.ID)
+                                    .then((value) => nextScreen(
+                                        context,
+                                        Payment(
+                                          price: price.toString(),
+                                          ID: widget.ID,
+                                        )));
+                              },
+                              child: Column(
+                                children: [
+                                  Image.asset(
+                                    "assets/images/car.png",
+                                    width: 260,
+                                  ),
+                                ],
+                              ),
                             ),
                             const SizedBox(
                               height: 20,
@@ -149,7 +190,37 @@ class _ChargeDetailState extends State<ChargeDetail> {
                                   ],
                                 ),
                               ],
-                            )
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 20, top: 10),
+                              child: TextFormField(
+                                controller: energyController,
+                                cursorColor: Colors.green,
+                                decoration: InputDecoration(
+                                  labelText:
+                                      "${snapshot.data!.docs[index]['battery']} kWh",
+                                  labelStyle: GoogleFonts.prompt(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey,
+                                  ),
+                                  border: const OutlineInputBorder(),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(20),
+                                    ),
+                                  ),
+                                  enabledBorder: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(20),
+                                    ),
+                                    borderSide: BorderSide(color: Colors.grey),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       );
@@ -191,10 +262,7 @@ class _ChargeDetailState extends State<ChargeDetail> {
         child: FittedBox(
           child: FloatingActionButton(
             backgroundColor: Colors.green,
-            onPressed: () async {
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => Payment()));
-            },
+            onPressed: () async {},
             child: const Icon(
               Icons.bolt,
               size: 35,

@@ -108,34 +108,21 @@ class MapSampleState extends State<MapSample> {
     setState(() {});
   }
 
-  int? randomworkID;
   String? workID;
-  int? inputenergy;
-  int? energy;
-  int? price;
 
   Future<String> _getLocation() async {
     Lo.Location location = Lo.Location();
     print("earth na heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
     final Lo.LocationData _locationResult = await location.getLocation();
-    randomworkID = Random().nextInt(900000) + 100000;
-    workID = randomworkID as String;
-    energy = 90;
-    price = 10 * energy!;
+    workID = (Random().nextInt(900000) + 100000).toString();
 
     DocumentReference requestDocumentReference =
         await FirebaseFirestore.instance.collection('requests').add({
       'Ulatitude': _locationResult.latitude,
       'Ulongitude': _locationResult.longitude,
       'Uname': '$name',
-      'status': 'Wait',
       'reId': '',
       'workID': '$workID',
-      'chargetype': 'type1',
-      'energy': '$energy',
-      'price': '$price',
-      'cartype': 'car1',
-      'UcarID': '1234',
     });
     await requestDocumentReference.update({
       "reId": requestDocumentReference.id,
@@ -302,8 +289,16 @@ class MapSampleState extends State<MapSample> {
           child: FloatingActionButton(
             backgroundColor: Colors.green,
             onPressed: () async {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => ChargeDetail()));
+              _getLocation().then((value) {
+                print(value);
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ChargeDetail(
+                              ID: value,
+                            )));
+              });
+
               // _getLocation();
               // String uid = await _getLocation();
               // Navigator.pushReplacement(
