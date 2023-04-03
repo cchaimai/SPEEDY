@@ -86,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             //รูปภาพโปรไฟล์และชื่อ
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SizedBox(height: 100),
                 Container(
@@ -110,6 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             fontSize: 20, color: Colors.black))
                   ],
                 ),
+                Spacer(),
                 TextButton(
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.all(15),
