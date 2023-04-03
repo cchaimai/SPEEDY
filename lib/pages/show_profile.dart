@@ -20,7 +20,8 @@ class _ShowProfileState extends State<ShowProfile> {
 
   AuthService authService = AuthService();
 
-  String userName = "";
+  String firstName = "";
+  String lastName = "";
   String email = "";
   String phoneNumber = "";
   String profilePic = "";
@@ -38,14 +39,15 @@ class _ShowProfileState extends State<ShowProfile> {
     final doc = await docRef.get();
     if (doc.exists) {
       final data = doc.data()!;
-      final firstName = data['firstName'] as String?;
-      final lastName = data['lastName'] as String?;
+      final showfirstName = data['firstName'] as String?;
+      final showlastName = data['lastName'] as String?;
       final showemail = data['email'];
       final showephoneNumber = data['phoneNumber'];
       final showprofilePic = data['profilePic'].toString();
       final showName = '$firstName $lastName';
       setState(() {
-        userName = showName;
+        firstName = showfirstName!;
+        lastName = showlastName!;
         email = showemail;
         phoneNumber = showephoneNumber;
         profilePic = showprofilePic;
@@ -128,7 +130,7 @@ class _ShowProfileState extends State<ShowProfile> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
-                    labelText: "Name",
+                    labelText: "First Name",
                     labelStyle: GoogleFonts.prompt(
                       textStyle: TextStyle(
                           color: Colors.black,
@@ -136,7 +138,35 @@ class _ShowProfileState extends State<ShowProfile> {
                           fontSize: 16),
                     ),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
-                    hintText: "$userName",
+                    hintText: firstName,
+                    hintStyle: GoogleFonts.prompt(
+                      textStyle: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF989898)),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 35.0),
+                child: TextField(
+                  enabled: false,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: const Color(0xFFD9D9D9),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    labelText: "Last Name",
+                    labelStyle: GoogleFonts.prompt(
+                      textStyle: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16),
+                    ),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    hintText: lastName,
                     hintStyle: GoogleFonts.prompt(
                       textStyle: TextStyle(
                           fontSize: 16,
@@ -248,7 +278,7 @@ class _ShowProfileState extends State<ShowProfile> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => EditProfile()),
                       );
