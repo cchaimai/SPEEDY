@@ -123,6 +123,7 @@ class MapSampleState extends State<MapSample> {
       'Ulatitude': _locationResult.latitude,
       'Ulongitude': _locationResult.longitude,
       'Uname': '$name',
+      'Uphone': '$phone',
       'reId': '',
       'workID': '$workID',
       'UPhone': phone,
@@ -229,14 +230,6 @@ class MapSampleState extends State<MapSample> {
                     markerId: const MarkerId("CurrentLocation"),
                     position: LatLng(currentLocation!.latitude!,
                         currentLocation!.longitude!),
-                  ),
-                  const Marker(
-                    markerId: MarkerId("Source"),
-                    position: sourceLocation,
-                  ),
-                  const Marker(
-                    markerId: MarkerId("Destination"),
-                    position: destination,
                   ),
                 },
               ),
