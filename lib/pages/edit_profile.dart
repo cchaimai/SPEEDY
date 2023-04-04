@@ -9,9 +9,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
-
-import '../widgets/user.model.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -65,8 +62,7 @@ class _EditProfileState extends State<EditProfile> {
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
 
-// อัพเดท email ของ user ใน Firestore
-  void updateUserEmail(String newfirstName, String newlastName, String newEmail,
+  void updateProfile(String newfirstName, String newlastName, String newEmail,
       String newphoneNumber) {
     final userId = FirebaseAuth.instance.currentUser!.uid;
     FirebaseFirestore.instance.collection('mUsers').doc(userId).update({
@@ -167,11 +163,6 @@ class _EditProfileState extends State<EditProfile> {
                                 fit: BoxFit
                                     .cover //กำหนดให้แสดงคลุมเต็มพื้นที่รูปจะโดน crop ไปบ้าง
                                 ),
-                            //image: DecorationImage(
-                            //fit: BoxFit
-                            //.cover, // กำหนดให้แสดงคลุมเต็มพื้นที่รูปจะโดน crop ไปบ้าง
-                            //image:
-                            //AssetImage("assets/images/Profile Pic.png"))
                           ),
                         ),
                       ),
@@ -187,10 +178,10 @@ class _EditProfileState extends State<EditProfile> {
                             });
                           }
                         },
-                        child: CircleAvatar(
+                        child: const CircleAvatar(
                           radius: 14,
                           backgroundColor: Colors.black,
-                          child: const Icon(
+                          child: Icon(
                             Icons.edit,
                             color: Colors.white,
                           ),
@@ -212,7 +203,7 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                       labelText: "First Name",
                       labelStyle: GoogleFonts.prompt(
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
                             fontSize: 16),
@@ -220,7 +211,7 @@ class _EditProfileState extends State<EditProfile> {
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                       hintText: firstName,
                       hintStyle: GoogleFonts.prompt(
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF989898)),
@@ -240,7 +231,7 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                       labelText: "Last Name",
                       labelStyle: GoogleFonts.prompt(
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
                             fontSize: 16),
@@ -248,7 +239,7 @@ class _EditProfileState extends State<EditProfile> {
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                       hintText: lastName,
                       hintStyle: GoogleFonts.prompt(
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF989898)),
@@ -268,7 +259,7 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                       labelText: "เบอร์โทรศัพท์",
                       labelStyle: GoogleFonts.prompt(
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
                             fontSize: 16),
@@ -276,7 +267,7 @@ class _EditProfileState extends State<EditProfile> {
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                       hintText: phoneNumber,
                       hintStyle: GoogleFonts.prompt(
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF989898)),
@@ -296,7 +287,7 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                       labelText: "Email",
                       labelStyle: GoogleFonts.prompt(
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
                             fontSize: 16),
@@ -304,7 +295,7 @@ class _EditProfileState extends State<EditProfile> {
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                       hintText: email,
                       hintStyle: GoogleFonts.prompt(
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF989898)),
@@ -312,54 +303,13 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                   ),
                 ),
-                /*Padding(
-            padding: const EdgeInsets.only(bottom: 35.0),
-            child: TextField(
-              obscureText: isPasswordTextField ? showPassword : false,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: const Color(0xFFD9D9D9),
-                suffixIcon: isPasswordTextField
-                    ? IconButton(
-                        onPressed: () {
-                          setState(() {
-                            showPassword = !showPassword;
-                          });
-                        },
-                        icon: Icon(
-                          Icons.remove_red_eye,
-                          color: Colors.grey,
-                        ),
-                      )
-                    : null,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                labelText: "รหัสผ่าน",
-                labelStyle: GoogleFonts.prompt(
-                  textStyle: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16),
-                ),
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-                hintText: "********",
-                hintStyle: GoogleFonts.prompt(
-                  textStyle: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF989898)),
-                ),
-              ),
-            ),
-          ),*/
                 const SizedBox(height: 30),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        updateUserEmail(
+                        updateProfile(
                           firstnameController.text,
                           lastnameController.text,
                           emailController.text,
@@ -380,8 +330,8 @@ class _EditProfileState extends State<EditProfile> {
                         ),
                       ),
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Color(0xFF3BB54A)),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            const Color(0xFF3BB54A)),
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
@@ -389,7 +339,7 @@ class _EditProfileState extends State<EditProfile> {
                           ),
                         ),
                         padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                          EdgeInsets.symmetric(horizontal: 150),
+                          const EdgeInsets.symmetric(horizontal: 150),
                         ),
                       ),
                     )
