@@ -114,6 +114,7 @@ class DatabaseService {
       "type": type,
       "model": model,
       "carId": carId,
+      "status": "กำลังดำเนินการ"
     });
 
     await eventDocumentReference.update({
