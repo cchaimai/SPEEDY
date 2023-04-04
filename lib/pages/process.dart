@@ -98,7 +98,6 @@ class WaitingState extends State<Waiting> {
         '----------------------------------${widget.uid}----------------------------------');
   }
 
-<<<<<<< Updated upstream
   // Future<void> gettingChat() async {
   //   final CollectionReference reqCollection =
   //       FirebaseFirestore.instance.collection("requests");
@@ -108,8 +107,6 @@ class WaitingState extends State<Waiting> {
   //   chatId = snapshot.get('chatID');
   // }
 
-=======
->>>>>>> Stashed changes
   @override
   Widget build(BuildContext context) {
     return Scaffold(

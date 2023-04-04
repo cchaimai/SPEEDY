@@ -98,11 +98,7 @@ class MapSampleState extends State<MapSample> {
 
   final userId = FirebaseAuth.instance.currentUser!.uid;
   String name = '';
-<<<<<<< Updated upstream
   String phone = "";
-=======
-  String uPhone = '';
->>>>>>> Stashed changes
 
   Future<void> getUserData() async {
     DocumentReference userDocRef =
@@ -110,12 +106,7 @@ class MapSampleState extends State<MapSample> {
 
     DocumentSnapshot userDocSnapshot = await userDocRef.get();
     name = userDocSnapshot.get('firstName');
-<<<<<<< Updated upstream
     phone = userDocSnapshot.get('phoneNumber');
-=======
-    uPhone = userDocSnapshot.get('phoneNumber');
-
->>>>>>> Stashed changes
     setState(() {});
   }
 
@@ -132,7 +123,7 @@ class MapSampleState extends State<MapSample> {
       'Ulatitude': _locationResult.latitude,
       'Ulongitude': _locationResult.longitude,
       'Uname': '$name',
-      'Uphone': '$uPhone',
+      'Uphone': '$phone',
       'reId': '',
       'workID': '$workID',
       'UPhone': phone,

@@ -1,5 +1,7 @@
+import 'package:chat_test/pages/cardpayment.dart';
 import 'package:chat_test/pages/finalpayment.dart';
 import 'package:chat_test/widgets/widgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -81,6 +83,8 @@ class _PaymentState extends State<Payment> {
       setState(() {});
     }
   }
+
+  final userId = FirebaseAuth.instance.currentUser!.uid;
 
   Future<void> _sendLocation() async {
     Lo.Location location = Lo.Location();
@@ -236,6 +240,10 @@ class _PaymentState extends State<Payment> {
                           InkWell(
                             onTap: () {
                               print('--------------บัตร--------------------');
+                              nextScreen(
+                                  context,
+                                  Cardpayment(
+                                      price: widget.price, ID: widget.ID));
                             },
                             child: Column(
                               children: [
