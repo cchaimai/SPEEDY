@@ -98,22 +98,7 @@ class _ShowProfileState extends State<ShowProfile> {
                                 ),
                                 fit: BoxFit
                                     .cover //กำหนดให้แสดงคลุมเต็มพื้นที่รูปจะโดน crop ไปบ้าง
-                                )
-
-                            //image: DecorationImage(
-                            //fit: BoxFit
-                            //.cover, // กำหนดให้แสดงคลุมเต็มพื้นที่รูปจะโดน crop ไปบ้าง
-                            //image:
-                            //AssetImage("assets/images/Profile Pic.png"))
-                            ),
-                      ),
-                    ),
-                    CircleAvatar(
-                      radius: 14,
-                      backgroundColor: Colors.black,
-                      child: const Icon(
-                        Icons.edit,
-                        color: Colors.white,
+                                )),
                       ),
                     ),
                   ],

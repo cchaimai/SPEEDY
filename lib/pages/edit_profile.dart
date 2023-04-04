@@ -53,6 +53,10 @@ class _EditProfileState extends State<EditProfile> {
         email = showemail;
         phoneNumber = showephoneNumber;
         profilePic = showprofilePic;
+        firstnameController.text = showfirstName;
+        lastnameController.text = showlastName;
+        emailController.text = showemail;
+        phoneController.text = showephoneNumber;
       });
     }
   }
@@ -98,6 +102,7 @@ class _EditProfileState extends State<EditProfile> {
 
     setState(() {
       _imageUrl = url;
+      print('upload success');
     });
     final String driverCardUrl =
         await storeFileDataToStorage("profilePic/$_uid", file);
@@ -172,9 +177,9 @@ class _EditProfileState extends State<EditProfile> {
                               .getImage(source: ImageSource.gallery);
                           if (pickedFile != null) {
                             setState(() {
-                              _imageFile = File(
-                                  pickedFile.path); // กำหนดค่าให้กับ _imageFile
-                              _uploadImage(_imageFile!);
+                              _imageFile = File(pickedFile.path);
+                              _uploadImage(
+                                  _imageFile!); // กำหนดค่าให้กับ _imageFile
                             });
                           }
                         },
