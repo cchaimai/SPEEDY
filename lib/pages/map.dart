@@ -98,6 +98,7 @@ class MapSampleState extends State<MapSample> {
 
   final userId = FirebaseAuth.instance.currentUser!.uid;
   String name = '';
+  String phone = "";
 
   Future<void> getUserData() async {
     DocumentReference userDocRef =
@@ -105,6 +106,7 @@ class MapSampleState extends State<MapSample> {
 
     DocumentSnapshot userDocSnapshot = await userDocRef.get();
     name = userDocSnapshot.get('firstName');
+    phone = userDocSnapshot.get('phoneNumber');
     setState(() {});
   }
 
@@ -123,6 +125,7 @@ class MapSampleState extends State<MapSample> {
       'Uname': '$name',
       'reId': '',
       'workID': '$workID',
+      'UPhone': phone,
     });
     await requestDocumentReference.update({
       "reId": requestDocumentReference.id,

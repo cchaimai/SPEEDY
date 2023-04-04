@@ -124,9 +124,6 @@ class _selectCarState extends State<selectCar> {
           return SingleChildScrollView(
             child: Column(
               children: [
-                const SizedBox(
-                  height: 10,
-                ),
                 SizedBox(
                   height: 450,
                   child: ListView.builder(
@@ -174,7 +171,7 @@ class _selectCarState extends State<selectCar> {
                                         snapshot.data!.docs[index]['brand'] +
                                             snapshot.data!.docs[index]['model'],
                                         style: GoogleFonts.prompt(
-                                            fontWeight: FontWeight.w400,
+                                            fontWeight: FontWeight.w600,
                                             fontSize: 24,
                                             color: Colors.black),
                                       ),
@@ -189,7 +186,7 @@ class _selectCarState extends State<selectCar> {
                                         snapshot.data!.docs[index]['provinces'],
                                         style: GoogleFonts.prompt(
                                             fontWeight: FontWeight.w400,
-                                            fontSize: 24,
+                                            fontSize: 20,
                                             color: Colors.black),
                                       ),
                                     ],
@@ -201,24 +198,6 @@ class _selectCarState extends State<selectCar> {
                         ),
                       );
                     },
-                  ),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    nextScreenReplace(context, const addCarScreen());
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 50,
-                    width: 60,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: const Icon(Icons.add),
                   ),
                 ),
               ],

@@ -1,3 +1,4 @@
+import 'package:chat_test/pages/selectcar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -81,7 +82,7 @@ class _changeTestState extends State<changeTest> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => nextScreenReplace(context, const HomePage()),
+          onPressed: () => nextScreenReplace(context, const selectCar()),
           icon: const Icon(Icons.arrow_back),
         ),
         toolbarHeight: 100,

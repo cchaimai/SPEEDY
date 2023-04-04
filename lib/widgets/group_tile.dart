@@ -30,6 +30,7 @@ class _GroupTileState extends State<GroupTile> {
               groupId: widget.groupId,
               groupName: widget.groupName,
               userName: widget.userName,
+              driverName: "driver",
             ));
       },
       child: Container(

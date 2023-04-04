@@ -1,4 +1,4 @@
-import 'package:chat_test/pages/search_page.dart';
+import 'package:chat_test/pages/process.dart';
 import 'package:chat_test/widgets/message_tile.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,11 +15,13 @@ class ChatPage extends StatefulWidget {
   final String groupId;
   final String groupName;
   final String userName;
+  final String driverName;
   const ChatPage(
       {Key? key,
       required this.groupId,
       required this.groupName,
-      required this.userName})
+      required this.userName,
+      required this.driverName})
       : super(key: key);
 
   @override
@@ -54,11 +56,6 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-              onPressed: () {
-                nextScreenReplace(context, HomePage());
-              },
-              icon: const Icon(Icons.home)),
           actions: [
             IconButton(
                 onPressed: () {
@@ -71,7 +68,7 @@ class _ChatPageState extends State<ChatPage> {
           centerTitle: true,
           backgroundColor: Colors.transparent,
           title: Text(
-            widget.groupName,
+            widget.driverName,
             style:
                 GoogleFonts.prompt(fontWeight: FontWeight.w600, fontSize: 22),
           ),
@@ -138,7 +135,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   call() async {
-    const number = '0928280766';
+    String number = widget.groupName;
     bool? res = await FlutterPhoneDirectCaller.callNumber(number);
   }
 

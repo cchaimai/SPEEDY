@@ -1,7 +1,10 @@
 import 'dart:math';
+import 'dart:developer';
 
+import 'package:chat_test/pages/chat_page.dart';
 import 'package:chat_test/pages/home_page.dart';
 import 'package:chat_test/widgets/widgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -39,6 +42,11 @@ class WaitingState extends State<Waiting> {
   List<LatLng> polyLinecoordinates = [];
   Lo.LocationData? currentLocation;
   StreamSubscription<Lo.LocationData>? _locationSubscription;
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+  String userName = "";
+  String phone = "";
+  String chatId = "";
+  String driver = "";
 
   double calculateDistance(lat1, lon1, lat2, lon2) {
     var p = 0.017453292519943295;
@@ -57,58 +65,25 @@ class WaitingState extends State<Waiting> {
       },
     );
 
-    GoogleMapController googleMapController = await mapcontroller.future;
+    //GoogleMapController googleMapController = await mapcontroller.future;
 
     location.onLocationChanged.listen(
       (newloc) {
         currentLocation = newloc;
-        googleMapController.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-              zoom: 15,
-              target: LatLng(
-                newloc.latitude!,
-                newloc.longitude!,
-              ),
-            ),
-          ),
-        );
-        setState(() {});
+        // googleMapController.animateCamera(
+        //   CameraUpdate.newCameraPosition(
+        //     CameraPosition(
+        //       zoom: 15,
+        //       target: LatLng(
+        //         newloc.latitude!,
+        //         newloc.longitude!,
+        //       ),
+        //     ),
+        //   ),
+        // );
+        //setState(() {});
       },
     );
-  }
-
-  void getPolyPoint() async {
-    PolylinePoints polylinePoint = PolylinePoints();
-
-    PolylineResult result = await polylinePoint.getRouteBetweenCoordinates(
-      'AIzaSyBw4oNuCPipSEZZWT10Zq3uhLCvzNx2o1I',
-      PointLatLng(sourceLocation.latitude, sourceLocation.longitude),
-      PointLatLng(destination.latitude, destination.longitude),
-    );
-    if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) =>
-          polyLinecoordinates.add(LatLng(point.latitude, point.longitude)));
-      setState(() {});
-    }
-  }
-
-  Future<void> _sendLocation() async {
-    Lo.Location location = Lo.Location();
-    _locationSubscription = location.onLocationChanged.handleError((onError) {
-      print(onError);
-      _locationSubscription?.cancel();
-      setState(() {
-        _locationSubscription = null;
-      });
-    }).listen((currentLocation) async {
-      await FirebaseFirestore.instance.collection('ULocation').doc('user1').set(
-          {
-            'latitude': currentLocation.latitude,
-            'longitude': currentLocation.longitude
-          },
-          SetOptions(merge: true));
-    });
   }
 
   var uuid = const Uuid();
@@ -118,54 +93,24 @@ class WaitingState extends State<Waiting> {
   @override
   void initState() {
     getCurrentLocation();
-    getPolyPoint();
     super.initState();
-    _controller.addListener(() {
-      onChange();
-    });
     print(
         '----------------------------------${widget.uid}----------------------------------');
   }
 
-  void onChange() {
-    if (_sessionToken == null) {
-      setState(() {
-        _sessionToken = uuid.v4();
-      });
-    }
+  // Future<void> gettingChat() async {
+  //   final CollectionReference reqCollection =
+  //       FirebaseFirestore.instance.collection("requests");
 
-    getSuggestion(_controller.text);
-  }
+  //   final DocumentSnapshot snapshot = await reqCollection.doc(widget.uid).get();
+  //   phone = snapshot.get('dPhone');
+  //   chatId = snapshot.get('chatID');
+  // }
 
-  void getSuggestion(String input) async {
-    String Place_api_key = 'AIzaSyBw4oNuCPipSEZZWT10Zq3uhLCvzNx2o1I';
-    String baseURL =
-        'https://maps.googleapis.com/maps/api/place/autocomplete/json';
-    String request =
-        '$baseURL?input=$input&key=$Place_api_key&sessiontoken=$_sessionToken';
-
-    var response = await http.get(Uri.parse(request));
-    var data = response.body.toString;
-    print(response);
-
-    if (response.statusCode == 200) {
-      setState(() {
-        _placesList = jsonDecode(response.body.toString())['prediction'];
-      });
-    } else {
-      throw Exception('Failed to load data');
-    }
-  }
-
-  final TextEditingController _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      // appBar: AppBar(
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0,
-      // ),
       body: StreamBuilder(
           stream: FirebaseFirestore.instance.collection('requests').snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -175,6 +120,16 @@ class WaitingState extends State<Waiting> {
             final status = snapshot.data!.docs
                 .singleWhere((doc) => doc.id == widget.uid)['status'];
             if (status == 'Accepted') {
+              userName = snapshot.data!.docs
+                  .singleWhere((doc) => doc.id == widget.uid)['Uname'];
+              phone = snapshot.data!.docs
+                  .singleWhere((doc) => doc.id == widget.uid)['dPhone'];
+              chatId = snapshot.data!.docs
+                  .singleWhere((doc) => doc.id == widget.uid)['chatID'];
+              driver = snapshot.data!.docs
+                  .singleWhere((doc) => doc.id == widget.uid)['dName'];
+              join(userName, chatId, phone);
+
               return currentLocation == null
                   ? Center(
                       child: Text(snapshot.data!.docs
@@ -188,7 +143,7 @@ class WaitingState extends State<Waiting> {
                             zoom: 14.5),
                         polylines: {
                           Polyline(
-                            polylineId: PolylineId("route"),
+                            polylineId: const PolylineId("route"),
                             points: polyLinecoordinates,
                             color: Colors.green,
                             width: 5,
@@ -201,7 +156,7 @@ class WaitingState extends State<Waiting> {
                                 currentLocation!.longitude!),
                           ),
                           Marker(
-                            markerId: MarkerId("Source"),
+                            markerId: const MarkerId("Source"),
                             position: LatLng(
                               snapshot.data!.docs.singleWhere(
                                   (doc) => doc.id == widget.uid)['dlatitude'],
@@ -209,7 +164,7 @@ class WaitingState extends State<Waiting> {
                                   (doc) => doc.id == widget.uid)['dlongitude'],
                             ),
                           ),
-                          Marker(
+                          const Marker(
                             markerId: MarkerId("Destination"),
                             position: destination,
                           ),
@@ -236,7 +191,7 @@ class WaitingState extends State<Waiting> {
                                 snapshot.data!.docs.singleWhere(
                                     (doc) => doc.id == widget.uid)['dName'],
                                 style: GoogleFonts.prompt(
-                                  textStyle: TextStyle(
+                                  textStyle: const TextStyle(
                                     fontSize: 22,
                                   ),
                                 ),
@@ -244,7 +199,7 @@ class WaitingState extends State<Waiting> {
                               Text(
                                 'ทะเบียน: ${snapshot.data!.docs.singleWhere((doc) => doc.id == widget.uid)['dCarID']}',
                                 style: GoogleFonts.prompt(
-                                  textStyle: TextStyle(
+                                  textStyle: const TextStyle(
                                     fontSize: 18,
                                   ),
                                 ),
@@ -252,7 +207,7 @@ class WaitingState extends State<Waiting> {
                               Text(
                                 'ระยะทาง: ${calculateDistance(currentLocation!.latitude!, currentLocation!.longitude!, snapshot.data!.docs.singleWhere((doc) => doc.id == widget.uid)['dlatitude'], snapshot.data!.docs.singleWhere((doc) => doc.id == widget.uid)['dlongitude']).toStringAsFixed(2)} กม.',
                                 style: GoogleFonts.prompt(
-                                  textStyle: TextStyle(
+                                  textStyle: const TextStyle(
                                     fontSize: 18,
                                   ),
                                 ),
@@ -286,7 +241,7 @@ class WaitingState extends State<Waiting> {
                           ),
                         ),
                       ),
-                      Align(
+                      const Align(
                         alignment: Alignment(0, 0.52),
                         child:
                             // Container(
@@ -331,7 +286,7 @@ class WaitingState extends State<Waiting> {
                             zoom: 14.5),
                         polylines: {
                           Polyline(
-                            polylineId: PolylineId("route"),
+                            polylineId: const PolylineId("route"),
                             points: polyLinecoordinates,
                             color: Colors.green,
                             width: 5,
@@ -343,11 +298,11 @@ class WaitingState extends State<Waiting> {
                             position: LatLng(currentLocation!.latitude!,
                                 currentLocation!.longitude!),
                           ),
-                          Marker(
+                          const Marker(
                             markerId: MarkerId("Source"),
                             position: sourceLocation,
                           ),
-                          Marker(
+                          const Marker(
                             markerId: MarkerId("Destination"),
                             position: destination,
                           ),
@@ -373,7 +328,7 @@ class WaitingState extends State<Waiting> {
                               Text(
                                 'เสร็จสิ้น',
                                 style: GoogleFonts.prompt(
-                                  textStyle: TextStyle(
+                                  textStyle: const TextStyle(
                                     fontSize: 42,
                                     color: Colors.green,
                                   ),
@@ -383,7 +338,7 @@ class WaitingState extends State<Waiting> {
                                 snapshot.data!.docs.singleWhere(
                                     (doc) => doc.id == widget.uid)['dName'],
                                 style: GoogleFonts.prompt(
-                                  textStyle: TextStyle(
+                                  textStyle: const TextStyle(
                                     fontSize: 22,
                                   ),
                                 ),
@@ -391,7 +346,7 @@ class WaitingState extends State<Waiting> {
                               Text(
                                 'ทะเบียน: ${snapshot.data!.docs.singleWhere((doc) => doc.id == widget.uid)['dCarID']}',
                                 style: GoogleFonts.prompt(
-                                  textStyle: TextStyle(
+                                  textStyle: const TextStyle(
                                     fontSize: 18,
                                   ),
                                 ),
@@ -426,7 +381,7 @@ class WaitingState extends State<Waiting> {
                           ),
                         ),
                       ),
-                      Align(
+                      const Align(
                         alignment: Alignment(0, 0.42),
                         child: CircleAvatar(
                           // backgroundImage: AssetImage('assets/images/Image3.png'),
@@ -708,24 +663,36 @@ class WaitingState extends State<Waiting> {
                   ),
                 ),
               ),
-              SizedBox(
-                width: 60,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Text(
-                        'Charge',
-                        style: GoogleFonts.prompt(
-                          textStyle: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: Colors.green,
-                              fontSize: 17),
+              InkWell(
+                onTap: () async {
+                  nextScreen(
+                      context,
+                      ChatPage(
+                        groupId: chatId,
+                        groupName: phone,
+                        userName: userName,
+                        driverName: driver,
+                      ));
+                },
+                child: SizedBox(
+                  width: 60,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          'Charge',
+                          style: GoogleFonts.prompt(
+                            textStyle: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.green,
+                                fontSize: 17),
+                          ),
                         ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
               ),
               InkWell(
@@ -785,5 +752,27 @@ class WaitingState extends State<Waiting> {
         ),
       ),
     );
+  }
+
+  join(String userName, String chatId, String phone) async {
+    final CollectionReference userCollection =
+        FirebaseFirestore.instance.collection("mUsers");
+    final CollectionReference groupCollection =
+        FirebaseFirestore.instance.collection("groups");
+
+    QuerySnapshot querySnapshot =
+        await groupCollection.where("groupName", isEqualTo: phone).get();
+    if (querySnapshot.docs.isNotEmpty) {
+      print("===============${querySnapshot.docs[0].id}===============");
+      DocumentReference groupDocumentReference =
+          groupCollection.doc(querySnapshot.docs[0].id);
+      await groupDocumentReference.update({
+        "members": FieldValue.arrayUnion(["${userId}_$userName"])
+      });
+      DocumentReference userDocumentReference = userCollection.doc(userId);
+      await userDocumentReference.update({
+        "chat": chatId,
+      });
+    }
   }
 }
