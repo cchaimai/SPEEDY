@@ -198,8 +198,15 @@ class _ChargeDetailState extends State<ChargeDetail> {
                                 controller: energyController,
                                 cursorColor: Colors.green,
                                 decoration: InputDecoration(
+                                  hintText:
+                                      "${snapshot.data!.docs[index]['battery']}",
+                                  hintStyle: GoogleFonts.prompt(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey,
+                                  ),
                                   labelText:
-                                      "${snapshot.data!.docs[index]['battery']} kWh",
+                                      "โปรดกรอกพลังงานที่ต้องการเติม (kWh)",
                                   labelStyle: GoogleFonts.prompt(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,

@@ -177,14 +177,6 @@ class _PaymentState extends State<Payment> {
                     position: LatLng(currentLocation!.latitude!,
                         currentLocation!.longitude!),
                   ),
-                  Marker(
-                    markerId: MarkerId("Source"),
-                    position: sourceLocation,
-                  ),
-                  Marker(
-                    markerId: MarkerId("Destination"),
-                    position: destination,
-                  ),
                 },
               ),
               Align(
@@ -243,7 +235,7 @@ class _PaymentState extends State<Payment> {
                           ),
                           InkWell(
                             onTap: () {
-                              print('kuy earth na heeeeeeeeee');
+                              print('--------------บัตร--------------------');
                             },
                             child: Column(
                               children: [
@@ -271,7 +263,8 @@ class _PaymentState extends State<Payment> {
                           ),
                           InkWell(
                             onTap: () {
-                              print('kuy earth na heeeeeeeeee');
+                              print(
+                                  '--------------โค้ดส่วนลด--------------------');
                             },
                             child: Column(
                               children: [
