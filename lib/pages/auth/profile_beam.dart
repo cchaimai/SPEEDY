@@ -1,7 +1,7 @@
 import 'package:chat_test/pages/auth/login.social.dart';
 import 'package:chat_test/pages/bank_page.dart';
 import 'package:chat_test/pages/coupon_screen.dart';
-import 'package:chat_test/pages/edit_profile.dart';
+import 'package:chat_test/pages/help_center.dart';
 import 'package:chat_test/pages/show_profile.dart';
 import 'package:chat_test/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-import '../../helper/helper_function.dart';
 import '../../service/auth_service.dart';
 import '../home_page.dart';
 
@@ -88,7 +87,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(height: 100),
+                const SizedBox(height: 100),
                 Container(
                   height: 70,
                   width: 70,
@@ -110,7 +109,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             fontSize: 20, color: Colors.black))
                   ],
                 ),
-                Spacer(),
+                const Spacer(),
                 TextButton(
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.all(15),
@@ -211,10 +210,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       borderRadius: BorderRadius.circular(30)),
                 ),
                 onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => const HelpCenter()),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HelpCenter()),
+                  );
                 },
                 child: Row(
                   // ignore: prefer_const_literals_to_create_immutables
@@ -247,12 +246,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
                 ),
-                onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => const LogOut()),
-                  // );
-                },
+                onPressed: () {},
                 child: GestureDetector(
                   onTap: () async {
                     showDialog(

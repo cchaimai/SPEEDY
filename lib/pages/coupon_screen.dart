@@ -14,7 +14,15 @@ class CouPonScreen extends StatelessWidget {
                   fontSize: 20, fontWeight: FontWeight.w500)),
           backgroundColor: const Color.fromRGBO(31, 31, 31, 1),
           toolbarHeight: 84, //ความสูง bar บน
-          centerTitle: true, //กลาง
+          centerTitle: true,
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.confirmation_num_outlined),
+              onPressed: () {
+                CouPon(context);
+              },
+            ),
+          ], //กลาง
         ),
         body: Container(
             padding: const EdgeInsets.only(left: 0, top: 0, right: 0),
@@ -45,33 +53,33 @@ class CouPonScreen extends StatelessWidget {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Enter a Voucher Code',
-                        style: GoogleFonts.prompt(
-                          color: Colors.white,
-                          fontSize: 18,
-                        ),
-                      ),
-                      Container(
-                        width: double.infinity,
-                        margin: const EdgeInsets.only(top: 10, bottom: 10),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                                child: TextField(
-                              decoration: InputDecoration(
-                                  hintText: "Coupon Code",
-                                  hintStyle: GoogleFonts.prompt(),
-                                  contentPadding: const EdgeInsets.all(10)),
-                            ))
-                          ],
-                        ),
-                      ),
+                      // Text(
+                      //   'Enter a Voucher Code',
+                      //   style: GoogleFonts.prompt(
+                      //     color: Colors.white,
+                      //     fontSize: 18,
+                      //   ),
+                      // ),
+                      // Container(
+                      //   width: double.infinity,
+                      //   margin: const EdgeInsets.only(top: 10, bottom: 10),
+                      //   decoration: BoxDecoration(
+                      //     color: Colors.white,
+                      //     borderRadius: BorderRadius.circular(5.0),
+                      //   ),
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //     children: [
+                      //       Expanded(
+                      //           child: TextField(
+                      //         decoration: InputDecoration(
+                      //             hintText: "Coupon Code",
+                      //             hintStyle: GoogleFonts.prompt(),
+                      //             contentPadding: const EdgeInsets.all(10)),
+                      //       ))
+                      //     ],
+                      //   ),
+                      // ),
                       Text(
                         'Your Coupon ',
                         style: GoogleFonts.prompt(
@@ -131,4 +139,23 @@ class CouPonScreen extends StatelessWidget {
               ),
             ])));
   }
+
+  Future<void> CouPon(BuildContext context) => showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            title: Text("Coupon", style: GoogleFonts.prompt()),
+            content: TextField(
+                autofocus: true, //แสดงTextField
+                decoration:
+                    InputDecoration(hintText: "Apply your coupon code here"),
+                style: GoogleFonts.prompt()),
+            actions: [
+              TextButton(
+                child: Text("Confirm", style: GoogleFonts.prompt()),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          ));
 }
