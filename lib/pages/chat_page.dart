@@ -54,6 +54,11 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {
+                nextScreenReplace(context, HomePage());
+              },
+              icon: const Icon(Icons.home)),
           actions: [
             IconButton(
                 onPressed: () {

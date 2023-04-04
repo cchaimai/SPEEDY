@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:chat_test/pages/home_page.dart';
+import 'package:chat_test/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -656,7 +658,7 @@ class WaitingState extends State<Waiting> {
             children: [
               InkWell(
                 onTap: () {
-                  print("kuy peng na hee");
+                  nextScreenReplace(context, const HomePage());
                 },
                 child: SizedBox(
                   width: 60,

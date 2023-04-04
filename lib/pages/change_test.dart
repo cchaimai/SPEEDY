@@ -12,13 +12,17 @@ import '../widgets/widgets.dart';
 import 'confirm_change.dart';
 import 'home_page.dart';
 
+// ignore: camel_case_types
 class changeTest extends StatefulWidget {
-  const changeTest({super.key});
+  final String carId;
+  final String car;
+  const changeTest({super.key, required this.carId, required this.car});
 
   @override
   State<changeTest> createState() => _changeTestState();
 }
 
+// ignore: camel_case_types
 class _changeTestState extends State<changeTest> {
   int num = 0;
   //Color color = const Color.fromARGB(255, 154, 222, 61);
@@ -45,8 +49,6 @@ class _changeTestState extends State<changeTest> {
 
   String firstName = "";
   String lastName = "";
-  String model = "";
-  String carId = "";
   String type = "Change";
   bool public = false;
   late DateTime date;
@@ -434,123 +436,86 @@ class _changeTestState extends State<changeTest> {
         return StatefulBuilder(
           builder: ((context, setState) {
             return SingleChildScrollView(
-              child: Form(
-                key: formkey,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 150),
-                  child: AlertDialog(
-                    title: Text(
-                      "จองคิวเปลี่ยนแบตเตอรี่",
-                      textAlign: TextAlign.left,
-                      style: GoogleFonts.prompt(),
-                    ),
-                    content: Column(
-                      children: [
-                        SizedBox(
-                          width: 250,
-                          child: Text(
-                            'จองคิววันที่ $selectedDay\nเวลา $time',
-                            style: GoogleFonts.prompt(
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 250,
-                          child: TextFormField(
-                            onSaved: (val) {
-                              model = val!;
-                            },
-                            validator: (val) {
-                              if (val!.isNotEmpty) {
-                                return null;
-                              } else {
-                                return "กรุณากรอกรุ่นรถยนต์";
-                              }
-                            },
-                            decoration: InputDecoration(
-                              hintText: "รุ่นรถยนต์",
-                              hintStyle: GoogleFonts.prompt(
-                                  color: Colors.grey.shade400),
-                              border: InputBorder.none,
-                              prefixIcon: const Padding(
-                                padding: EdgeInsets.only(top: 5),
-                                child: Icon(
-                                  Icons.directions_car,
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const Divider(),
-                        SizedBox(
-                          width: 250,
-                          child: TextFormField(
-                            onSaved: (val) {
-                              carId = val!;
-                            },
-                            validator: (val) {
-                              if (val!.isNotEmpty) {
-                                return null;
-                              } else {
-                                return "กรุณากรอกทะเบียนรถยนต์";
-                              }
-                            },
-                            decoration: InputDecoration(
-                              hintText: "ทะเบียนรถยนต์",
-                              hintStyle: GoogleFonts.prompt(
-                                  color: Colors.grey.shade400),
-                              border: InputBorder.none,
-                              prefixIcon: const Padding(
-                                padding: EdgeInsets.only(top: 5),
-                                child: Icon(
-                                  Icons.wysiwyg,
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const Divider(),
-                        if (num < 3)
-                          Container()
-                        else
-                          const Text(
-                            "Booking full",
-                            style: TextStyle(color: Colors.red),
-                          ),
-                      ],
-                    ),
-                    actions: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 150),
+                child: AlertDialog(
+                  title: Text(
+                    "จองคิวเปลี่ยนแบตเตอรี่",
+                    textAlign: TextAlign.left,
+                    style: GoogleFonts.prompt(fontWeight: FontWeight.w500),
+                  ),
+                  content: Column(
+                    children: [
+                      SizedBox(
+                        width: 250,
                         child: Text(
-                          "ยกเลิก",
+                          "รถ ${widget.car}",
                           style:
-                              GoogleFonts.prompt(fontWeight: FontWeight.w500),
+                              GoogleFonts.prompt(fontWeight: FontWeight.w400),
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          if (formkey.currentState!.validate()) {
-                            formkey.currentState!.save();
-                            submit(selectedDay, time);
-                          }
-                          //nextScreenReplace(context, const confirmChange());
-                        },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green),
-                        child: Text("ยืนยัน",
-                            style: GoogleFonts.prompt(
-                                fontWeight: FontWeight.w500)),
-                      )
+                      const Divider(),
+                      SizedBox(
+                        width: 250,
+                        child: Text(
+                          'ทะเบียน ${widget.carId}',
+                          style: GoogleFonts.prompt(
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                      const Divider(),
+                      SizedBox(
+                        width: 250,
+                        child: Text(
+                          'วันที่ $selectedDay',
+                          style: GoogleFonts.prompt(
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 250,
+                        child: Text(
+                          'เวลา $time',
+                          style: GoogleFonts.prompt(
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                      if (num < 3)
+                        Container()
+                      else
+                        const Text(
+                          "Booking full",
+                          style: TextStyle(color: Colors.red),
+                        ),
                     ],
                   ),
+                  actions: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                      child: Text(
+                        "ยกเลิก",
+                        style: GoogleFonts.prompt(fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        submit(selectedDay, time);
+                        //nextScreenReplace(context, const confirmChange());
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green),
+                      child: Text("ยืนยัน",
+                          style:
+                              GoogleFonts.prompt(fontWeight: FontWeight.w500)),
+                    )
+                  ],
                 ),
               ),
             );
@@ -561,38 +526,29 @@ class _changeTestState extends State<changeTest> {
   }
 
   submit(String date, String time) async {
-    if (formkey.currentState!.validate()) {
+    String eventId =
+        await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+            .addDateTime(
+      FirebaseAuth.instance.currentUser!.uid,
+      type,
+      date,
+      time,
+      widget.car,
+      widget.carId,
+      firstName,
+      lastName,
+    )
+            .whenComplete(() async {
       setState(() {
-        _isLoading = true;
+        _isLoading = false;
       });
-      formkey.currentState!.save();
-      String eventId =
-          await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
-              .addDateTime(
-        FirebaseAuth.instance.currentUser!.uid,
-        type,
-        date,
-        time,
-        model,
-        carId,
-        firstName,
-        lastName,
-      )
-              .whenComplete(() async {
-        setState(() {
-          _isLoading = false;
-        });
-        // ignore: use_build_context_synchronously
-        showSnackbar(context, Colors.green, "Booking successfully.");
-        // ignore: use_build_context_synchronously
-      });
-      // ignore: use_build_context_synchronously
-      nextScreenReplace(
-          context,
-          confirmChange(
-            eventsId: eventId,
-          ));
-    }
-    return;
+      showSnackbar(context, Colors.green, "Booking successfully.");
+    });
+    // ignore: use_build_context_synchronously
+    nextScreenReplace(
+        context,
+        confirmChange(
+          eventsId: eventId,
+        ));
   }
 }

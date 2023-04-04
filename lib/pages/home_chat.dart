@@ -30,6 +30,7 @@ class _HomeChatState extends State<HomeChat> {
   bool _isLoading = false;
   String groupName = "";
   String userName = "";
+  String tel = "";
 
   @override
   void initState() {
@@ -55,8 +56,10 @@ class _HomeChatState extends State<HomeChat> {
       final data = doc.data()!;
       final firstName = data['firstName'] as String?;
       final showName = '$firstName';
+      final phone = data['phoneNumber'] as String;
       setState(() {
         userName = showName;
+        tel = phone;
       });
     }
     await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
@@ -137,36 +140,36 @@ class _HomeChatState extends State<HomeChat> {
                 style: GoogleFonts.prompt(),
                 textAlign: TextAlign.left,
               ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _isLoading == true
-                      ? const Center(
-                          child: CircularProgressIndicator(color: Colors.green),
-                        )
-                      : TextField(
-                          onChanged: (val) {
-                            setState(() {
-                              groupName = val;
-                            });
-                          },
-                          style: const TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Color.fromARGB(255, 31, 31, 31)),
-                                  borderRadius: BorderRadius.circular(20)),
-                              errorBorder: OutlineInputBorder(
-                                  borderSide:
-                                      const BorderSide(color: Colors.red),
-                                  borderRadius: BorderRadius.circular(20)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Color.fromARGB(255, 31, 31, 31)),
-                                  borderRadius: BorderRadius.circular(20))),
-                        ),
-                ],
-              ),
+              // content: Column(
+              //   mainAxisSize: MainAxisSize.min,
+              //   children: [
+              //     _isLoading == true
+              //         ? const Center(
+              //             child: CircularProgressIndicator(color: Colors.green),
+              //           )
+              //         : TextField(
+              //             onChanged: (val) {
+              //               setState(() {
+              //                 groupName = val;
+              //               });
+              //             },
+              //             style: const TextStyle(color: Colors.black),
+              //             decoration: InputDecoration(
+              //                 enabledBorder: OutlineInputBorder(
+              //                     borderSide: const BorderSide(
+              //                         color: Color.fromARGB(255, 31, 31, 31)),
+              //                     borderRadius: BorderRadius.circular(20)),
+              //                 errorBorder: OutlineInputBorder(
+              //                     borderSide:
+              //                         const BorderSide(color: Colors.red),
+              //                     borderRadius: BorderRadius.circular(20)),
+              //                 focusedBorder: OutlineInputBorder(
+              //                     borderSide: const BorderSide(
+              //                         color: Color.fromARGB(255, 31, 31, 31)),
+              //                     borderRadius: BorderRadius.circular(20))),
+              //           ),
+              //   ],
+              // ),
               actions: [
                 ElevatedButton(
                   onPressed: () {
@@ -180,14 +183,14 @@ class _HomeChatState extends State<HomeChat> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    if (groupName != "") {
+                    if (tel != "") {
                       setState(() {
                         _isLoading = true;
                       });
                       DatabaseService(
                               uid: FirebaseAuth.instance.currentUser!.uid)
                           .createGroup(userName,
-                              FirebaseAuth.instance.currentUser!.uid, groupName)
+                              FirebaseAuth.instance.currentUser!.uid, tel)
                           .whenComplete(() {
                         _isLoading = false;
                       });
