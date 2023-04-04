@@ -99,7 +99,7 @@ class _ChargeDetailState extends State<ChargeDetail> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      nextScreenReplace(context, const addCarScreen());
+                      nextScreen(context, const addCarScreen());
                     },
                     child: Container(
                       alignment: Alignment.center,
@@ -129,35 +129,119 @@ class _ChargeDetailState extends State<ChargeDetail> {
                     itemCount: snapshot.data?.docs.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
-                      return Container(
-                        width: 300,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white,
-                        ),
-                        margin: const EdgeInsets.fromLTRB(35, 10, 10, 10),
-                        child: Column(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                print('----------${widget.ID}----------');
+                      return InkWell(
+                        onTap: () {
+                          print('----------${widget.ID}----------');
+                          // _getchargedetail(
+                          //         snapshot.data!.docs[index]['brand'],
+                          //         snapshot.data!.docs[index]['carId'],
+                          //         snapshot.data!.docs[index]['chargeType'],
+                          //         snapshot.data!.docs[index]['provinces'],
+                          //         widget.ID)
+                          //     .then((value) => nextScreen(
+                          //         context,
+                          //         Payment(
+                          //           price: price.toString(),
+                          //           ID: widget.ID,
+                          //           dis: 0,
+                          //         )));
 
-                                _getchargedetail(
-                                        snapshot.data!.docs[index]['brand'],
-                                        snapshot.data!.docs[index]['carId'],
-                                        snapshot.data!.docs[index]
-                                            ['chargeType'],
-                                        snapshot.data!.docs[index]['provinces'],
-                                        widget.ID)
-                                    .then((value) => nextScreen(
-                                        context,
-                                        Payment(
-                                          price: price.toString(),
-                                          ID: widget.ID,
-                                          dis: 0,
-                                        )));
-                              },
-                              child: Column(
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                backgroundColor: Colors.black,
+                                title: Center(
+                                  child: Text(
+                                    'คุณต้องการเติม ${energyController.text} kWh?',
+                                    style: GoogleFonts.prompt(
+                                      textStyle: const TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                actions: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          _getchargedetail(
+                                                  snapshot.data!.docs[index]
+                                                      ['brand'],
+                                                  snapshot.data!.docs[index]
+                                                      ['carId'],
+                                                  snapshot.data!.docs[index]
+                                                      ['chargeType'],
+                                                  snapshot.data!.docs[index]
+                                                      ['provinces'],
+                                                  widget.ID)
+                                              .then((value) => nextScreen(
+                                                  context,
+                                                  Payment(
+                                                    price: price.toString(),
+                                                    ID: widget.ID,
+                                                    dis: 0,
+                                                  )));
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              const Color(0xff3BB54A),
+                                          fixedSize: const Size(100, 30),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                        ),
+                                        child: Text(
+                                          "ยืนยัน",
+                                          style: GoogleFonts.prompt(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop(false);
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.red,
+                                          fixedSize: const Size(100, 30),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                        ),
+                                        child: Text(
+                                          "ยกเลิก",
+                                          style: GoogleFonts.prompt(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: Container(
+                          width: 300,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white,
+                          ),
+                          margin: const EdgeInsets.fromLTRB(35, 10, 10, 10),
+                          child: Column(
+                            children: [
+                              Column(
                                 children: [
                                   Image.asset(
                                     "assets/images/car.png",
@@ -165,71 +249,70 @@ class _ChargeDetailState extends State<ChargeDetail> {
                                   ),
                                 ],
                               ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Column(
-                                  children: [
-                                    Text(
-                                      snapshot.data!.docs[index]['carId'],
-                                      style: GoogleFonts.prompt(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 24,
-                                          color: Colors.black),
-                                    ),
-                                    Text(
-                                      snapshot.data!.docs[index]['provinces'],
-                                      style: GoogleFonts.prompt(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 24,
-                                          color: Colors.black),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 10),
-                              child: TextFormField(
-                                controller: energyController,
-                                cursorColor: Colors.green,
-                                decoration: InputDecoration(
-                                  hintText:
-                                      "${snapshot.data!.docs[index]['battery']}",
-                                  hintStyle: GoogleFonts.prompt(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Column(
+                                    children: [
+                                      Text(
+                                        snapshot.data!.docs[index]['carId'],
+                                        style: GoogleFonts.prompt(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 24,
+                                            color: Colors.black),
+                                      ),
+                                      Text(
+                                        snapshot.data!.docs[index]['provinces'],
+                                        style: GoogleFonts.prompt(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 24,
+                                            color: Colors.black),
+                                      ),
+                                    ],
                                   ),
-                                  labelText:
-                                      "โปรดกรอกพลังงานที่ต้องการเติม (kWh)",
-                                  labelStyle: GoogleFonts.prompt(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey,
-                                  ),
-                                  border: const OutlineInputBorder(),
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.grey),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(20),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 10),
+                                child: TextFormField(
+                                  controller: energyController,
+                                  cursorColor: Colors.green,
+                                  decoration: InputDecoration(
+                                    hintText:
+                                        "${snapshot.data!.docs[index]['battery']}",
+                                    hintStyle: GoogleFonts.prompt(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey,
                                     ),
-                                  ),
-                                  enabledBorder: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(20),
+                                    labelText:
+                                        "โปรดกรอกพลังงานที่ต้องการเติม (kWh)",
+                                    labelStyle: GoogleFonts.prompt(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey,
                                     ),
-                                    borderSide: BorderSide(color: Colors.grey),
+                                    border: const OutlineInputBorder(),
+                                    focusedBorder: const OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(20),
+                                      ),
+                                    ),
+                                    enabledBorder: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(20),
+                                      ),
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       );
                     },

@@ -539,7 +539,10 @@ class _addCarScreenState extends State<addCarScreen> {
                         ),
                         const SizedBox(height: 30),
                         InkWell(
-                          onTap: () => saveToFirebase(),
+                          onTap: () {
+                            saveToFirebase();
+                            Navigator.pop(context);
+                          },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -764,12 +767,7 @@ class _addCarScreenState extends State<addCarScreen> {
           'chargeType': chargeType,
           'battery': battery,
           'year': year,
-        }).then((value) => Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const myCarScreen(),
-            ),
-            (route) => false));
+        });
       } else {
         // ไม่เจอเอกสารที่ค้นหา สร้างเอกสารใหม่
         FirebaseFirestore.instance.collection('car').doc().set({
@@ -781,12 +779,7 @@ class _addCarScreenState extends State<addCarScreen> {
           'chargeType': chargeType,
           'battery': battery,
           'year': year,
-        }).then((value) => Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const myCarScreen(),
-            ),
-            (route) => false));
+        });
       }
     });
   }

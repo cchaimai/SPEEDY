@@ -26,6 +26,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image/image.dart' as Im;
 
 import 'driverinfo.dart';
+import 'map.dart';
 
 class Waiting extends StatefulWidget {
   const Waiting({super.key, required this.uid});
@@ -523,8 +524,13 @@ class WaitingState extends State<Waiting> {
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
                                       ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop(true);
+                                        onPressed: () async {
+                                          await FirebaseFirestore.instance
+                                              .collection('requests')
+                                              .doc(widget.uid)
+                                              .delete();
+                                          nextScreen(
+                                              context, const MapSample());
                                         },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor:

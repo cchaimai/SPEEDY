@@ -286,14 +286,22 @@ class _PaymentState extends State<Payment> {
                         indent: 15,
                         endIndent: 15,
                       ),
+                      // Container(
+                      //   width: double.infinity,
+                      //   height: 1,
+                      //   color: Colors.black,
+                      // ),
 
                       Text(
-                        '$totalprice ฿',
+                        '$totalprice฿',
                         style: GoogleFonts.prompt(
                           textStyle: TextStyle(
                             fontSize: 38,
                           ),
                         ),
+                      ),
+                      SizedBox(
+                        height: 10,
                       ),
                       // Row(
                       //   mainAxisAlignment: MainAxisAlignment.center,
