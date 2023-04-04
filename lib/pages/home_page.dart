@@ -1,22 +1,26 @@
 import 'dart:math';
+import 'dart:developer';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:chat_test/pages/auth/login.social.dart';
 import 'package:chat_test/pages/auth/login_phone.dart';
 import 'package:chat_test/pages/auth/profile_beam.dart';
-import 'package:chat_test/pages/home_chat.dart';
+import 'package:chat_test/pages/chat_page.dart';
 import 'package:chat_test/pages/map.dart';
 import 'package:chat_test/pages/mycar.dart';
+import 'package:chat_test/pages/selectcar.dart';
 import 'package:chat_test/pages/test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../helper/helper_function.dart';
 import '../service/auth_service.dart';
+import '../service/database_service.dart';
 import '../widgets/widgets.dart';
 import 'change_test.dart';
 
@@ -29,12 +33,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String userName = "";
+  String phone = "";
+  String chatData = "";
   AuthService authService = AuthService();
   final userId = FirebaseAuth.instance.currentUser!.uid;
+  CollectionReference users = FirebaseFirestore.instance.collection('mUsers');
   Stream? groups;
   String groupName = "";
   final FirebaseAuth _auth = FirebaseAuth.instance;
   bool isUserLoggedIn = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -59,22 +67,14 @@ class _HomePageState extends State<HomePage> {
     final doc = await docRef.get();
     if (doc.exists) {
       final data = doc.data()!;
-      final firstName = data['firstName'] as String?;
-      final showName = '$firstName';
+      final firstName = data['firstName'] as String;
+      final phoneNum = data['phoneNumber'] as String;
       setState(() {
-        userName = showName;
+        userName = firstName;
+        phone = phoneNum;
       });
     }
   }
-
-  // gettingUserData() async {
-  //   final phone = await HelperFunction.getUserPhoneFromSF();
-  //   if (phone != null) {
-  //     setState(() {
-  //       userName = phone;
-  //     });
-  //   }
-  // }
 
   Future<void> _showLoginReminderDialog(BuildContext context) async {
     return showDialog(
@@ -177,266 +177,283 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       body: StreamBuilder<Object>(
-          stream: null,
-          builder: (context, snapshot) {
-            return SafeArea(
-                child: GestureDetector(
-                    child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child: CarouselSlider(
-                        items: _carouselImages
-                            .map((item) => Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 3, right: 3),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                            image: NetworkImage(item),
-                                            fit: BoxFit.fitWidth)),
-                                  ),
-                                ))
-                            .toList(),
-                        options: CarouselOptions(
-                            autoPlay: true,
-                            enlargeCenterPage: true,
-                            enlargeFactor: 0.3,
-                            viewportFraction: 0.8,
-                            enlargeStrategy: CenterPageEnlargeStrategy.height,
-                            onPageChanged: (val, carouselPageChangedReason) {
-                              setState(() {
-                                _dotPosition = val;
-                              });
-                            })),
-                  ),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                DotsIndicator(
-                  dotsCount:
-                      _carouselImages.isEmpty ? 1 : _carouselImages.length,
-                  position: _dotPosition.toDouble(),
-                  decorator: const DotsDecorator(
-                    activeColor: Colors.green,
-                    color: Colors.grey,
-                    spacing: EdgeInsets.all(2),
-                    activeSize: Size(8, 8),
-                    size: Size(6, 8),
-                  ),
-                ),
-                Expanded(
-                    child: Stack(children: [
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      width: 395,
-                      height: 420,
-                      decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 217, 217, 217),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(25),
-                          topRight: Radius.circular(25),
-                        ),
-                      ),
-                      alignment: const AlignmentDirectional(0, 0),
-                      child: Stack(
-                        children: [
-                          Align(
-                            alignment: const AlignmentDirectional(-0.8, -0.65),
-                            child: GestureDetector(
-                              onTap: () async {
-                                nextScreenReplace(context, const MapSample());
-                              },
-                              child: SizedBox(
-                                width: 160,
-                                height: 170,
-                                child: DecoratedBox(
-                                  decoration: const BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(15))),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: const [
-                                      Icon(
-                                        Icons.bolt,
-                                        size: 70,
-                                        color: Colors.green,
-                                      ),
-                                      Text(
-                                        "CHARGE",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.green,
-                                            fontSize: 18),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: const AlignmentDirectional(-0.8, 0.85),
-                            child: GestureDetector(
-                              onTap: () async {
-                                bool isLoggedIn = await AuthService()
-                                    .checkUserLoginStatus(context);
-                                if (isLoggedIn) {
-                                  nextScreenReplace(context, const testPage());
-                                } else {
-                                  await _showLoginReminderDialog(context);
-                                  nextScreenReplace(context, LoginSocial());
-                                }
-                              },
-                              child: SizedBox(
-                                width: 160,
-                                height: 170,
-                                child: DecoratedBox(
-                                  decoration: const BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(15))),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: const [
-                                      Icon(
-                                        Icons.task,
-                                        size: 55,
-                                        color: Colors.green,
-                                      ),
-                                      Text(
-                                        "CHECK",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.green,
-                                            fontSize: 18),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: const AlignmentDirectional(0.8, -0.65),
-                            child: GestureDetector(
-                              onTap: () async {
-                                bool isLoggedIn = await AuthService()
-                                    .checkUserLoginStatus(context);
-                                if (isLoggedIn) {
-                                  // ignore: use_build_context_synchronously
-                                  nextScreenReplace(
-                                      context, const changeTest());
-                                } else {
-                                  // ignore: use_build_context_synchronously
-                                  await _showLoginReminderDialog(context);
-                                  // ignore: use_build_context_synchronously
-                                  nextScreenReplace(
-                                      context, const LoginSocial());
-                                }
-                              },
-                              child: SizedBox(
-                                width: 160,
-                                height: 170,
-                                child: DecoratedBox(
-                                  decoration: const BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(15))),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: const [
-                                      Icon(
-                                        Icons.change_circle_rounded,
-                                        size: 55,
-                                        color: Colors.green,
-                                      ),
-                                      Text(
-                                        "CHANGE",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.green,
-                                            fontSize: 18),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: const AlignmentDirectional(0.8, 0.85),
-                            child: GestureDetector(
-                              onTap: () async {
-                                bool isLoggedIn = await AuthService()
-                                    .checkUserLoginStatus(context);
-                                if (isLoggedIn) {
-                                  // ignore: use_build_context_synchronously
-                                  nextScreenReplace(
-                                      context, const myCarScreen());
-                                } else {
-                                  // ignore: use_build_context_synchronously
-                                  await _showLoginReminderDialog(context);
-                                  // ignore: use_build_context_synchronously
-                                  nextScreenReplace(
-                                      context, const LoginSocial());
-                                }
-                              },
-                              child: SizedBox(
-                                width: 160,
-                                height: 170,
-                                child: DecoratedBox(
-                                  decoration: const BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(15))),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: const [
-                                      Icon(
-                                        Icons.electric_car,
-                                        size: 55,
-                                        color: Colors.green,
-                                      ),
-                                      Text(
-                                        "MY CAR",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.green,
-                                            fontSize: 18),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: const AlignmentDirectional(-0.75, -0.95),
-                            child: Text("สวัสดี, คุณ $userName!",
-                                style: GoogleFonts.prompt(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 20,
-                                )),
-                          ),
-                        ],
-                      ),
+        stream: null,
+        builder: (context, snapshot) {
+          return SafeArea(
+            child: GestureDetector(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: CarouselSlider(
+                          items: _carouselImages
+                              .map((item) => Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 3, right: 3),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              image: NetworkImage(item),
+                                              fit: BoxFit.fitWidth)),
+                                    ),
+                                  ))
+                              .toList(),
+                          options: CarouselOptions(
+                              autoPlay: true,
+                              enlargeCenterPage: true,
+                              enlargeFactor: 0.3,
+                              viewportFraction: 0.8,
+                              enlargeStrategy: CenterPageEnlargeStrategy.height,
+                              onPageChanged: (val, carouselPageChangedReason) {
+                                setState(() {
+                                  _dotPosition = val;
+                                });
+                              })),
                     ),
                   ),
-                ]))
-              ],
-            )));
-          }),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  DotsIndicator(
+                    dotsCount:
+                        _carouselImages.isEmpty ? 1 : _carouselImages.length,
+                    position: _dotPosition.toDouble(),
+                    decorator: const DotsDecorator(
+                      activeColor: Colors.green,
+                      color: Colors.grey,
+                      spacing: EdgeInsets.all(2),
+                      activeSize: Size(8, 8),
+                      size: Size(6, 8),
+                    ),
+                  ),
+                  Expanded(
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            width: 395,
+                            height: 420,
+                            decoration: const BoxDecoration(
+                              color: Color.fromARGB(255, 217, 217, 217),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(25),
+                                topRight: Radius.circular(25),
+                              ),
+                            ),
+                            alignment: const AlignmentDirectional(0, 0),
+                            child: Stack(
+                              children: [
+                                Align(
+                                  alignment:
+                                      const AlignmentDirectional(-0.8, -0.65),
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      nextScreenReplace(
+                                          context, const MapSample());
+                                    },
+                                    child: SizedBox(
+                                      width: 160,
+                                      height: 170,
+                                      child: DecoratedBox(
+                                        decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15))),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: const [
+                                            Icon(
+                                              Icons.bolt,
+                                              size: 70,
+                                              color: Colors.green,
+                                            ),
+                                            Text(
+                                              "CHARGE",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.green,
+                                                  fontSize: 18),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment:
+                                      const AlignmentDirectional(-0.8, 0.85),
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      bool isLoggedIn = await AuthService()
+                                          .checkUserLoginStatus(context);
+                                      if (isLoggedIn) {
+                                        nextScreenReplace(
+                                            context, const testPage());
+                                      } else {
+                                        await _showLoginReminderDialog(context);
+                                        nextScreenReplace(
+                                            context, LoginSocial());
+                                      }
+                                    },
+                                    child: SizedBox(
+                                      width: 160,
+                                      height: 170,
+                                      child: DecoratedBox(
+                                        decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15))),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: const [
+                                            Icon(
+                                              Icons.task,
+                                              size: 55,
+                                              color: Colors.green,
+                                            ),
+                                            Text(
+                                              "CHECK",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.green,
+                                                  fontSize: 18),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment:
+                                      const AlignmentDirectional(0.8, -0.65),
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      bool isLoggedIn = await AuthService()
+                                          .checkUserLoginStatus(context);
+                                      if (isLoggedIn) {
+                                        // ignore: use_build_context_synchronously
+                                        // nextScreenReplace(
+                                        //     context, const changeTest());
+                                        // ignore: use_build_context_synchronously
+                                        nextScreenReplace(
+                                            context, const selectCar());
+                                      } else {
+                                        // ignore: use_build_context_synchronously
+                                        await _showLoginReminderDialog(context);
+                                        // ignore: use_build_context_synchronously
+                                        nextScreenReplace(
+                                            context, const LoginSocial());
+                                      }
+                                    },
+                                    child: SizedBox(
+                                      width: 160,
+                                      height: 170,
+                                      child: DecoratedBox(
+                                        decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15))),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: const [
+                                            Icon(
+                                              Icons.change_circle_rounded,
+                                              size: 55,
+                                              color: Colors.green,
+                                            ),
+                                            Text(
+                                              "CHANGE",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.green,
+                                                  fontSize: 18),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment:
+                                      const AlignmentDirectional(0.8, 0.85),
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      bool isLoggedIn = await AuthService()
+                                          .checkUserLoginStatus(context);
+                                      if (isLoggedIn) {
+                                        // ignore: use_build_context_synchronously
+                                        nextScreenReplace(
+                                            context, const myCarScreen());
+                                      } else {
+                                        // ignore: use_build_context_synchronously
+                                        await _showLoginReminderDialog(context);
+                                        // ignore: use_build_context_synchronously
+                                        nextScreenReplace(
+                                            context, const LoginSocial());
+                                      }
+                                    },
+                                    child: SizedBox(
+                                      width: 160,
+                                      height: 170,
+                                      child: DecoratedBox(
+                                        decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15))),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: const [
+                                            Icon(
+                                              Icons.electric_car,
+                                              size: 55,
+                                              color: Colors.green,
+                                            ),
+                                            Text(
+                                              "MY CAR",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.green,
+                                                  fontSize: 18),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment:
+                                      const AlignmentDirectional(-0.75, -0.95),
+                                  child: Text("สวัสดี, คุณ $userName!",
+                                      style: GoogleFonts.prompt(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 20,
+                                      )),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

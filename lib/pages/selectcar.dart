@@ -1,7 +1,4 @@
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:chat_test/pages/addcar.dart';
 import 'package:chat_test/pages/auth/profile_beam.dart';
-import 'package:chat_test/pages/change_test.dart';
 import 'package:chat_test/pages/home_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,17 +8,24 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets/widgets.dart';
+import 'addcar.dart';
+import 'change_test.dart';
+import 'mycar.dart';
 
-class myCarScreen extends StatefulWidget {
-  const myCarScreen({super.key});
+class selectCar extends StatefulWidget {
+  const selectCar({super.key});
 
   @override
-  State<myCarScreen> createState() => _myCarScreenState();
+  State<selectCar> createState() => _selectCarState();
 }
 
-class _myCarScreenState extends State<myCarScreen> {
+class _selectCarState extends State<selectCar> {
   final List<Map<String, dynamic>> _car = [];
   final userId = FirebaseAuth.instance.currentUser!.uid;
+
+  String carId = "";
+  String model = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,8 +43,8 @@ class _myCarScreenState extends State<myCarScreen> {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         title: Text(
-          "รถของฉัน",
-          style: GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.bold),
+          "กรุณาเลือกรถที่ต้องการจองคิว",
+          style: GoogleFonts.prompt(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
@@ -120,140 +124,80 @@ class _myCarScreenState extends State<myCarScreen> {
           return SingleChildScrollView(
             child: Column(
               children: [
-                const SizedBox(
-                  height: 10,
-                ),
                 SizedBox(
                   height: 450,
                   child: ListView.builder(
                     itemCount: snapshot.data?.docs.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
-                      return Container(
-                        width: 300,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white,
-                        ),
-                        margin: const EdgeInsets.fromLTRB(35, 10, 10, 10),
-                        child: Column(
-                          children: [
-                            Column(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    showDialog(
-                                        barrierDismissible: false,
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            title: Text("Delete!",
-                                                style: GoogleFonts.prompt(
-                                                    fontSize: 16)),
-                                            content: Text(
-                                                "Are you sure you want to delete this car?",
-                                                style: GoogleFonts.prompt(
-                                                    fontSize: 16)),
-                                            actions: [
-                                              IconButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                icon: const Icon(
-                                                  Icons.cancel,
-                                                  color: Colors.red,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                onPressed: () async {
-                                                  FirebaseFirestore.instance
-                                                      .collection('car')
-                                                      .doc(snapshot
-                                                          .data!.docs[index].id)
-                                                      .delete();
-                                                  Navigator.of(context)
-                                                      .pushAndRemoveUntil(
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  const myCarScreen()),
-                                                          (route) => false);
-                                                },
-                                                icon: const Icon(
-                                                  Icons.done,
-                                                  color: Colors.green,
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        });
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: const [
-                                        Icon(
-                                          Icons.close,
-                                          color: Colors.black,
-                                        ),
-                                      ],
-                                    ),
+                      return GestureDetector(
+                        onTap: () {
+                          final carId = snapshot.data!.docs[index]['carId'];
+                          final car = snapshot.data!.docs[index]['brand'] +
+                              snapshot.data!.docs[index]['model'];
+                          nextScreenReplace(
+                              context,
+                              changeTest(
+                                carId: carId,
+                                car: car,
+                              ));
+                        },
+                        child: Container(
+                          width: 300,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white,
+                          ),
+                          margin: const EdgeInsets.fromLTRB(35, 10, 10, 10),
+                          child: Column(
+                            children: [
+                              Column(
+                                children: [
+                                  Image.asset(
+                                    "assets/images/car.png",
+                                    width: 260,
                                   ),
-                                ),
-                                Image.asset(
-                                  "assets/images/car.png",
-                                  width: 260,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Column(
-                                  children: [
-                                    Text(
-                                      snapshot.data!.docs[index]['carId'],
-                                      style: GoogleFonts.prompt(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 24,
-                                          color: Colors.black),
-                                    ),
-                                    Text(
-                                      snapshot.data!.docs[index]['provinces'],
-                                      style: GoogleFonts.prompt(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 24,
-                                          color: Colors.black),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )
-                          ],
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Text(
+                                        snapshot.data!.docs[index]['brand'] +
+                                            snapshot.data!.docs[index]['model'],
+                                        style: GoogleFonts.prompt(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 24,
+                                            color: Colors.black),
+                                      ),
+                                      Text(
+                                        snapshot.data!.docs[index]['carId'],
+                                        style: GoogleFonts.prompt(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 24,
+                                            color: Colors.black),
+                                      ),
+                                      Text(
+                                        snapshot.data!.docs[index]['provinces'],
+                                        style: GoogleFonts.prompt(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 20,
+                                            color: Colors.black),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                       );
                     },
-                  ),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    nextScreenReplace(context, const addCarScreen());
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 50,
-                    width: 60,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: const Icon(Icons.add),
                   ),
                 ),
               ],
@@ -261,7 +205,7 @@ class _myCarScreenState extends State<myCarScreen> {
           );
         },
       ),
-      floatingActionButton: Container(
+      floatingActionButton: SizedBox(
         height: 70,
         width: 70,
         child: FittedBox(
@@ -280,16 +224,16 @@ class _myCarScreenState extends State<myCarScreen> {
         shape: const CircularNotchedRectangle(),
         color: const Color.fromARGB(255, 31, 31, 31),
         notchMargin: 5,
-        child: Container(
+        child: SizedBox(
           height: 75,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               InkWell(
                 onTap: () {
-                  nextScreenReplace(context, HomePage());
+                  nextScreenReplace(context, const HomePage());
                 },
-                child: Container(
+                child: SizedBox(
                   width: 60,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -315,7 +259,7 @@ class _myCarScreenState extends State<myCarScreen> {
                 onTap: () {
                   print("kuy peng na hee");
                 },
-                child: Container(
+                child: SizedBox(
                   width: 60,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -337,7 +281,7 @@ class _myCarScreenState extends State<myCarScreen> {
                   ),
                 ),
               ),
-              Container(
+              SizedBox(
                 width: 60,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -358,10 +302,8 @@ class _myCarScreenState extends State<myCarScreen> {
                 ),
               ),
               InkWell(
-                onTap: () {
-                  //nextScreenReplace(context, changeTest());
-                },
-                child: Container(
+                onTap: () {},
+                child: SizedBox(
                   width: 60,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -385,9 +327,9 @@ class _myCarScreenState extends State<myCarScreen> {
               ),
               InkWell(
                 onTap: () {
-                  nextScreenReplace(context, ProfileScreen());
+                  nextScreenReplace(context, const ProfileScreen());
                 },
-                child: Container(
+                child: SizedBox(
                   width: 60,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

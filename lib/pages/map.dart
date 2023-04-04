@@ -98,6 +98,7 @@ class MapSampleState extends State<MapSample> {
 
   final userId = FirebaseAuth.instance.currentUser!.uid;
   String name = '';
+  String phone = "";
 
   Future<void> getUserData() async {
     DocumentReference userDocRef =
@@ -105,37 +106,26 @@ class MapSampleState extends State<MapSample> {
 
     DocumentSnapshot userDocSnapshot = await userDocRef.get();
     name = userDocSnapshot.get('firstName');
+    phone = userDocSnapshot.get('phoneNumber');
     setState(() {});
   }
 
-  int? randomworkID;
   String? workID;
-  int? inputenergy;
-  int? energy;
-  int? price;
 
   Future<String> _getLocation() async {
     Lo.Location location = Lo.Location();
     print("earth na heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
     final Lo.LocationData _locationResult = await location.getLocation();
-    randomworkID = Random().nextInt(900000) + 100000;
-    workID = randomworkID as String;
-    energy = 90;
-    price = 10 * energy!;
+    workID = (Random().nextInt(900000) + 100000).toString();
 
     DocumentReference requestDocumentReference =
         await FirebaseFirestore.instance.collection('requests').add({
       'Ulatitude': _locationResult.latitude,
       'Ulongitude': _locationResult.longitude,
       'Uname': '$name',
-      'status': 'Wait',
       'reId': '',
       'workID': '$workID',
-      'chargetype': 'type1',
-      'energy': '$energy',
-      'price': '$price',
-      'cartype': 'car1',
-      'UcarID': '1234',
+      'UPhone': phone,
     });
     await requestDocumentReference.update({
       "reId": requestDocumentReference.id,
@@ -261,39 +251,6 @@ class MapSampleState extends State<MapSample> {
               //     ),
               //   ),
               // )
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 100),
-                child: TextFormField(
-                  controller: _controller,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: const InputDecoration(
-                      filled: true,
-                      fillColor: Color.fromARGB(150, 0, 0, 0),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white, width: 3),
-                          borderRadius: BorderRadius.all(Radius.circular(30))),
-                      hintText: 'Find Your Location',
-                      hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
-                      prefixIcon: Icon(Icons.search),
-                      prefixIconColor: Colors.white),
-                ),
-              ),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 160),
-                  child: ListView.builder(
-                      itemCount: _placesList.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          onTap: () async {
-                            List<Location> currentLocation =
-                                await locationFromAddress(
-                                    _placesList[index]['description']);
-                          },
-                          title: Text(_placesList[index]['description']),
-                        );
-                      }))
             ]),
       floatingActionButton: Container(
         height: 70,
@@ -302,8 +259,16 @@ class MapSampleState extends State<MapSample> {
           child: FloatingActionButton(
             backgroundColor: Colors.green,
             onPressed: () async {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => ChargeDetail()));
+              _getLocation().then((value) {
+                print(value);
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ChargeDetail(
+                              ID: value,
+                            )));
+              });
+
               // _getLocation();
               // String uid = await _getLocation();
               // Navigator.pushReplacement(

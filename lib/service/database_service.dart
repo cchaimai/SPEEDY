@@ -58,10 +58,8 @@ class DatabaseService {
     });
 
     DocumentReference userDocumentReference = userCollection.doc(uid);
-    return await userDocumentReference.update({
-      "groups":
-          FieldValue.arrayUnion(["${groupDocumentReference.id}_$groupName"])
-    });
+    await userDocumentReference.update({"chat": groupDocumentReference.id});
+    return groupDocumentReference.id;
   }
 
   // creating a card
@@ -116,6 +114,7 @@ class DatabaseService {
       "type": type,
       "model": model,
       "carId": carId,
+      "status": "กำลังดำเนินการ"
     });
 
     await eventDocumentReference.update({

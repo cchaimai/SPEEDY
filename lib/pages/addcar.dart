@@ -52,27 +52,27 @@ class _addCarScreenState extends State<addCarScreen> {
   ];
 
   static const List<String> chargeType = [
-    'สายสีน้ำเงิน',
-    'สายสีเขียว',
-    'สายสีแดง',
-    'สายสีม่วง',
-    'สายสีเหลือง',
-    'สายสีน้ำตาล',
+    'Type1',
+    'Type2',
+    'GB/T',
+    'CHAdeMO',
+    'CCS-Type1',
+    'CCS-Type2',
   ];
 
   static const List<String> batterySizes = [
-    'Panasonic NCR18650B 3400mAh',
-    'LG MJ1 3500mAh',
-    'Samsung 30Q 3000mAh',
-    'Sony VTC6 3000mAh',
-    'Samsung 35E 3500mAh',
-    'LG HG2 3000mAh',
-    'Samsung 20S 2000mAh',
-    'Sanyo NCR18650GA 3500mAh',
-    'Molicel P26A 2600mAh',
-    'Sony VTC5A 2600mAh',
-    'Samsung 25R 2500mAh',
-    'Panasonic NCR18650GA 3500mAh',
+    '90',
+    '85',
+    '80',
+    '75',
+    '70',
+    '65',
+    '60',
+    '55',
+    '50',
+    '45',
+    '40',
+    '35',
   ];
 
   static const List<String> provinces = [
@@ -492,7 +492,7 @@ class _addCarScreenState extends State<addCarScreen> {
                         Row(
                           children: [
                             Text(
-                              'ขนาดเเบตเตอรี่',
+                              'ขนาดเเบตเตอรี่  (kWh)',
                               style: GoogleFonts.prompt(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,
@@ -752,11 +752,7 @@ class _addCarScreenState extends State<addCarScreen> {
     String year = _selectedYear.toString();
     String owner = user.uid;
 
-    await FirebaseFirestore.instance
-        .collection('car')
-        .doc()
-        .get()
-        .then((doc) {
+    await FirebaseFirestore.instance.collection('car').doc().get().then((doc) {
       if (doc.exists) {
         // เจอเอกสารที่ค้นหา ทำการอัปเดตข้อมูลได้
         FirebaseFirestore.instance.collection('car').doc().update({
@@ -768,7 +764,6 @@ class _addCarScreenState extends State<addCarScreen> {
           'chargeType': chargeType,
           'battery': battery,
           'year': year,
-
         }).then((value) => Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
