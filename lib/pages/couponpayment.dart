@@ -1,17 +1,70 @@
-import 'package:chat_test/pages/coupon_model.dart';
+import 'package:chat_test/pages/auth/profile_beam.dart';
+import 'package:chat_test/pages/payment.dart';
+import 'package:chat_test/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CouPonScreen extends StatelessWidget {
-  CouPonScreen({super.key});
+class Couponpayment extends StatefulWidget {
+  const Couponpayment({super.key, required this.price, required this.ID});
+  final String price;
+  final String ID;
+  @override
+  State<Couponpayment> createState() => _CouponpaymentState();
+}
 
+class _CouponpaymentState extends State<Couponpayment> {
+  @override
+  final List<Map<String, dynamic>> coupon = [];
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection("mUsers");
   final uid = FirebaseAuth.instance.currentUser!.uid;
 
   final textController = TextEditingController();
+
+  Future<void> fetchUserCoupon() async {
+    // Get the current user's data
+    final userRef = FirebaseFirestore.instance.collection('mUsers').doc(uid);
+    final userData = await userRef.get();
+
+    // Get the array of card document names from the user's data
+    final couponIds = userData.get('coupon') as List<dynamic>;
+
+    // Loop through each card ID and fetch the corresponding card document
+    for (final couponId in couponIds) {
+      final couponRef =
+          FirebaseFirestore.instance.collection('coupon').doc(couponId);
+
+      // Check if the card document exists before fetching the data
+      final couponData = await couponRef.get();
+      if (couponData.exists) {
+        setState(() {
+          coupon.add(couponData.data()!);
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserCoupon();
+  }
+
+  String totalprice = '';
+
+  Future<void> discount(num dis) async {
+    if (dis >= 1) {
+      totalprice = (num.parse(widget.price) - dis).toString();
+    } else {
+      totalprice = (num.parse(widget.price) - (num.parse(widget.price) * dis))
+          .toStringAsFixed(0);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +76,11 @@ class CouPonScreen extends StatelessWidget {
           backgroundColor: const Color.fromRGBO(31, 31, 31, 1),
           toolbarHeight: 84, //ความสูง bar บน
           centerTitle: true,
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.arrow_back_ios)),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.confirmation_num_outlined),
@@ -61,33 +119,6 @@ class CouPonScreen extends StatelessWidget {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Text(
-                      //   'Enter a Voucher Code',
-                      //   style: GoogleFonts.prompt(
-                      //     color: Colors.white,
-                      //     fontSize: 18,
-                      //   ),
-                      // ),
-                      // Container(
-                      //   width: double.infinity,
-                      //   margin: const EdgeInsets.only(top: 10, bottom: 10),
-                      //   decoration: BoxDecoration(
-                      //     color: Colors.white,
-                      //     borderRadius: BorderRadius.circular(5.0),
-                      //   ),
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //     children: [
-                      //       Expanded(
-                      //           child: TextField(
-                      //         decoration: InputDecoration(
-                      //             hintText: "Coupon Code",
-                      //             hintStyle: GoogleFonts.prompt(),
-                      //             contentPadding: const EdgeInsets.all(10)),
-                      //       ))
-                      //     ],
-                      //   ),
-                      // ),
                       Text(
                         'Your Coupon ',
                         style: GoogleFonts.prompt(
@@ -97,7 +128,7 @@ class CouPonScreen extends StatelessWidget {
                       ),
                       Expanded(
                           child: ListView.builder(
-                        itemCount: Coupon.coupons.length,
+                        itemCount: coupon.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           return Container(
@@ -116,16 +147,29 @@ class CouPonScreen extends StatelessWidget {
                                   width: 20,
                                 ),
                                 Expanded(
-                                  child: Text(
-                                    Coupon.coupons[index].code,
-                                    style: GoogleFonts.prompt(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
-                                  ),
-                                ),
+                                    child: coupon[index]['dis'] >= 1
+                                        ? Text(
+                                            coupon[index]['dis'].toString(),
+                                            style: GoogleFonts.prompt(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20),
+                                          )
+                                        : Text(
+                                            '${(coupon[index]['dis'] * 100).toStringAsFixed(0)}%',
+                                            style: GoogleFonts.prompt(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20),
+                                          )),
                                 TextButton(
                                   onPressed: () {
-                                    //Navigator.pop(context);
+                                    nextScreenReplace(
+                                        context,
+                                        Payment(
+                                            price: widget.price,
+                                            ID: widget.ID,
+                                            dis: coupon[index]['dis']));
+
+                                    print(totalprice);
                                   },
                                   child: Text(
                                     "Apply",
@@ -182,8 +226,14 @@ class CouPonScreen extends StatelessWidget {
               TextButton(
                 child: Text("Confirm", style: GoogleFonts.prompt()),
                 onPressed: () {
-                  getCoupon(textController.text);
-                  //Navigator.of(context).pop();
+                  getCoupon(textController.text)
+                      .then((value) => Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Couponpayment(
+                                    price: widget.price, ID: widget.ID)),
+                            (route) => false,
+                          ));
                 },
               )
             ],

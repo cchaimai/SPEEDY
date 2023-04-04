@@ -47,40 +47,12 @@ class MapSampleState extends State<MapSample> {
       },
     );
 
-    GoogleMapController googleMapController = await mapcontroller.future;
-
-    location.onLocationChanged.listen(
+    _locationSubscription = location.onLocationChanged.listen(
       (newloc) {
         currentLocation = newloc;
-        googleMapController.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-              zoom: 15,
-              target: LatLng(
-                newloc.latitude!,
-                newloc.longitude!,
-              ),
-            ),
-          ),
-        );
         setState(() {});
       },
     );
-  }
-
-  void getPolyPoint() async {
-    PolylinePoints polylinePoint = PolylinePoints();
-
-    PolylineResult result = await polylinePoint.getRouteBetweenCoordinates(
-      'AIzaSyBw4oNuCPipSEZZWT10Zq3uhLCvzNx2o1I',
-      PointLatLng(sourceLocation.latitude, sourceLocation.longitude),
-      PointLatLng(destination.latitude, destination.longitude),
-    );
-    if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) =>
-          polyLinecoordinates.add(LatLng(point.latitude, point.longitude)));
-      setState(() {});
-    }
   }
 
   Future<bool> checkRequestStatus(String requestId) async {
@@ -161,11 +133,16 @@ class MapSampleState extends State<MapSample> {
   void initState() {
     getUserData();
     getCurrentLocation();
-    getPolyPoint();
     super.initState();
     _controller.addListener(() {
       onChange();
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _locationSubscription?.cancel();
   }
 
   void onChange() {

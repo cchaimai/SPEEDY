@@ -154,6 +154,7 @@ class _ChargeDetailState extends State<ChargeDetail> {
                                         Payment(
                                           price: price.toString(),
                                           ID: widget.ID,
+                                          dis: 0,
                                         )));
                               },
                               child: Column(

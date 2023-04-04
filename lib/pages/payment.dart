@@ -1,4 +1,5 @@
 import 'package:chat_test/pages/cardpayment.dart';
+import 'package:chat_test/pages/couponpayment.dart';
 import 'package:chat_test/pages/finalpayment.dart';
 import 'package:chat_test/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,9 +24,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image/image.dart' as Im;
 
 class Payment extends StatefulWidget {
-  const Payment({super.key, required this.price, required this.ID});
+  const Payment(
+      {super.key, required this.price, required this.ID, required this.dis});
   final String price;
   final String ID;
+  final num dis;
   @override
   State<Payment> createState() => _PaymentState();
 }
@@ -48,61 +51,39 @@ class _PaymentState extends State<Payment> {
       },
     );
 
-    GoogleMapController googleMapController = await mapcontroller.future;
-
-    location.onLocationChanged.listen(
+    _locationSubscription = location.onLocationChanged.listen(
       (newloc) {
         currentLocation = newloc;
-        googleMapController.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-              zoom: 15,
-              target: LatLng(
-                newloc.latitude!,
-                newloc.longitude!,
-              ),
-            ),
-          ),
-        );
+
         setState(() {});
       },
     );
   }
 
-  void getPolyPoint() async {
-    PolylinePoints polylinePoint = PolylinePoints();
+  String totalprice = '';
 
-    PolylineResult result = await polylinePoint.getRouteBetweenCoordinates(
-      'AIzaSyBw4oNuCPipSEZZWT10Zq3uhLCvzNx2o1I',
-      PointLatLng(sourceLocation.latitude, sourceLocation.longitude),
-      PointLatLng(destination.latitude, destination.longitude),
-    );
-    if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) =>
-          polyLinecoordinates.add(LatLng(point.latitude, point.longitude)));
-      setState(() {});
+  Future<void> discount() async {
+    if (widget.dis >= 1) {
+      totalprice = (num.parse(widget.price) - widget.dis).toString();
+    } else {
+      totalprice =
+          (num.parse(widget.price) - (num.parse(widget.price) * widget.dis))
+              .toStringAsFixed(0);
     }
+    await FirebaseFirestore.instance
+        .collection("requests")
+        .doc(widget.ID)
+        .update({'price': totalprice});
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _locationSubscription?.cancel();
   }
 
   final userId = FirebaseAuth.instance.currentUser!.uid;
-
-  Future<void> _sendLocation() async {
-    Lo.Location location = Lo.Location();
-    _locationSubscription = location.onLocationChanged.handleError((onError) {
-      print(onError);
-      _locationSubscription?.cancel();
-      setState(() {
-        _locationSubscription = null;
-      });
-    }).listen((currentLocation) async {
-      await FirebaseFirestore.instance.collection('ULocation').doc('user1').set(
-          {
-            'latitude': currentLocation.latitude,
-            'longitude': currentLocation.longitude
-          },
-          SetOptions(merge: true));
-    });
-  }
 
   var uuid = Uuid();
   String _sessionToken = '122344';
@@ -111,7 +92,8 @@ class _PaymentState extends State<Payment> {
   @override
   void initState() {
     getCurrentLocation();
-    getPolyPoint();
+    discount();
+
     super.initState();
     _controller.addListener(() {
       onChange();
@@ -273,6 +255,10 @@ class _PaymentState extends State<Payment> {
                             onTap: () {
                               print(
                                   '--------------โค้ดส่วนลด--------------------');
+                              nextScreen(
+                                  context,
+                                  Couponpayment(
+                                      price: widget.price, ID: widget.ID));
                             },
                             child: Column(
                               children: [
@@ -302,7 +288,7 @@ class _PaymentState extends State<Payment> {
                       ),
 
                       Text(
-                        widget.price.toString(),
+                        '$totalprice ฿',
                         style: GoogleFonts.prompt(
                           textStyle: TextStyle(
                             fontSize: 38,
@@ -345,9 +331,7 @@ class _PaymentState extends State<Payment> {
         child: FittedBox(
           child: FloatingActionButton(
             backgroundColor: Colors.green,
-            onPressed: () {
-              _sendLocation();
-            },
+            onPressed: () {},
             child: Icon(
               Icons.bolt,
               size: 35,
