@@ -41,26 +41,6 @@ class HelpCenter extends StatelessWidget {
           },
           child: ListView(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 30),
-                child: TextField(
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: const Color(0xFFD9D9D9),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    prefixIcon:
-                        const Icon(Icons.search, color: Color(0xFF1F1F1F)),
-                    hintText: "คุณต้องการให้เราช่วยเหลืออย่างไร ?",
-                    hintStyle: GoogleFonts.prompt(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: const Color.fromRGBO(31, 31, 31, 1),
-                    ),
-                  ),
-                ),
-              ),
               //กล่องสีดำ มีประโยชน์กับคุณมากที่สุด
               Stack(
                 children: <Widget>[
@@ -228,14 +208,49 @@ class HelpCenter extends StatelessWidget {
                       TextSpan(
                         text: "ต้องการความช่วยเหลือเพิ่มเติม",
                         style: GoogleFonts.prompt(
-                            fontWeight: FontWeight.bold, color: Colors.black),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
                       ),
                       TextSpan(
-                          text: " ติดต่อเรา",
-                          style: GoogleFonts.prompt(
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xFF3BB54A)),
-                          recognizer: TapGestureRecognizer())
+                        text: " ติดต่อเรา",
+                        style: GoogleFonts.prompt(
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF3BB54A),
+                        ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return Dialog(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(16),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          'ช่องทางการติดต่อ',
+                                          style: GoogleFonts.prompt(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 16),
+                                        Text('เบอร์โทรติดต่อ : 0816290242',
+                                            style: GoogleFonts.prompt(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            )),
+                                        const SizedBox(height: 16),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                      ),
                     ],
                   ),
                 ),
@@ -594,6 +609,7 @@ class _OfferState extends State<Offer> {
         await FirebaseFirestore.instance.collection('help').add({
       'Uword': wordController.text,
       'Uemail': uemail,
+      'type': 'user',
     });
   }
 
