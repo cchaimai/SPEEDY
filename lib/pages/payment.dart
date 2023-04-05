@@ -145,6 +145,7 @@ class _PaymentState extends State<Payment> {
                                   Fpayment(
                                     price: widget.price,
                                     ID: widget.ID,
+                                    totalprice: totalprice,
                                   ));
                             },
                             child: Column(
@@ -177,7 +178,10 @@ class _PaymentState extends State<Payment> {
                               nextScreen(
                                   context,
                                   Cardpayment(
-                                      price: widget.price, ID: widget.ID));
+                                    price: widget.price,
+                                    ID: widget.ID,
+                                    totalprice: totalprice,
+                                  ));
                             },
                             child: Column(
                               children: [

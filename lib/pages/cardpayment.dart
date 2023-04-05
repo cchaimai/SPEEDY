@@ -14,9 +14,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'bank_page.dart';
 
 class Cardpayment extends StatefulWidget {
-  const Cardpayment({super.key, required this.price, required this.ID});
+  const Cardpayment(
+      {super.key,
+      required this.price,
+      required this.ID,
+      required this.totalprice});
   final String price;
   final String ID;
+  final String totalprice;
   @override
   State<Cardpayment> createState() => _CardpaymentState();
 }
@@ -216,7 +221,10 @@ class _CardpaymentState extends State<Cardpayment> {
                                   nextScreen(
                                       context,
                                       Fpayment(
-                                          price: widget.price, ID: widget.ID));
+                                        price: widget.price,
+                                        ID: widget.ID,
+                                        totalprice: '',
+                                      ));
                                 },
                                 child: Container(
                                   width: 300,

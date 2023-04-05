@@ -59,8 +59,7 @@ class _ChargeDetailState extends State<ChargeDetail> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => MapSample()));
+            Navigator.pop(context);
             // ฟังก์ชันที่จะทำงานเมื่อกดปุ่มย้อนกลับ
           },
         ),

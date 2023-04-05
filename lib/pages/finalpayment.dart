@@ -10,9 +10,14 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Fpayment extends StatefulWidget {
-  const Fpayment({super.key, required this.price, required this.ID});
+  const Fpayment(
+      {super.key,
+      required this.price,
+      required this.ID,
+      required this.totalprice});
   final String price;
   final String ID;
+  final String totalprice;
   @override
   State<Fpayment> createState() => _FpaymentState();
 }
@@ -61,8 +66,7 @@ class _FpaymentState extends State<Fpayment> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
             onPressed: () {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => MapSample()));
+              Navigator.pop(context);
               // ฟังก์ชันที่จะทำงานเมื่อกดปุ่มย้อนกลับ
             },
           ),
@@ -176,7 +180,7 @@ class _FpaymentState extends State<Fpayment> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                widget.price,
+                                widget.totalprice,
                                 style: GoogleFonts.prompt(
                                     color: Colors.black,
                                     fontSize: 50,

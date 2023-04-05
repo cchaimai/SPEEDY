@@ -66,12 +66,12 @@ class WaitingState extends State<Waiting> {
       },
     );
 
-    location.onLocationChanged.listen(
-      (newloc) {
-        currentLocation = newloc;
-        setState(() {});
-      },
-    );
+    // location.onLocationChanged.listen(
+    //   (newloc) {
+    //     currentLocation = newloc;
+    //     setState(() {});
+    //   },
+    //   );
   }
 
   @override
@@ -137,17 +137,14 @@ class WaitingState extends State<Waiting> {
                                 currentLocation!.longitude!),
                           ),
                           Marker(
-                            markerId: const MarkerId("Source"),
+                            markerId: const MarkerId("Driver"),
+                            icon: BitmapDescriptor.defaultMarkerWithHue(127),
                             position: LatLng(
                               snapshot.data!.docs.singleWhere(
                                   (doc) => doc.id == widget.uid)['dlatitude'],
                               snapshot.data!.docs.singleWhere(
                                   (doc) => doc.id == widget.uid)['dlongitude'],
                             ),
-                          ),
-                          const Marker(
-                            markerId: MarkerId("Destination"),
-                            position: destination,
                           ),
                         },
                       ),
@@ -197,16 +194,34 @@ class WaitingState extends State<Waiting> {
                           ),
                         ),
                       ),
-                      const Align(
-                        alignment: Alignment(0, 0.52),
+                      Align(
+                        alignment: Alignment(0.99, -0.6),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white),
+                          child: Icon(
+                            Icons.comment_outlined,
+                            color: Colors.green,
+                          ),
+                          onPressed: () {
+                            nextScreen(
+                                context,
+                                ChatPage(
+                                  groupId: chatId,
+                                  groupName: phone,
+                                  userName: userName,
+                                  driverName: driver,
+                                ));
+                          },
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment(0, 0.53),
                         child: CircleAvatar(
                           backgroundColor: Color.fromRGBO(217, 217, 217, 1),
+                          backgroundImage: NetworkImage(
+                              '${snapshot.data!.docs.singleWhere((doc) => doc.id == widget.uid)['dProfile']}'),
                           radius: 40,
-                          child: Icon(
-                            Icons.account_circle,
-                            size: 70,
-                            color: Colors.black,
-                          ),
                         ),
                       ),
                     ]);
@@ -239,14 +254,6 @@ class WaitingState extends State<Waiting> {
                             markerId: const MarkerId("CurrentLocation"),
                             position: LatLng(currentLocation!.latitude!,
                                 currentLocation!.longitude!),
-                          ),
-                          const Marker(
-                            markerId: MarkerId("Source"),
-                            position: sourceLocation,
-                          ),
-                          const Marker(
-                            markerId: MarkerId("Destination"),
-                            position: destination,
                           ),
                         },
                       ),
@@ -297,15 +304,23 @@ class WaitingState extends State<Waiting> {
                           ),
                         ),
                       ),
-                      const Align(
-                        alignment: Alignment(0, 0.42),
+                      Align(
+                        alignment: Alignment(0, 0.44),
                         child: CircleAvatar(
                           backgroundColor: Color.fromRGBO(217, 217, 217, 1),
+                          backgroundImage: NetworkImage(
+                              '${snapshot.data!.docs.singleWhere((doc) => doc.id == widget.uid)['dProfile']}'),
                           radius: 40,
+                        ),
+                      ),
+                      Align(
+                        alignment: const Alignment(0.80, 0.46),
+                        child: InkWell(
+                          onTap: () {
+                            nextScreenReplace(context, MapSample());
+                          },
                           child: Icon(
-                            Icons.account_circle,
-                            size: 70,
-                            color: Colors.black,
+                            Icons.close,
                           ),
                         ),
                       ),
@@ -334,14 +349,6 @@ class WaitingState extends State<Waiting> {
                           markerId: const MarkerId("CurrentLocation"),
                           position: LatLng(currentLocation!.latitude!,
                               currentLocation!.longitude!),
-                        ),
-                        const Marker(
-                          markerId: MarkerId("Source"),
-                          position: sourceLocation,
-                        ),
-                        const Marker(
-                          markerId: MarkerId("Destination"),
-                          position: destination,
                         ),
                       },
                     ),
@@ -383,7 +390,7 @@ class WaitingState extends State<Waiting> {
                       ),
                     ),
                     const Align(
-                      alignment: Alignment(0, 0.52),
+                      alignment: Alignment(0, 0.53),
                       child: CircleAvatar(
                         backgroundColor: Color.fromRGBO(217, 217, 217, 1),
                         radius: 40,
@@ -395,10 +402,9 @@ class WaitingState extends State<Waiting> {
                       ),
                     ),
                     Align(
-                      alignment: const Alignment(0.79, 0.53),
+                      alignment: const Alignment(0.79, 0.55),
                       child: InkWell(
                         onTap: () {
-                          print('Earth na hee');
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
