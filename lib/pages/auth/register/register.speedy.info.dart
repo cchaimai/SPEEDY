@@ -21,18 +21,17 @@ class RegisterInformation extends StatefulWidget {
 
 class _RegisterInformationState extends State<RegisterInformation> {
   File? image;
-  final fnameController = TextEditingController();
-  final lnameController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
   final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
     super.dispose();
-    fnameController.dispose();
-    lnameController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
     emailController.dispose();
-    passwordController.dispose();
   }
 
   //for selecting image
@@ -78,260 +77,403 @@ class _RegisterInformationState extends State<RegisterInformation> {
           ),
         ),
       ),
-      body: SafeArea(
-        child: isLoading == true
-            ? const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.green,
-                ),
-              )
-            : SingleChildScrollView(
-                child: Center(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 30),
-                        child: Center(
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: 350,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Column(
-                                      children: [
-                                        const Icon(
-                                          Icons.check_circle,
-                                          color: Colors.green,
-                                          size: 60,
-                                        ),
-                                        Text(
-                                          'ข้อตกลง',
-                                          style: GoogleFonts.prompt(
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
+      body: Form(
+        key: formKey,
+        child: SafeArea(
+          child: isLoading == true
+              ? const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.green,
+                  ),
+                )
+              : SingleChildScrollView(
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30),
+                          child: Center(
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  width: 350,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          const Icon(
+                                            Icons.check_circle,
+                                            color: Colors.green,
+                                            size: 60,
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                    const Icon(
-                                      Icons.horizontal_rule,
-                                      color: Colors.green,
-                                      size: 25,
-                                    ),
-                                    Column(
-                                      children: [
-                                        const Icon(
-                                          Icons.check_circle,
-                                          color: Colors.green,
-                                          size: 60,
-                                        ),
-                                        Text(
-                                          'ยืนยันตัวตน',
-                                          style: GoogleFonts.prompt(
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    const Icon(
-                                      Icons.horizontal_rule,
-                                      color: Colors.green,
-                                      size: 25,
-                                    ),
-                                    Column(
-                                      children: [
-                                        const Icon(
-                                          Icons.check_circle,
-                                          color: Colors.green,
-                                          size: 60,
-                                        ),
-                                        Text(
-                                          'กรอกข้อมูล',
-                                          style: GoogleFonts.prompt(
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    const Icon(
-                                      Icons.horizontal_rule,
-                                      color: Colors.grey,
-                                      size: 25,
-                                    ),
-                                    Column(
-                                      children: [
-                                        const Icon(
-                                          Icons.check_circle,
-                                          color: Colors.grey,
-                                          size: 60,
-                                        ),
-                                        Text(
-                                          'สำเร็จ',
-                                          style: GoogleFonts.prompt(
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 30),
-                              Column(
-                                children: [
-                                  InkWell(
-                                    onTap: () => selectImage(),
-                                    child: image == null
-                                        ? const CircleAvatar(
-                                            backgroundColor: Colors.grey,
-                                            radius: 50,
-                                            child: Icon(
-                                              Icons.account_circle,
-                                              size: 50,
-                                              color: Colors.white,
+                                          Text(
+                                            'ข้อตกลง',
+                                            style: GoogleFonts.prompt(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
                                             ),
                                           )
-                                        : CircleAvatar(
-                                            backgroundImage: FileImage(image!),
-                                            radius: 50,
-                                          ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () => selectImage(),
-                                    child: Text(
-                                      'เพิ่มรูปภาพ',
-                                      style: GoogleFonts.prompt(
-                                        color: Colors.grey.shade600,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400,
+                                        ],
                                       ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 350,
-                                    child: Column(
-                                      children: [
-                                        textFeld(
-                                          hintText: "First Name",
-                                          icon: Icons.account_circle_outlined,
-                                          inputType: TextInputType.name,
-                                          maxLines: 1,
-                                          controller: fnameController,
-                                        ),
-                                        textFeld(
-                                          hintText: "Last Name",
-                                          icon: Icons.account_circle_outlined,
-                                          inputType: TextInputType.name,
-                                          maxLines: 1,
-                                          controller: lnameController,
-                                        ),
-                                        textFeld(
-                                            hintText: "abc@mail.com",
-                                            icon: Icons.email_outlined,
-                                            inputType: TextInputType.name,
-                                            maxLines: 1,
-                                            controller: emailController),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 25,
-                                  ),
-                                  InkWell(
-                                    onTap: () => storeData(),
-                                    child: Center(
-                                      child: Container(
-                                        alignment: Alignment.center,
-                                        height: 55,
-                                        width: 340,
-                                        decoration: BoxDecoration(
-                                          color: Colors.green,
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.black.withOpacity(0.1),
-                                              blurRadius: 10,
+                                      const Icon(
+                                        Icons.horizontal_rule,
+                                        color: Colors.green,
+                                        size: 25,
+                                      ),
+                                      Column(
+                                        children: [
+                                          const Icon(
+                                            Icons.check_circle,
+                                            color: Colors.green,
+                                            size: 60,
+                                          ),
+                                          Text(
+                                            'ยืนยันตัวตน',
+                                            style: GoogleFonts.prompt(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
                                             ),
-                                          ],
+                                          )
+                                        ],
+                                      ),
+                                      const Icon(
+                                        Icons.horizontal_rule,
+                                        color: Colors.green,
+                                        size: 25,
+                                      ),
+                                      Column(
+                                        children: [
+                                          const Icon(
+                                            Icons.check_circle,
+                                            color: Colors.green,
+                                            size: 60,
+                                          ),
+                                          Text(
+                                            'กรอกข้อมูล',
+                                            style: GoogleFonts.prompt(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      const Icon(
+                                        Icons.horizontal_rule,
+                                        color: Colors.grey,
+                                        size: 25,
+                                      ),
+                                      Column(
+                                        children: [
+                                          const Icon(
+                                            Icons.check_circle,
+                                            color: Colors.grey,
+                                            size: 60,
+                                          ),
+                                          Text(
+                                            'สำเร็จ',
+                                            style: GoogleFonts.prompt(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 30),
+                                Column(
+                                  children: [
+                                    InkWell(
+                                      onTap: () => selectImage(),
+                                      child: image == null
+                                          ? const CircleAvatar(
+                                              backgroundColor: Colors.grey,
+                                              radius: 50,
+                                              child: Icon(
+                                                Icons.account_circle,
+                                                size: 50,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : CircleAvatar(
+                                              backgroundImage:
+                                                  FileImage(image!),
+                                              radius: 50,
+                                            ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () => selectImage(),
+                                      child: Text(
+                                        'เพิ่มรูปภาพ',
+                                        style: GoogleFonts.prompt(
+                                          color: Colors.grey.shade600,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400,
                                         ),
-                                        child: Text(
-                                          'ลงทะเบียน',
-                                          style: GoogleFonts.prompt(
-                                            color: Colors.white,
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 350,
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                'ชื่อ',
+                                                style: GoogleFonts.prompt(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 5),
+                                          TextFormField(
+                                            cursorColor: Colors.green,
+                                            controller: firstNameController,
+                                            autovalidateMode: AutovalidateMode
+                                                .onUserInteraction,
+                                            style: GoogleFonts.prompt(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                            maxLines: 1,
+                                            decoration: InputDecoration(
+                                              labelText: 'First Name',
+                                              labelStyle: GoogleFonts.prompt(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w300,
+                                                  color: Colors.grey),
+                                              border:
+                                                  const OutlineInputBorder(),
+                                              focusedBorder:
+                                                  const OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(20),
+                                                ),
+                                                borderSide: BorderSide(
+                                                    color: Colors.grey),
+                                              ),
+                                              enabledBorder:
+                                                  const OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(20),
+                                                ),
+                                                borderSide: BorderSide(
+                                                    color: Colors.grey),
+                                              ),
+                                              errorBorder:
+                                                  const OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(20)),
+                                                borderSide: BorderSide(
+                                                    color: Colors.red),
+                                              ),
+                                              focusedErrorBorder:
+                                                  const OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(20)),
+                                                borderSide: BorderSide(
+                                                    color: Colors.red),
+                                              ),
+                                            ),
+                                            validator: (value) {
+                                              if (value!.isEmpty) {
+                                                return 'กรุณากรอกชื่อจริง';
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                          const SizedBox(height: 20),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                'นามสกุล',
+                                                style: GoogleFonts.prompt(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 5),
+                                          TextFormField(
+                                            cursorColor: Colors.green,
+                                            controller: lastNameController,
+                                            autovalidateMode: AutovalidateMode
+                                                .onUserInteraction,
+                                            style: GoogleFonts.prompt(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                            maxLines: 1,
+                                            decoration: InputDecoration(
+                                              labelText: 'Last Name',
+                                              labelStyle: GoogleFonts.prompt(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w300,
+                                                  color: Colors.grey),
+                                              border:
+                                                  const OutlineInputBorder(),
+                                              focusedBorder:
+                                                  const OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(20),
+                                                ),
+                                                borderSide: BorderSide(
+                                                    color: Colors.grey),
+                                              ),
+                                              enabledBorder:
+                                                  const OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(20),
+                                                ),
+                                                borderSide: BorderSide(
+                                                    color: Colors.grey),
+                                              ),
+                                              errorBorder:
+                                                  const OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(20)),
+                                                borderSide: BorderSide(
+                                                    color: Colors.red),
+                                              ),
+                                              focusedErrorBorder:
+                                                  const OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(20)),
+                                                borderSide: BorderSide(
+                                                    color: Colors.red),
+                                              ),
+                                            ),
+                                            validator: (value) {
+                                              if (value!.isEmpty) {
+                                                return 'กรุณากรอกนามสกุล';
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                          const SizedBox(height: 20),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                'อีเมล์',
+                                                style: GoogleFonts.prompt(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 5),
+                                          TextFormField(
+                                            cursorColor: Colors.green,
+                                            controller: emailController,
+                                            autovalidateMode: AutovalidateMode
+                                                .onUserInteraction,
+                                            style: GoogleFonts.prompt(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                            maxLines: 1,
+                                            decoration: InputDecoration(
+                                              labelText: 'example@gmail.com',
+                                              labelStyle: GoogleFonts.prompt(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w300,
+                                                  color: Colors.grey),
+                                              border:
+                                                  const OutlineInputBorder(),
+                                              focusedBorder:
+                                                  const OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(20),
+                                                ),
+                                                borderSide: BorderSide(
+                                                    color: Colors.grey),
+                                              ),
+                                              enabledBorder:
+                                                  const OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(20),
+                                                ),
+                                                borderSide: BorderSide(
+                                                    color: Colors.grey),
+                                              ),
+                                              errorBorder:
+                                                  const OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(20)),
+                                                borderSide: BorderSide(
+                                                    color: Colors.red),
+                                              ),
+                                              focusedErrorBorder:
+                                                  const OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(20)),
+                                                borderSide: BorderSide(
+                                                    color: Colors.red),
+                                              ),
+                                            ),
+                                            validator: (value) {
+                                              if (value!.isEmpty) {
+                                                return 'กรุณากรอกอีเมล์';
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 30),
+                                    InkWell(
+                                      onTap: () => storeData(),
+                                      child: Center(
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          height: 55,
+                                          width: 340,
+                                          decoration: BoxDecoration(
+                                            color: Colors.green,
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.1),
+                                                blurRadius: 10,
+                                              ),
+                                            ],
+                                          ),
+                                          child: Text(
+                                            'ลงทะเบียน',
+                                            style: GoogleFonts.prompt(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w500,
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                    const SizedBox(height: 30),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-      ),
-    );
-  }
-
-  Widget textFeld({
-    required String hintText,
-    required IconData icon,
-    required TextInputType inputType,
-    required int maxLines,
-    required TextEditingController controller,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.all(5.0),
-      child: TextFormField(
-        cursorColor: Colors.green,
-        controller: controller,
-        keyboardType: inputType,
-        maxLines: maxLines,
-        decoration: InputDecoration(
-          prefixIcon: Container(
-            margin: const EdgeInsets.all(10.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.green,
-            ),
-            child: Icon(
-              icon,
-              size: 20,
-              color: Colors.white,
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: Colors.grey,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: Colors.grey,
-            ),
-          ),
-          hintText: hintText,
-          alignLabelWithHint: true,
         ),
       ),
     );
@@ -343,8 +485,8 @@ class _RegisterInformationState extends State<RegisterInformation> {
     List<String> events = [];
     List<String> coupon = [];
     UserModel userModel = UserModel(
-      firstName: fnameController.text.trim(),
-      lastName: lnameController.text.trim(),
+      firstName: firstNameController.text.trim(),
+      lastName: lastNameController.text.trim(),
       email: emailController.text.trim(),
       profilePic: "",
       uid: "",
@@ -354,7 +496,7 @@ class _RegisterInformationState extends State<RegisterInformation> {
       events: [],
       coupon: [],
     );
-    if (image != null) {
+    if (image != null && formKey.currentState!.validate()) {
       ap.saveUserDataToFirebase(
         context: context,
         userModel: userModel,
@@ -371,7 +513,7 @@ class _RegisterInformationState extends State<RegisterInformation> {
         events: events.toList(),
         coupon: coupon.toList(),
       );
-    } else {
+    } else if (image == null) {
       Fluttertoast.showToast(msg: "Please upload your profile photo");
     }
   }
