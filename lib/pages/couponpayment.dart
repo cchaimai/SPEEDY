@@ -194,61 +194,6 @@ class _CouponpaymentState extends State<Couponpayment> {
                               ),
                             ),
                           );
-                          // return Container(
-                          //   width: double.infinity,
-                          //   height: 100,
-                          //   margin: const EdgeInsets.only(top: 5, bottom: 5),
-                          //   decoration: BoxDecoration(
-                          //     color: Colors.white,
-                          //     borderRadius: BorderRadius.circular(16),
-                          //   ),
-                          //   child: Row(
-                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //     children: [
-                          //       //Text("1x"),
-                          //       SizedBox(
-                          //         width: 20,
-                          //       ),
-                          //       Expanded(
-                          //           child: coupon[index]['dis'] >= 1
-                          //               ? Text(
-                          //                   coupon[index]['dis'].toString(),
-                          //                   style: GoogleFonts.prompt(
-                          //                       fontWeight: FontWeight.bold,
-                          //                       fontSize: 20),
-                          //                 )
-                          //               : Text(
-                          //                   '${(coupon[index]['dis'] * 100).toStringAsFixed(0)}%',
-                          //                   style: GoogleFonts.prompt(
-                          //                       fontWeight: FontWeight.bold,
-                          //                       fontSize: 20),
-                          //                 )),
-
-                          //       TextButton(
-                          //         onPressed: () {
-                          //           nextScreenReplace(
-                          //               context,
-                          //               Payment(
-                          //                   price: widget.price,
-                          //                   ID: widget.ID,
-                          //                   dis: coupon[index]['dis']));
-
-                          //           print(totalprice);
-                          //         },
-                          //         child: Text(
-                          //           "Apply",
-                          //           style:
-                          //               GoogleFonts.prompt(color: Colors.white),
-                          //         ),
-                          //         style: ButtonStyle(
-                          //           backgroundColor:
-                          //               MaterialStateProperty.all<Color>(
-                          //                   Color(0xFFF53BE1E)),
-                          //         ),
-                          //       )
-                          //     ],
-                          //   ),
-                          // );
                         },
                       ))
                     ]),
