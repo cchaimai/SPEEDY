@@ -433,13 +433,22 @@ class WaitingState extends State<Waiting> {
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
                                       ElevatedButton(
-                                        onPressed: () async {
-                                          await FirebaseFirestore.instance
+                                        onPressed: () {
+                                          // await FirebaseFirestore.instance
+                                          //     .collection('requests')
+                                          //     .doc(widget.uid)
+                                          //     .delete();
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const MapSample()),
+                                            (route) => false,
+                                          ).then((value) => FirebaseFirestore
+                                              .instance
                                               .collection('requests')
                                               .doc(widget.uid)
-                                              .delete();
-                                          nextScreenReplace(
-                                              context, MapSample());
+                                              .delete());
                                         },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor:
