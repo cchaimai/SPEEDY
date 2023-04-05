@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:chat_test/pages/show_profile.dart';
 import 'package:chat_test/service/auth_service.dart';
+import 'package:chat_test/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -326,14 +327,6 @@ class _EditProfileState extends State<EditProfile> {
                               builder: (context) => ShowProfile()),
                         );
                       },
-                      child: Text(
-                        "ยืนยัน",
-                        style: GoogleFonts.prompt(
-                          fontSize: 15,
-                          letterSpacing: 2,
-                          color: Colors.white,
-                        ),
-                      ),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
                             const Color(0xFF3BB54A)),
@@ -345,6 +338,14 @@ class _EditProfileState extends State<EditProfile> {
                         ),
                         padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                           const EdgeInsets.symmetric(horizontal: 150),
+                        ),
+                      ),
+                      child: Text(
+                        "ยืนยัน",
+                        style: GoogleFonts.prompt(
+                          fontSize: 15,
+                          letterSpacing: 2,
+                          color: Colors.white,
                         ),
                       ),
                     )

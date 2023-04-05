@@ -44,7 +44,6 @@ class _ShowProfileState extends State<ShowProfile> {
       final showemail = data['email'];
       final showephoneNumber = data['phoneNumber'];
       final showprofilePic = data['profilePic'].toString();
-      final showName = '$firstName $lastName';
       setState(() {
         firstName = showfirstName!;
         lastName = showlastName!;
@@ -117,7 +116,7 @@ class _ShowProfileState extends State<ShowProfile> {
                     ),
                     labelText: "First Name",
                     labelStyle: GoogleFonts.prompt(
-                      textStyle: TextStyle(
+                      textStyle: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                           fontSize: 16),
@@ -125,7 +124,7 @@ class _ShowProfileState extends State<ShowProfile> {
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     hintText: firstName,
                     hintStyle: GoogleFonts.prompt(
-                      textStyle: TextStyle(
+                      textStyle: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF989898)),
@@ -145,7 +144,7 @@ class _ShowProfileState extends State<ShowProfile> {
                     ),
                     labelText: "Last Name",
                     labelStyle: GoogleFonts.prompt(
-                      textStyle: TextStyle(
+                      textStyle: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                           fontSize: 16),
@@ -153,7 +152,7 @@ class _ShowProfileState extends State<ShowProfile> {
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     hintText: lastName,
                     hintStyle: GoogleFonts.prompt(
-                      textStyle: TextStyle(
+                      textStyle: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF989898)),
@@ -173,7 +172,7 @@ class _ShowProfileState extends State<ShowProfile> {
                     ),
                     labelText: "เบอร์โทรศัพท์",
                     labelStyle: GoogleFonts.prompt(
-                      textStyle: TextStyle(
+                      textStyle: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                           fontSize: 16),
@@ -181,7 +180,7 @@ class _ShowProfileState extends State<ShowProfile> {
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     hintText: phoneNumber,
                     hintStyle: GoogleFonts.prompt(
-                      textStyle: TextStyle(
+                      textStyle: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF989898)),
@@ -201,7 +200,7 @@ class _ShowProfileState extends State<ShowProfile> {
                     ),
                     labelText: "Email",
                     labelStyle: GoogleFonts.prompt(
-                      textStyle: TextStyle(
+                      textStyle: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                           fontSize: 16),
@@ -209,7 +208,7 @@ class _ShowProfileState extends State<ShowProfile> {
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                     hintText: email,
                     hintStyle: GoogleFonts.prompt(
-                      textStyle: TextStyle(
+                      textStyle: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF989898)),
@@ -217,47 +216,6 @@ class _ShowProfileState extends State<ShowProfile> {
                   ),
                 ),
               ),
-              /*Padding(
-                padding: const EdgeInsets.only(bottom: 35.0),
-                child: TextField(
-                  obscureText: isPasswordTextField ? showPassword : false,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: const Color(0xFFD9D9D9),
-                    suffixIcon: isPasswordTextField
-                        ? IconButton(
-                            onPressed: () {
-                              setState(() {
-                                showPassword = !showPassword;
-                              });
-                            },
-                            icon: Icon(
-                              Icons.remove_red_eye,
-                              color: Colors.grey,
-                            ),
-                          )
-                        : null,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    labelText: "รหัสผ่าน",
-                    labelStyle: GoogleFonts.prompt(
-                      textStyle: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
-                    ),
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    hintText: "********",
-                    hintStyle: GoogleFonts.prompt(
-                      textStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF989898)),
-                    ),
-                  ),
-                ),
-              ),*/
               const SizedBox(height: 30),
               Column(
                 children: [
@@ -265,9 +223,22 @@ class _ShowProfileState extends State<ShowProfile> {
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => EditProfile()),
+                        MaterialPageRoute(
+                            builder: (context) => const EditProfile()),
                       );
                     },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          const Color(0xFF3BB54A)),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                        const EdgeInsets.symmetric(horizontal: 155),
+                      ),
+                    ),
                     child: Text(
                       "แก้ไข",
                       style: GoogleFonts.prompt(
@@ -276,45 +247,33 @@ class _ShowProfileState extends State<ShowProfile> {
                         color: Colors.white,
                       ),
                     ),
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Color(0xFF3BB54A)),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        EdgeInsets.symmetric(horizontal: 155),
-                      ),
-                    ),
                   ),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.pop(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ProfileScreen()),
+                            builder: (context) => const ProfileScreen()),
                       );
                     },
-                    child: Text(
-                      "ยกเลิก",
-                      style: GoogleFonts.prompt(
-                        fontSize: 15,
-                        letterSpacing: 2,
-                        color: Colors.white,
-                      ),
-                    ),
                     style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Color(0xFFFF0000)),
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          const Color(0xFFFF0000)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
                       padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        EdgeInsets.symmetric(horizontal: 150),
+                        const EdgeInsets.symmetric(horizontal: 150),
+                      ),
+                    ),
+                    child: Text(
+                      "ยกเลิก",
+                      style: GoogleFonts.prompt(
+                        fontSize: 15,
+                        letterSpacing: 2,
+                        color: Colors.white,
                       ),
                     ),
                   ),
