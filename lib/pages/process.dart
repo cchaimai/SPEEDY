@@ -1,7 +1,10 @@
 import 'dart:math';
 import 'dart:developer';
 
+import 'package:chat_test/pages/auth/profile_beam.dart';
+import 'package:chat_test/pages/change_test.dart';
 import 'package:chat_test/pages/chat_page.dart';
+import 'package:chat_test/pages/check_main.dart';
 import 'package:chat_test/pages/home_page.dart';
 import 'package:chat_test/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -551,7 +554,7 @@ class WaitingState extends State<Waiting> {
               ),
               InkWell(
                 onTap: () {
-                  // nextScreen(context, )
+                  nextScreenReplace(context, checkScreen(carId: '', car: ''));
                 },
                 child: SizedBox(
                   width: 60,
@@ -575,40 +578,30 @@ class WaitingState extends State<Waiting> {
                   ),
                 ),
               ),
-              InkWell(
-                onTap: () async {
-                  nextScreen(
-                      context,
-                      ChatPage(
-                        groupId: chatId,
-                        groupName: phone,
-                        userName: userName,
-                        driverName: driver,
-                      ));
-                },
-                child: SizedBox(
-                  width: 60,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Text(
-                          'Charge',
-                          style: GoogleFonts.prompt(
-                            textStyle: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Colors.green,
-                                fontSize: 17),
-                          ),
+              SizedBox(
+                width: 60,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Text(
+                        'Charge',
+                        style: GoogleFonts.prompt(
+                          textStyle: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.green,
+                              fontSize: 17),
                         ),
-                      )
-                    ],
-                  ),
+                      ),
+                    )
+                  ],
                 ),
               ),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  nextScreenReplace(context, changeTest(carId: '', car: ''));
+                },
                 child: SizedBox(
                   width: 60,
                   child: Column(
@@ -633,7 +626,7 @@ class WaitingState extends State<Waiting> {
               ),
               InkWell(
                 onTap: () {
-                  print("kuy peng na hee");
+                  nextScreenReplace(context, ProfileScreen());
                 },
                 child: SizedBox(
                   width: 60,

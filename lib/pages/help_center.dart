@@ -1,8 +1,5 @@
-import 'package:chat_test/pages/auth/profile_beam.dart';
-import 'package:chat_test/service/database_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -81,7 +78,8 @@ class HelpCenter extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Accident()),
+                          MaterialPageRoute(
+                              builder: (context) => const Accident()),
                         );
                       },
                       child: Text("รายงานอุบัติเหตุและความปลอดภัย",
@@ -105,7 +103,8 @@ class HelpCenter extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Offer()),
+                          MaterialPageRoute(
+                              builder: (context) => const Offer()),
                         );
                       },
                       child: Text("ข้อเสนอถึงผู้ให้บริการ",
@@ -129,7 +128,8 @@ class HelpCenter extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Problem()),
+                          MaterialPageRoute(
+                              builder: (context) => const Problem()),
                         );
                       },
                       child: Text("ปัญหาแผนที่/ตำแหน่งที่ตั้ง",
@@ -153,7 +153,8 @@ class HelpCenter extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Other()),
+                          MaterialPageRoute(
+                              builder: (context) => const Other()),
                         );
                       },
                       child: Column(
@@ -178,21 +179,24 @@ class HelpCenter extends StatelessWidget {
                     height: 43,
                     width: 222,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFFFFC700), width: 3),
+                      border:
+                          Border.all(color: const Color(0xFFFFC700), width: 3),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.dangerous_rounded, color: Color(0xFFFFC700)),
-                        SizedBox(width: 8),
+                        const Icon(Icons.dangerous_rounded,
+                            color: Color(0xFFFFC700)),
+                        const SizedBox(width: 8),
                         Text(
                           "ความช่วยเหลือเร่งด่วน",
                           style:
                               GoogleFonts.prompt(fontWeight: FontWeight.bold),
                         ),
-                        SizedBox(width: 8),
-                        Icon(Icons.dangerous_rounded, color: Color(0xFFFFC700)),
+                        const SizedBox(width: 8),
+                        const Icon(Icons.dangerous_rounded,
+                            color: Color(0xFFFFC700)),
                       ],
                     ),
                   ),
@@ -324,7 +328,7 @@ class Accident extends StatelessWidget {
                           style: GoogleFonts.prompt(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF626262)),
+                              color: const Color(0xFF626262)),
                         )
                       ],
                     ),
@@ -345,7 +349,7 @@ class Accident extends StatelessWidget {
                             "ฉันได้รับการแจ้งเตือนเหตุฉุกเฉิน",
                             style: GoogleFonts.prompt(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF25ABD1)),
+                                color: const Color(0xFF25ABD1)),
                           )
                         ],
                       ),
@@ -367,7 +371,7 @@ class Accident extends StatelessWidget {
                             "ทำอย่างไรเมื่อรู้สึกไม่ปลอดภัย",
                             style: GoogleFonts.prompt(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF25ABD1)),
+                                color: const Color(0xFF25ABD1)),
                           )
                         ],
                       ),
@@ -389,7 +393,7 @@ class Accident extends StatelessWidget {
                             "ทำไมฉันได้รับแต้งเตือนหยุดกลางคัน",
                             style: GoogleFonts.prompt(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF25ABD1)),
+                                color: const Color(0xFF25ABD1)),
                           )
                         ],
                       ),
@@ -411,7 +415,7 @@ class Accident extends StatelessWidget {
                             "นโยบายความปลอดภัย",
                             style: GoogleFonts.prompt(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF25ABD1)),
+                                color: const Color(0xFF25ABD1)),
                           )
                         ],
                       ),
@@ -433,7 +437,7 @@ class Accident extends StatelessWidget {
                             "ศูนย์ความปลอยภัยคืออะไร",
                             style: GoogleFonts.prompt(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF25ABD1)),
+                                color: const Color(0xFF25ABD1)),
                           )
                         ],
                       ),
@@ -456,7 +460,7 @@ class Accident extends StatelessWidget {
                             "รายชื่อผู้ติดต่อฉุกเฉินคืออะไร",
                             style: GoogleFonts.prompt(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF25ABD1)),
+                                color: const Color(0xFF25ABD1)),
                           )
                         ],
                       ),
@@ -478,7 +482,7 @@ class Accident extends StatelessWidget {
                             "วิธีการแชร์เที่ยวการเดินทาง",
                             style: GoogleFonts.prompt(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF25ABD1)),
+                                color: const Color(0xFF25ABD1)),
                           )
                         ],
                       ),
@@ -501,7 +505,7 @@ class Accident extends StatelessWidget {
                             "ฟีเจอร์ปกปิดเบอร์โทรศัพท์ คืออะไร",
                             style: GoogleFonts.prompt(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF25ABD1)),
+                                color: const Color(0xFF25ABD1)),
                           )
                         ],
                       ),
@@ -518,7 +522,7 @@ class Accident extends StatelessWidget {
                           style: GoogleFonts.prompt(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF626262)),
+                              color: const Color(0xFF626262)),
                         )
                       ],
                     ),
@@ -539,7 +543,7 @@ class Accident extends StatelessWidget {
                             "แนวทางและวิธีการป้องกันไวรัสโควิด-19",
                             style: GoogleFonts.prompt(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF25ABD1)),
+                                color: const Color(0xFF25ABD1)),
                           )
                         ],
                       ),
@@ -556,7 +560,7 @@ class Accident extends StatelessWidget {
                           style: GoogleFonts.prompt(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF626262)),
+                              color: const Color(0xFF626262)),
                         )
                       ],
                     ),
@@ -577,7 +581,7 @@ class Accident extends StatelessWidget {
                             "รายงานอุบัติเหตุและกรณีฉุกเฉิน",
                             style: GoogleFonts.prompt(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF25ABD1)),
+                                color: const Color(0xFF25ABD1)),
                           )
                         ],
                       ),
@@ -690,7 +694,7 @@ class _OfferState extends State<Offer> {
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: const Color(0xFFD9D9D9),
-                              contentPadding: EdgeInsets.symmetric(
+                              contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 90),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(17),
@@ -706,6 +710,7 @@ class _OfferState extends State<Offer> {
                         ElevatedButton(
                           onPressed: () async {
                             await _getOffer();
+                            // ignore: use_build_context_synchronously
                             showDialog(
                               context: context,
                               builder: (_) => AlertDialog(
@@ -721,15 +726,16 @@ class _OfferState extends State<Offer> {
                                       Navigator.pop(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => HelpCenter()),
+                                            builder: (context) =>
+                                                const HelpCenter()),
                                       );
                                     },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Color(0xFF3BB54A),
+                                    ),
                                     child: Text(
                                       'ตกลง',
                                       style: GoogleFonts.prompt(),
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Color(0xFF3BB54A),
                                     ),
                                   )
                                 ],
@@ -737,8 +743,9 @@ class _OfferState extends State<Offer> {
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFF3BB54A),
-                              padding: EdgeInsets.symmetric(horizontal: 50),
+                              backgroundColor: const Color(0xFF3BB54A),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 50),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10))),
                           child: Text("ส่ง",
@@ -815,7 +822,7 @@ class Problem extends StatelessWidget {
                           style: GoogleFonts.prompt(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF626262)),
+                              color: const Color(0xFF626262)),
                         )
                       ],
                     ),
@@ -836,7 +843,7 @@ class Problem extends StatelessWidget {
                             "วิธีรายงานปัญญาผ่านศูนย์ช่วยเหลือ",
                             style: GoogleFonts.prompt(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF25ABD1)),
+                                color: const Color(0xFF25ABD1)),
                           )
                         ],
                       ),
@@ -858,7 +865,7 @@ class Problem extends StatelessWidget {
                             "แอปพลิเคชั่น SPEEDY Driver มีปัญหา",
                             style: GoogleFonts.prompt(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF25ABD1)),
+                                color: const Color(0xFF25ABD1)),
                           )
                         ],
                       ),
@@ -880,7 +887,7 @@ class Problem extends StatelessWidget {
                             "วิธีสำรองข้อมูลและเรียกคืนข้อมูลโทรศัพท์",
                             style: GoogleFonts.prompt(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF25ABD1)),
+                                color: const Color(0xFF25ABD1)),
                           )
                         ],
                       ),
@@ -897,7 +904,7 @@ class Problem extends StatelessWidget {
                           style: GoogleFonts.prompt(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF626262)),
+                              color: const Color(0xFF626262)),
                         )
                       ],
                     ),
@@ -918,7 +925,7 @@ class Problem extends StatelessWidget {
                             "รายงานปัญหาเกี่ยวกับสถานที่",
                             style: GoogleFonts.prompt(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF25ABD1)),
+                                color: const Color(0xFF25ABD1)),
                           )
                         ],
                       ),
@@ -940,7 +947,7 @@ class Problem extends StatelessWidget {
                             "รายงานปัญหาแผนที่และการนำทางหน้าแอป",
                             style: GoogleFonts.prompt(
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF25ABD1)),
+                                color: const Color(0xFF25ABD1)),
                           )
                         ],
                       ),
@@ -980,15 +987,13 @@ class Other extends StatelessWidget {
             ),
           ],
         ),
-        body: Container(
-          child: Stack(children: <Widget>[
-            Positioned(
-                top: 40,
-                left: 30,
-                child: Text("หัวข้ออื่นๆ",
-                    style: GoogleFonts.prompt(
-                        fontSize: 20, fontWeight: FontWeight.bold))),
-          ]),
-        ));
+        body: Stack(children: <Widget>[
+          Positioned(
+              top: 40,
+              left: 30,
+              child: Text("หัวข้ออื่นๆ",
+                  style: GoogleFonts.prompt(
+                      fontSize: 20, fontWeight: FontWeight.bold))),
+        ]));
   }
 }
