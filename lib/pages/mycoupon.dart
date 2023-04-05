@@ -66,12 +66,12 @@ class _MyCouponState extends State<MyCoupon> {
           toolbarHeight: 84, //ความสูง bar บน
           centerTitle: true, //กลาง
           leading: IconButton(
-          onPressed: () => nextScreenReplace(context, const ProfileScreen()),
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.white,
+            onPressed: () => nextScreenReplace(context, const ProfileScreen()),
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
           ),
-        ),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.confirmation_num_outlined),
@@ -172,11 +172,13 @@ class _MyCouponState extends State<MyCoupon> {
           await firestore.collection('coupon').doc(couponId).get();
 
       if (!couponDoc.exists) {
-        print("ไม่มีไอสัสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสส");
+        print("NO");
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       } else {
         print("asdasdasdasdasdasdasdsad");
+        ScaffoldMessenger.of(context).showSnackBar(Bar2);
         DocumentReference userDocumentReference = userCollection.doc(uid);
-        return await userDocumentReference.update({
+        await userDocumentReference.update({
           "coupon": FieldValue.arrayUnion([couponId])
         });
       }
@@ -184,6 +186,27 @@ class _MyCouponState extends State<MyCoupon> {
       print('Error getting coupon: $e');
     }
   }
+
+  final snackBar = SnackBar(
+    closeIconColor: Colors.white,
+    showCloseIcon: true,
+    content: Text(
+      'No Coupon',
+      style: GoogleFonts.prompt(),
+    ),
+    backgroundColor: const Color(0xff3BB54A),
+    duration: const Duration(seconds: 2),
+  );
+  final Bar2 = SnackBar(
+    closeIconColor: Colors.white,
+    showCloseIcon: true,
+    content: Text(
+      'คุณได้รับ Coupon',
+      style: GoogleFonts.prompt(),
+    ),
+    backgroundColor: const Color(0xff3BB54A),
+    duration: const Duration(seconds: 2),
+  );
 
   Future<void> CouPon(BuildContext context) => showDialog(
       context: context,

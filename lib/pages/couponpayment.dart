@@ -211,11 +211,13 @@ class _CouponpaymentState extends State<Couponpayment> {
           await firestore.collection('coupon').doc(couponId).get();
 
       if (!couponDoc.exists) {
-        print("ไม่มีไอสัสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสสส");
+        print("No");
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
       } else {
         print("asdasdasdasdasdasdasdsad");
         DocumentReference userDocumentReference = userCollection.doc(uid);
-        return await userDocumentReference.update({
+        ScaffoldMessenger.of(context).showSnackBar(Bar2);
+        await userDocumentReference.update({
           "coupon": FieldValue.arrayUnion([couponId])
         });
       }
@@ -224,6 +226,27 @@ class _CouponpaymentState extends State<Couponpayment> {
     }
   }
 
+  final snackBar = SnackBar(
+    closeIconColor: Colors.white,
+    showCloseIcon: true,
+    content: Text(
+      'No Coupon',
+      style: GoogleFonts.prompt(),
+    ),
+    backgroundColor: const Color(0xff3BB54A),
+    duration: const Duration(seconds: 2),
+  );
+
+  final Bar2 = SnackBar(
+    closeIconColor: Colors.white,
+    showCloseIcon: true,
+    content: Text(
+      'คุณได้รับ Coupon',
+      style: GoogleFonts.prompt(),
+    ),
+    backgroundColor: const Color(0xff3BB54A),
+    duration: const Duration(seconds: 2),
+  );
   Future<void> CouPon(BuildContext context) => showDialog(
       context: context,
       builder: (context) => AlertDialog(

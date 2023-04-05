@@ -77,7 +77,6 @@ class MapSampleState extends State<MapSample> {
 
   Future<String> _getLocation() async {
     Lo.Location location = Lo.Location();
-    print("earth na heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
     final Lo.LocationData _locationResult = await location.getLocation();
     workID = (Random().nextInt(900000) + 100000).toString();
 
