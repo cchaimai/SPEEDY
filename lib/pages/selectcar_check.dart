@@ -1,5 +1,4 @@
-import 'package:chat_test/pages/auth/profile_beam.dart';
-import 'package:chat_test/pages/home_page.dart';
+import 'package:chat_test/pages/check_main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,17 +8,17 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets/widgets.dart';
 import 'addcar.dart';
-import 'change_test.dart';
-import 'mycar.dart';
+import 'auth/profile_beam.dart';
+import 'home_page.dart';
 
-class selectCar extends StatefulWidget {
-  const selectCar({super.key});
+class selectCarCheck extends StatefulWidget {
+  const selectCarCheck({super.key});
 
   @override
-  State<selectCar> createState() => _selectCarState();
+  State<selectCarCheck> createState() => _selectCarCheckState();
 }
 
-class _selectCarState extends State<selectCar> {
+class _selectCarCheckState extends State<selectCarCheck> {
   final List<Map<String, dynamic>> _car = [];
   final userId = FirebaseAuth.instance.currentUser!.uid;
 
@@ -137,9 +136,9 @@ class _selectCarState extends State<selectCar> {
                             final carId = snapshot.data!.docs[index]['carId'];
                             final car = snapshot.data!.docs[index]['brand'] +
                                 snapshot.data!.docs[index]['model'];
-                            nextScreenReplace(
+                            nextScreen(
                                 context,
-                                changeTest(
+                                checkScreen(
                                   carId: carId,
                                   car: car,
                                 ));

@@ -74,10 +74,10 @@ class _cancelChangeState extends State<cancelChange> {
           height: 200,
           child: Center(
             child: Text(
-              "CHECK",
+              "CHANGE",
               style: GoogleFonts.prompt(
                   color: const Color.fromARGB(255, 41, 41, 41),
-                  fontSize: 100,
+                  fontSize: 80,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 10),
             ),
@@ -257,6 +257,7 @@ class _cancelChangeState extends State<cancelChange> {
                           children: [
                             GestureDetector(
                               onTap: () {
+
                                 delete();
                               },
                               child: Container(
@@ -305,7 +306,7 @@ class _cancelChangeState extends State<cancelChange> {
       'events': FieldValue.arrayRemove([widget.eventsId])
     });
     FirebaseFirestore.instance.collection('date').doc(dateId).update({
-      'time': FieldValue.arrayRemove([widget.eventsId])
+      widget.time: FieldValue.arrayRemove([widget.eventsId])
     });
     nextScreenReplace(context, HomePage());
   }

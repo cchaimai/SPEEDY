@@ -1,6 +1,7 @@
 import 'package:chat_test/helper/helper_function.dart';
 import 'package:chat_test/pages/auth/login.social.dart';
 import 'package:chat_test/pages/home_page.dart';
+import 'package:chat_test/pages/notifications.dart';
 import 'package:chat_test/shared/constant.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +9,10 @@ import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import '../../service/auth_service.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   if (kIsWeb) {
     await Firebase.initializeApp(
         options: FirebaseOptions(
@@ -28,7 +29,7 @@ void main() async {
 
 class MyApp extends StatefulWidget {
   MyApp({Key? key}) : super(key: key);
-
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -36,10 +37,17 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool _isSignedIn = false;
 
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   void initState() {
     super.initState();
     getUserLoggedInStatus();
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
   }
 
   getUserLoggedInStatus() async {
@@ -59,6 +67,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => AuthService()),
       ],
       child: MaterialApp(
+        navigatorKey: navigatorKey,
         home: AnimatedSplashScreen(
           duration: 3000,
           splash: SizedBox(

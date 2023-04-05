@@ -348,9 +348,9 @@ class _RegisterInformationState extends State<RegisterInformation> {
       profilePic: "",
       uid: "",
       phoneNumber: "",
+      chat: "",
       cards: [],
       events: [],
-      groups: [],
     );
     if (image != null) {
       ap.saveUserDataToFirebase(
@@ -367,7 +367,6 @@ class _RegisterInformationState extends State<RegisterInformation> {
         },
         cards: cards.toList(),
         events: events.toList(),
-        groups: groups.toList(),
       );
     } else {
       print("Please upload your profile photo");

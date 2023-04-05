@@ -259,9 +259,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         context: context,
                         builder: (context) {
                           return AlertDialog(
-                            title: const Text("Logout"),
-                            content:
-                                const Text("Are you sure you want to logout?"),
+                            title: Text(
+                              "Logout",
+                              style: GoogleFonts.prompt(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            content: Text(
+                              "Are you sure you want to logout?",
+                              style: GoogleFonts.prompt(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
                             actions: [
                               IconButton(
                                 onPressed: () {

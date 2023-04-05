@@ -79,8 +79,8 @@ class _ChargeDetailState extends State<ChargeDetail> {
                     padding: const EdgeInsets.all(20),
                     child: Container(
                       alignment: Alignment.center,
-                      height: 430,
-                      width: 300,
+                      height: 490,
+                      width: 330,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
@@ -120,125 +120,27 @@ class _ChargeDetailState extends State<ChargeDetail> {
           return SingleChildScrollView(
             child: Column(
               children: [
-                const SizedBox(
-                  height: 10,
+                const Padding(
+                  padding: EdgeInsets.only(top: 40),
+                  child: SizedBox(
+                    height: 10,
+                  ),
                 ),
                 SizedBox(
-                  height: 450,
+                  height: 490,
                   child: ListView.builder(
                     itemCount: snapshot.data?.docs.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
                       return InkWell(
-                        onTap: () {
-                          print('----------${widget.ID}----------');
-                          // _getchargedetail(
-                          //         snapshot.data!.docs[index]['brand'],
-                          //         snapshot.data!.docs[index]['carId'],
-                          //         snapshot.data!.docs[index]['chargeType'],
-                          //         snapshot.data!.docs[index]['provinces'],
-                          //         widget.ID)
-                          //     .then((value) => nextScreen(
-                          //         context,
-                          //         Payment(
-                          //           price: price.toString(),
-                          //           ID: widget.ID,
-                          //           dis: 0,
-                          //         )));
-
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20))),
-                                backgroundColor: Colors.black,
-                                title: Center(
-                                  child: Text(
-                                    'คุณต้องการเติม ${energyController.text} kWh?',
-                                    style: GoogleFonts.prompt(
-                                      textStyle: const TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                actions: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          _getchargedetail(
-                                                  snapshot.data!.docs[index]
-                                                      ['brand'],
-                                                  snapshot.data!.docs[index]
-                                                      ['carId'],
-                                                  snapshot.data!.docs[index]
-                                                      ['chargeType'],
-                                                  snapshot.data!.docs[index]
-                                                      ['provinces'],
-                                                  widget.ID)
-                                              .then((value) => nextScreen(
-                                                  context,
-                                                  Payment(
-                                                    price: price.toString(),
-                                                    ID: widget.ID,
-                                                    dis: 0,
-                                                  )));
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              const Color(0xff3BB54A),
-                                          fixedSize: const Size(100, 30),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8)),
-                                        ),
-                                        child: Text(
-                                          "ยืนยัน",
-                                          style: GoogleFonts.prompt(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop(false);
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.red,
-                                          fixedSize: const Size(100, 30),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8)),
-                                        ),
-                                        child: Text(
-                                          "ยกเลิก",
-                                          style: GoogleFonts.prompt(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
+                        onTap: () {},
                         child: Container(
-                          width: 300,
+                          width: 340,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
                             color: Colors.white,
                           ),
-                          margin: const EdgeInsets.fromLTRB(35, 10, 10, 10),
+                          margin: const EdgeInsets.fromLTRB(30, 10, 10, 10),
                           child: Column(
                             children: [
                               Column(
@@ -255,17 +157,25 @@ class _ChargeDetailState extends State<ChargeDetail> {
                                   Column(
                                     children: [
                                       Text(
+                                        snapshot.data!.docs[index]['brand'] +
+                                            snapshot.data!.docs[index]['model'],
+                                        style: GoogleFonts.prompt(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 24,
+                                            color: Colors.black),
+                                      ),
+                                      Text(
                                         snapshot.data!.docs[index]['carId'],
                                         style: GoogleFonts.prompt(
                                             fontWeight: FontWeight.w400,
-                                            fontSize: 24,
+                                            fontSize: 20,
                                             color: Colors.black),
                                       ),
                                       Text(
                                         snapshot.data!.docs[index]['provinces'],
                                         style: GoogleFonts.prompt(
                                             fontWeight: FontWeight.w400,
-                                            fontSize: 24,
+                                            fontSize: 20,
                                             color: Colors.black),
                                       ),
                                     ],
@@ -274,41 +184,194 @@ class _ChargeDetailState extends State<ChargeDetail> {
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(
-                                    left: 20, right: 20, top: 10),
-                                child: TextFormField(
-                                  controller: energyController,
-                                  cursorColor: Colors.green,
-                                  decoration: InputDecoration(
-                                    hintText:
-                                        "${snapshot.data!.docs[index]['battery']}",
-                                    hintStyle: GoogleFonts.prompt(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey,
-                                    ),
-                                    labelText:
-                                        "โปรดกรอกพลังงานที่ต้องการเติม (kWh)",
-                                    labelStyle: GoogleFonts.prompt(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey,
-                                    ),
-                                    border: const OutlineInputBorder(),
-                                    focusedBorder: const OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.grey),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(20),
+                                    left: 20, right: 20, top: 25),
+                                child: Stack(
+                                  children: [
+                                    SizedBox(
+                                      height: 50,
+                                      child: TextFormField(
+                                        controller: energyController,
+                                        cursorColor: Colors.green,
+                                        decoration: InputDecoration(
+                                          hintText:
+                                              "${snapshot.data!.docs[index]['battery']}",
+                                          hintStyle: GoogleFonts.prompt(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.grey,
+                                          ),
+                                          labelText:
+                                              "โปรดกรอกพลังงานที่ต้องการเติม (kWh)",
+                                          labelStyle: GoogleFonts.prompt(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.grey,
+                                          ),
+                                          border: const OutlineInputBorder(),
+                                          focusedBorder:
+                                              const OutlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.grey),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(20),
+                                            ),
+                                          ),
+                                          enabledBorder:
+                                              const OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(20),
+                                            ),
+                                            borderSide:
+                                                BorderSide(color: Colors.grey),
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                    enabledBorder: const OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(20),
-                                      ),
-                                      borderSide:
-                                          BorderSide(color: Colors.grey),
+                                    Positioned(
+                                      right: 6,
+                                      child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                const Color(0xff3BB54A),
+                                            fixedSize: const Size(70, 35),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(15)),
+                                          ),
+                                          onPressed: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          20))),
+                                                  backgroundColor: Colors.black,
+                                                  title: Center(
+                                                    child: Text(
+                                                      'คุณต้องการเติม ${energyController.text} kWh?',
+                                                      style: GoogleFonts.prompt(
+                                                        textStyle:
+                                                            const TextStyle(
+                                                          fontSize: 18,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  actions: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
+                                                      children: [
+                                                        ElevatedButton(
+                                                          onPressed: () {
+                                                            _getchargedetail(
+                                                                    snapshot.data!
+                                                                            .docs[index]
+                                                                        [
+                                                                        'brand'],
+                                                                    snapshot.data!
+                                                                            .docs[index]
+                                                                        [
+                                                                        'carId'],
+                                                                    snapshot.data!
+                                                                            .docs[index]
+                                                                        [
+                                                                        'chargeType'],
+                                                                    snapshot.data!
+                                                                            .docs[index]
+                                                                        [
+                                                                        'provinces'],
+                                                                    widget.ID)
+                                                                .then((value) =>
+                                                                    nextScreen(
+                                                                        context,
+                                                                        Payment(
+                                                                          price:
+                                                                              price.toString(),
+                                                                          ID: widget
+                                                                              .ID,
+                                                                          dis:
+                                                                              0,
+                                                                        )));
+                                                          },
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                            backgroundColor:
+                                                                const Color(
+                                                                    0xff3BB54A),
+                                                            fixedSize:
+                                                                const Size(
+                                                                    100, 30),
+                                                            shape: RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            8)),
+                                                          ),
+                                                          child: Text(
+                                                            "ยืนยัน",
+                                                            style: GoogleFonts
+                                                                .prompt(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 20,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        ElevatedButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop(false);
+                                                          },
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                            backgroundColor:
+                                                                Colors.red,
+                                                            fixedSize:
+                                                                const Size(
+                                                                    100, 30),
+                                                            shape: RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            8)),
+                                                          ),
+                                                          child: Text(
+                                                            "ยกเลิก",
+                                                            style: GoogleFonts
+                                                                .prompt(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 20,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child: Text(
+                                            'ยืนยัน',
+                                            style: GoogleFonts.prompt(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 14,
+                                            ),
+                                          )),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ),
                             ],

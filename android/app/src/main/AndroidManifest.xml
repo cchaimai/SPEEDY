@@ -32,5 +32,8 @@
             android:value="2" />
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyBw4oNuCPipSEZZWT10Zq3uhLCvzNx2o1I"/>
+               <meta-data
+            android:name="com.dexterous.flutterlocalnotifications.default_channel_id"
+            android:value="Test"/>
     </application>
 </manifest>

@@ -174,12 +174,12 @@ class _RegisterNumberState extends State<RegisterNumber> {
                   SizedBox(
                     width: 350,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           'ยืนยันหมายเลขโทรศัพท์',
                           style: GoogleFonts.prompt(
-                            fontSize: 24,
+                            fontSize: 22,
                             fontWeight: FontWeight.w600,
                             color: Colors.black,
                           ),
@@ -188,7 +188,7 @@ class _RegisterNumberState extends State<RegisterNumber> {
                         Text(
                           'เพื่อความปลอดภัยของบัญชีของคุณ เราจำเป็นต้องให้คุณยืนยันตัวตน กรุณากรอกหมายเลขโทรศัพท์มือถือ เราจะส่งรหัสผ่านแบบครั้งเดียว (OTP) ไปยังหมายเลขโทรศัพท์มือถือของคุณ',
                           style: GoogleFonts.prompt(
-                            fontSize: 16,
+                            fontSize: 15,
                             fontWeight: FontWeight.w400,
                             color: Colors.black,
                           ),
@@ -267,7 +267,47 @@ class _RegisterNumberState extends State<RegisterNumber> {
                         ),
                         const SizedBox(height: 45),
                         InkWell(
-                          onTap: () => sendPhoneNumber(),
+                          onTap: () {
+                            String phoneNumber = phoneController.text.trim();
+                            if (phoneNumber.length < 10) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Center(
+                                      child: Text(
+                                        "กรุณากรอกเบอร์ให้ถูกต้อง",
+                                        style: GoogleFonts.prompt(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                    actions: [
+                                      Center(
+                                        child: TextButton(
+                                          child: Text(
+                                            "ตกลง",
+                                            style: GoogleFonts.prompt(
+                                              fontSize: 16,
+                                              color: Colors.green,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  );
+                                },
+                              );
+                            } else if (phoneNumber.length >= 10) {
+                              sendPhoneNumber();
+                            }
+                          },
                           child: Center(
                             child: Container(
                               alignment: Alignment.center,
@@ -306,9 +346,58 @@ class _RegisterNumberState extends State<RegisterNumber> {
     );
   }
 
-  void sendPhoneNumber() {
+  void sendPhoneNumber() async {
     final ap = Provider.of<AuthService>(context, listen: false);
     String phoneNumber = phoneController.text.trim();
-    ap.signInWithPhone(context, "+${country.phoneCode}$phoneNumber");
+    if (phoneNumber.startsWith('0')) {
+      phoneNumber = phoneNumber.substring(1);
+    }
+
+    bool isUsed = await ap.isPhoneUsed("+${country.phoneCode}$phoneNumber");
+    if (isUsed) {
+      // ignore: use_build_context_synchronously
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              "เบอร์โทรศัพท์นี้เคยใช้งานไปแล้ว",
+              style: GoogleFonts.prompt(
+                fontSize: 20,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            content: Text(
+              "กรุณาเปลี่ยนเบอร์โทรศัพท์ของคุณ",
+              style: GoogleFonts.prompt(
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+            actions: [
+              Center(
+                child: TextButton(
+                  child: Text(
+                    "ตกลง",
+                    style: GoogleFonts.prompt(
+                      fontSize: 16,
+                      color: Colors.green,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              )
+            ],
+          );
+        },
+      );
+    } else {
+      ap.signInWithPhone(context, "+${country.phoneCode}$phoneNumber");
+    }
   }
 }

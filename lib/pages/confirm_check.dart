@@ -1,4 +1,6 @@
 import 'package:chat_test/pages/cancel_check.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -8,13 +10,42 @@ import '../widgets/widgets.dart';
 import 'home_page.dart';
 
 class confirmCheck extends StatefulWidget {
-  const confirmCheck({super.key});
+  final String eventsId;
+  const confirmCheck({super.key, required this.eventsId});
 
   @override
   State<confirmCheck> createState() => _confirmCheckState();
 }
 
 class _confirmCheckState extends State<confirmCheck> {
+  @override
+  void initState() {
+    super.initState();
+    getEventData();
+  }
+
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+  String model = "";
+  String carId = "";
+  String date = "";
+  String time = "";
+  String type = '';
+
+  Future<void> getEventData() async {
+    DocumentReference userDocRef =
+        FirebaseFirestore.instance.collection('events').doc(widget.eventsId);
+
+    DocumentSnapshot userDocSnapshot = await userDocRef.get();
+
+    model = userDocSnapshot.get('model');
+    carId = userDocSnapshot.get('carId');
+    date = userDocSnapshot.get('date');
+    time = userDocSnapshot.get('time');
+    type = userDocSnapshot.get('type');
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +84,7 @@ class _confirmCheckState extends State<confirmCheck> {
               "CHECK",
               style: GoogleFonts.prompt(
                   color: const Color.fromARGB(255, 41, 41, 41),
-                  fontSize: 100,
+                  fontSize: 90,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 10),
             ),
@@ -114,7 +145,14 @@ class _confirmCheckState extends State<confirmCheck> {
                       fontWeight: FontWeight.w600),
                 ),
                 Text(
-                  "?? \n??",
+                  model,
+                  style: GoogleFonts.prompt(
+                      color: const Color.fromARGB(255, 41, 41, 41),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500),
+                ),
+                Text(
+                  carId,
                   style: GoogleFonts.prompt(
                       color: const Color.fromARGB(255, 41, 41, 41),
                       fontSize: 14,
@@ -186,7 +224,7 @@ class _confirmCheckState extends State<confirmCheck> {
                               size: 40,
                             ),
                             Text(
-                              "??/??/??",
+                              date,
                               style: GoogleFonts.prompt(),
                             )
                           ],
@@ -198,7 +236,7 @@ class _confirmCheckState extends State<confirmCheck> {
                               color: Color.fromARGB(255, 41, 41, 41),
                               size: 40,
                             ),
-                            Text("??:??", style: GoogleFonts.prompt())
+                            Text(time, style: GoogleFonts.prompt())
                           ],
                         ),
                         Column(
@@ -209,7 +247,7 @@ class _confirmCheckState extends State<confirmCheck> {
                               size: 40,
                             ),
                             Text(
-                              "?????",
+                              type,
                               style: GoogleFonts.prompt(),
                             )
                           ],
@@ -283,7 +321,16 @@ class _confirmCheckState extends State<confirmCheck> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        nextScreenReplace(context, const cancelCheck());
+                        nextScreenReplace(
+                            context,
+                            cancelCheck(
+                              eventsId: widget.eventsId,
+                              model: model,
+                              carId: carId,
+                              date: date,
+                              time: time,
+                              type: type,
+                            ));
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,

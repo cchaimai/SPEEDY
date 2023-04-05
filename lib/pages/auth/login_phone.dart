@@ -70,26 +70,64 @@ class LoginPhonePageState extends State<LoginPhonePage> {
 
   Future<void> _signInWithPhoneNumber() async {
     String smsCode = _codeController.text.trim();
-    AuthCredential credential = PhoneAuthProvider.credential(
-      verificationId: _verificationId,
-      smsCode: smsCode,
-    );
-
-    await _auth.signInWithCredential(credential).then((value) async {
-      // saving the values to our shared preferences
-      await HelperFunction.saveUserLoggedInStatus(true);
-      await HelperFunction.saveUserPhoneSF(_phoneController.text);
-
-      // Navigate to the HomePage
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+    if (smsCode.length == 6 && int.tryParse(smsCode) != null) {
+      AuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: _verificationId,
+        smsCode: smsCode,
       );
-    }).catchError((e){
-      print(e);
-      Fluttertoast.showToast(msg: 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ');
-    });
-    Fluttertoast.showToast(msg: 'การเข้าสู่ระบบเสร็จสิ้น!');
+
+      await _auth.signInWithCredential(credential).then((value) async {
+        // saving the values to our shared preferences
+        await HelperFunction.saveUserLoggedInStatus(true);
+        await HelperFunction.saveUserPhoneSF(_phoneController.text);
+
+        // Navigate to the HomePage
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
+      }).catchError((e) {
+        print(e);
+        Fluttertoast.showToast(msg: 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ');
+      });
+      Fluttertoast.showToast(msg: 'การเข้าสู่ระบบเสร็จสิ้น!');
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Center(
+              child: Text(
+                "กรุณากรอก OTP ให้ถูกต้อง",
+                style: GoogleFonts.prompt(
+                  fontSize: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            actions: [
+              Center(
+                child: TextButton(
+                  child: Text(
+                    "ตกลง",
+                    style: GoogleFonts.prompt(
+                      fontSize: 16,
+                      color: Colors.green,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              )
+            ],
+          );
+        },
+      );
+    }
   }
 
   @override
@@ -258,7 +296,48 @@ class LoginPhonePageState extends State<LoginPhonePage> {
           height: 10,
         ),
         InkWell(
-          onTap: () => _verifyPhoneNumber(),
+          // onTap: () => _verifyPhoneNumber(),
+          onTap: () {
+            String phoneNumber = _phoneController.text.trim();
+            if (phoneNumber.length < 10) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Center(
+                      child: Text(
+                        "กรุณากรอกเบอร์ให้ถูกต้อง",
+                        style: GoogleFonts.prompt(
+                          fontSize: 18,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    actions: [
+                      Center(
+                        child: TextButton(
+                          child: Text(
+                            "ตกลง",
+                            style: GoogleFonts.prompt(
+                              fontSize: 16,
+                              color: Colors.green,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      )
+                    ],
+                  );
+                },
+              );
+            } else if (phoneNumber.length >= 10) {
+              _verifyPhoneNumber();
+            }
+          },
           child: Center(
             child: Container(
               alignment: Alignment.center,

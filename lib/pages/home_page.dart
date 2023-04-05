@@ -1,21 +1,17 @@
 import 'dart:math';
-import 'dart:developer';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:chat_test/pages/auth/login.social.dart';
-import 'package:chat_test/pages/auth/login_phone.dart';
 import 'package:chat_test/pages/auth/profile_beam.dart';
-import 'package:chat_test/pages/chat_page.dart';
 import 'package:chat_test/pages/map.dart';
 import 'package:chat_test/pages/mycar.dart';
+import 'package:chat_test/pages/notifications.dart';
 import 'package:chat_test/pages/selectcar.dart';
-import 'package:chat_test/pages/test.dart';
+import 'package:chat_test/pages/selectcar_check.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../helper/helper_function.dart';
@@ -76,24 +72,6 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> _showLoginReminderDialog(BuildContext context) async {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Please Login'),
-          content: const Text('You need to login to access this page'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   gettingAnonData() async {
     final userUid = await HelperFunction.getUserUidFromSF();
     if (userUid != null) {
@@ -132,20 +110,19 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-            onPressed: () {}, icon: const Icon(Icons.notifications_active)),
+            onPressed: () async {
+              bool isLoggedIn =
+                  await AuthService().checkUserLoginStatus(context);
+              if (isLoggedIn) {}
+            },
+            icon: const Icon(Icons.notifications_active)),
         actions: [
           IconButton(
               onPressed: () async {
                 bool isLoggedIn =
                     await AuthService().checkUserLoginStatus(context);
                 if (isLoggedIn) {
-                  // ignore: use_build_context_synchronously
-                  nextScreenReplace(context, const ProfileScreen());
-                } else {
-                  // ignore: use_build_context_synchronously
-                  await _showLoginReminderDialog(context);
-                  // ignore: use_build_context_synchronously
-                  nextScreenReplace(context, const LoginSocial());
+                  nextScreenReplace(context, ProfileScreen());
                 }
               },
               icon: const Icon(
@@ -252,8 +229,11 @@ class _HomePageState extends State<HomePage> {
                                       const AlignmentDirectional(-0.8, -0.65),
                                   child: GestureDetector(
                                     onTap: () async {
-                                      nextScreenReplace(
-                                          context, const MapSample());
+                                      bool isLoggedIn = await AuthService()
+                                          .checkUserLoginStatus(context);
+                                      if (isLoggedIn) {
+                                        nextScreenReplace(context, MapSample());
+                                      }
                                     },
                                     child: SizedBox(
                                       width: 160,
@@ -266,15 +246,15 @@ class _HomePageState extends State<HomePage> {
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
-                                          children: const [
-                                            Icon(
+                                          children: [
+                                            const Icon(
                                               Icons.bolt,
                                               size: 70,
                                               color: Colors.green,
                                             ),
                                             Text(
                                               "CHARGE",
-                                              style: TextStyle(
+                                              style: GoogleFonts.prompt(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.green,
                                                   fontSize: 18),
@@ -294,11 +274,7 @@ class _HomePageState extends State<HomePage> {
                                           .checkUserLoginStatus(context);
                                       if (isLoggedIn) {
                                         nextScreenReplace(
-                                            context, const testPage());
-                                      } else {
-                                        await _showLoginReminderDialog(context);
-                                        nextScreenReplace(
-                                            context, LoginSocial());
+                                            context, selectCarCheck());
                                       }
                                     },
                                     child: SizedBox(
@@ -312,15 +288,15 @@ class _HomePageState extends State<HomePage> {
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
-                                          children: const [
-                                            Icon(
+                                          children: [
+                                            const Icon(
                                               Icons.task,
                                               size: 55,
                                               color: Colors.green,
                                             ),
                                             Text(
                                               "CHECK",
-                                              style: TextStyle(
+                                              style: GoogleFonts.prompt(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.green,
                                                   fontSize: 18),
@@ -339,18 +315,8 @@ class _HomePageState extends State<HomePage> {
                                       bool isLoggedIn = await AuthService()
                                           .checkUserLoginStatus(context);
                                       if (isLoggedIn) {
-                                        // ignore: use_build_context_synchronously
-                                        // nextScreenReplace(
-                                        //     context, const changeTest());
-                                        // ignore: use_build_context_synchronously
                                         nextScreenReplace(
                                             context, const selectCar());
-                                      } else {
-                                        // ignore: use_build_context_synchronously
-                                        await _showLoginReminderDialog(context);
-                                        // ignore: use_build_context_synchronously
-                                        nextScreenReplace(
-                                            context, const LoginSocial());
                                       }
                                     },
                                     child: SizedBox(
@@ -364,15 +330,15 @@ class _HomePageState extends State<HomePage> {
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
-                                          children: const [
-                                            Icon(
+                                          children: [
+                                            const Icon(
                                               Icons.change_circle_rounded,
                                               size: 55,
                                               color: Colors.green,
                                             ),
                                             Text(
                                               "CHANGE",
-                                              style: TextStyle(
+                                              style: GoogleFonts.prompt(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.green,
                                                   fontSize: 18),
@@ -391,15 +357,8 @@ class _HomePageState extends State<HomePage> {
                                       bool isLoggedIn = await AuthService()
                                           .checkUserLoginStatus(context);
                                       if (isLoggedIn) {
-                                        // ignore: use_build_context_synchronously
                                         nextScreenReplace(
-                                            context, const myCarScreen());
-                                      } else {
-                                        // ignore: use_build_context_synchronously
-                                        await _showLoginReminderDialog(context);
-                                        // ignore: use_build_context_synchronously
-                                        nextScreenReplace(
-                                            context, const LoginSocial());
+                                            context, myCarScreen());
                                       }
                                     },
                                     child: SizedBox(
@@ -413,15 +372,15 @@ class _HomePageState extends State<HomePage> {
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
-                                          children: const [
-                                            Icon(
+                                          children: [
+                                            const Icon(
                                               Icons.electric_car,
                                               size: 55,
                                               color: Colors.green,
                                             ),
                                             Text(
                                               "MY CAR",
-                                              style: TextStyle(
+                                              style: GoogleFonts.prompt(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.green,
                                                   fontSize: 18),
@@ -457,3 +416,34 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+// showDialog(
+//                                           barrierDismissible: false,
+//                                           context: context,
+//                                           builder: (context) {
+//                                             return AlertDialog(
+//                                               titleTextStyle:
+//                                                   GoogleFonts.prompt(
+//                                                       fontWeight:
+//                                                           FontWeight.bold,
+//                                                       color: Colors.black,
+//                                                       fontSize: 18),
+//                                               title: const Text("กรุณาล็อคอินก่อนใช้บริการ"),                 
+//                                               actions: [
+//                                                 TextButton(
+//                                                   onPressed: () async {
+//                                                     await authService.signOut();
+//                                                     // ignore: use_build_context_synchronously
+//                                                     Navigator.of(context)
+//                                                         .pushAndRemoveUntil(
+//                                                             MaterialPageRoute(
+//                                                                 builder:
+//                                                                     (context) =>
+//                                                                         const LoginSocial()),
+//                                                             (route) => false);
+//                                                   }, child: Text('Login'),
+                                              
+//                                                 ),
+//                                               ],
+//                                             );
+//                                           },
+//                                         );

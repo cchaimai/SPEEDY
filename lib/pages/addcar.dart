@@ -77,7 +77,7 @@ class _addCarScreenState extends State<addCarScreen> {
 
   static const List<String> provinces = [
     'กระบี่',
-    'กรุงเทพมหานคร',
+    'กรุงเทพฯ',
     'กาญจนบุรี',
     'กาฬสินธุ์',
     'กำแพงเพชร',

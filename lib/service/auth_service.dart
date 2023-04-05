@@ -1,8 +1,10 @@
+import 'package:chat_test/pages/auth/login.social.dart';
 import 'package:chat_test/pages/auth/login_phone.dart';
 import 'package:chat_test/pages/auth/register/register.speedy.otp.dart';
 import 'package:chat_test/service/database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../helper/helper_function.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -39,30 +41,46 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  Future<void> _showLoginReminderDialog(BuildContext context) async {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Please Login'),
-          content: Text('You need to login to access this page'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void signInAnon(BuildContext context) async {
+  void signInAnon(context) async {
     User? user = (await _firebaseAuth.signInAnonymously()).user;
     if (user != null && user.isAnonymous == true) {
       await HelperFunction.saveUserUidSF(user.uid);
-      nextScreenReplace(context, LoginPhonePage());
-      Fluttertoast.showToast(msg: 'Please Login');
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Colors.black,
+            buttonPadding: EdgeInsets.all(10),
+            title: Center(
+              child: Text(
+                'กรุณาล็อคอินก่อนใช้บริการ',
+                style: GoogleFonts.prompt(
+                  textStyle: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                      fontSize: 18),
+                ),
+              ),
+            ),
+            actions: [
+              Center(
+                child: TextButton(
+                  onPressed: () => nextScreenReplace(context, LoginSocial()),
+                  child: Text(
+                    'Login',
+                    style: GoogleFonts.prompt(
+                      textStyle: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.lightGreen,
+                          fontSize: 18),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
     } else {
       Fluttertoast.showToast(msg: 'Login fail!');
     }
@@ -80,6 +98,12 @@ class AuthService extends ChangeNotifier {
     _isSignedIn = true;
     notifyListeners();
   }
+
+  Future<bool> isPhoneUsed(String phoneNumber) async {
+  final usersRef = FirebaseFirestore.instance.collection('mUsers');
+  final snapshot = await usersRef.where('phoneNumber', isEqualTo: phoneNumber).get();
+  return snapshot.docs.isNotEmpty;
+}
 
   void signInWithPhone(BuildContext context, String phoneNumber) async {
     try {
@@ -150,7 +174,6 @@ class AuthService extends ChangeNotifier {
     required File profilePic,
     required List<String> cards,
     required List<String> events,
-    required List<String> groups, // รับข้อมูล cards เป็น List<String>
     required Function onSuccess,
   }) async {
     _isLoading = true;
@@ -163,7 +186,6 @@ class AuthService extends ChangeNotifier {
         userModel.cards =
             cards; // กำหนดค่าของ cards จาก parameter ให้กับ userModel
         userModel.events = events;
-        userModel.groups = groups;
         userModel.phoneNumber = _firebaseAuth.currentUser!.phoneNumber!;
         userModel.uid = _firebaseAuth.currentUser!.uid;
       });

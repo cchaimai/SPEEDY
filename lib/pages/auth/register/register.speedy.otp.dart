@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:async';
+
 import 'package:chat_test/pages/auth/register/register.speedy.agreement.dart';
 import 'package:chat_test/pages/auth/register/register.speedy.info.dart';
 import 'package:chat_test/pages/auth/register/register.speedy.number.dart';
@@ -22,6 +24,7 @@ class OtpScreen extends StatefulWidget {
 
 class _OtpScreenState extends State<OtpScreen> {
   String? otpCode;
+
   @override
   Widget build(BuildContext context) {
     final isLoading = Provider.of<AuthService>(context, listen: true).isLoading;
@@ -189,7 +192,6 @@ class _OtpScreenState extends State<OtpScreen> {
                                       color: Colors.black,
                                     ),
                                   ),
-                                  // Text()
                                 ],
                               ),
                             ],
@@ -229,7 +231,40 @@ class _OtpScreenState extends State<OtpScreen> {
                                       builder: (context) => RegisterInformation(
                                           phone: widget.phone)));
                             } else {
-                              print("Enter 6-Digit code");
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Center(
+                                      child: Text(
+                                        "กรุณากรอก OTP ให้ถูกต้อง",
+                                        style: GoogleFonts.prompt(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                    actions: [
+                                      Center(
+                                        child: TextButton(
+                                          child: Text(
+                                            "ตกลง",
+                                            style: GoogleFonts.prompt(
+                                              fontSize: 16,
+                                              color: Colors.green,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  );
+                                },
+                              );
                             }
                           },
                           child: Center(
@@ -260,7 +295,11 @@ class _OtpScreenState extends State<OtpScreen> {
                         ),
                         const SizedBox(height: 10),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            if (otpCode != null) {
+                              verifyOtp(context, otpCode!);
+                            }
+                          },
                           child: Center(
                             child: Container(
                               alignment: Alignment.center,

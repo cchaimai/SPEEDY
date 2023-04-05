@@ -4,10 +4,10 @@ class UserModel {
   String email;
   String profilePic;
   String uid;
+  String chat;
   String phoneNumber;
   List<String> cards;
   List<String> events;
-  List<String> groups;
 
   UserModel({
     required this.firstName,
@@ -15,10 +15,10 @@ class UserModel {
     required this.email,
     required this.profilePic,
     required this.uid,
+    required this.chat,
     required this.phoneNumber,
     required this.cards,
     required this.events,
-    required this.groups,
   });
 
   //from map
@@ -29,10 +29,11 @@ class UserModel {
       email: map['email'] ?? '',
       profilePic: map['profilePic'] ?? '',
       uid: map['uid'] ?? '',
+      chat: map['chat'] ?? '',
       phoneNumber: map['phoneNumber'] ?? '',
       cards: List<String>.from(map['cards'] ?? []),
       events: List<String>.from(map['events'] ?? []),
-      groups: List<String>.from(map['groups'] ?? []),
+  
     );
   }
 
@@ -47,7 +48,7 @@ class UserModel {
       "phoneNumber": phoneNumber,
       "cards": cards,
       "events": events,
-      "groups": groups,
+      "chat": chat,
     };
   }
 }

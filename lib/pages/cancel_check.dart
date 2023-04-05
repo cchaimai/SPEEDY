@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -7,13 +9,28 @@ import '../widgets/widgets.dart';
 import 'home_page.dart';
 
 class cancelCheck extends StatefulWidget {
-  const cancelCheck({super.key});
+  final String eventsId;
+  final String model;
+  final String carId;
+  final String date;
+  final String time;
+  final String type;
+  const cancelCheck(
+      {super.key,
+      required this.eventsId,
+      required this.model,
+      required this.carId,
+      required this.date,
+      required this.time,
+      required this.type});
 
   @override
   State<cancelCheck> createState() => _cancelCheckState();
 }
 
 class _cancelCheckState extends State<cancelCheck> {
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+  bool _deleteDate = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +69,7 @@ class _cancelCheckState extends State<cancelCheck> {
               "CHECK",
               style: GoogleFonts.prompt(
                   color: const Color.fromARGB(255, 41, 41, 41),
-                  fontSize: 100,
+                  fontSize: 90,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 10),
             ),
@@ -113,7 +130,14 @@ class _cancelCheckState extends State<cancelCheck> {
                       fontWeight: FontWeight.w600),
                 ),
                 Text(
-                  "?? \n??",
+                  widget.model,
+                  style: GoogleFonts.prompt(
+                      color: const Color.fromARGB(255, 41, 41, 41),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500),
+                ),
+                Text(
+                  widget.carId,
                   style: GoogleFonts.prompt(
                       color: const Color.fromARGB(255, 41, 41, 41),
                       fontSize: 14,
@@ -185,7 +209,7 @@ class _cancelCheckState extends State<cancelCheck> {
                               size: 40,
                             ),
                             Text(
-                              "??/??/??",
+                              widget.date,
                               style: GoogleFonts.prompt(),
                             )
                           ],
@@ -197,7 +221,7 @@ class _cancelCheckState extends State<cancelCheck> {
                               color: Color.fromARGB(255, 41, 41, 41),
                               size: 40,
                             ),
-                            Text("??:??", style: GoogleFonts.prompt())
+                            Text(widget.time, style: GoogleFonts.prompt())
                           ],
                         ),
                         Column(
@@ -208,7 +232,7 @@ class _cancelCheckState extends State<cancelCheck> {
                               size: 40,
                             ),
                             Text(
-                              "?????",
+                              widget.type,
                               style: GoogleFonts.prompt(),
                             )
                           ],
@@ -225,7 +249,7 @@ class _cancelCheckState extends State<cancelCheck> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                nextScreenReplace(context, const HomePage());
+                                delete();
                               },
                               child: Container(
                                 height: 40,
@@ -257,5 +281,27 @@ class _cancelCheckState extends State<cancelCheck> {
         )
       ]),
     );
+  }
+
+  delete() async {
+    print(widget.eventsId);
+    print(widget.time);
+    DocumentReference dateDocRef =
+        FirebaseFirestore.instance.collection('events').doc(widget.eventsId);
+    DocumentSnapshot dateDocSnapshot = await dateDocRef.get();
+    String dateId = dateDocSnapshot.get('date');
+
+    FirebaseFirestore.instance
+        .collection('events')
+        .doc(widget.eventsId)
+        .delete();
+    FirebaseFirestore.instance.collection('mUsers').doc(userId).update({
+      'events': FieldValue.arrayRemove([widget.eventsId])
+    });
+    FirebaseFirestore.instance.collection('date').doc(dateId).update({
+      widget.time: FieldValue.arrayRemove([widget.eventsId])
+    });
+
+    nextScreenReplace(context, HomePage());
   }
 }

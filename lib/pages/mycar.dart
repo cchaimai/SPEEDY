@@ -11,6 +11,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets/widgets.dart';
+import 'check_main.dart';
 
 class myCarScreen extends StatefulWidget {
   const myCarScreen({super.key});
@@ -99,7 +100,7 @@ class _myCarScreenState extends State<myCarScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      nextScreenReplace(context, const addCarScreen());
+                      nextScreen(context, const addCarScreen());
                     },
                     child: Container(
                       alignment: Alignment.center,
@@ -124,7 +125,7 @@ class _myCarScreenState extends State<myCarScreen> {
                   height: 10,
                 ),
                 SizedBox(
-                  height: 450,
+                  height: 480,
                   child: ListView.builder(
                     itemCount: snapshot.data?.docs.length,
                     scrollDirection: Axis.horizontal,
@@ -149,7 +150,9 @@ class _myCarScreenState extends State<myCarScreen> {
                                           return AlertDialog(
                                             title: Text("Delete!",
                                                 style: GoogleFonts.prompt(
-                                                    fontSize: 16)),
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w600,
+                                                )),
                                             content: Text(
                                                 "Are you sure you want to delete this car?",
                                                 style: GoogleFonts.prompt(
@@ -215,6 +218,14 @@ class _myCarScreenState extends State<myCarScreen> {
                                 Column(
                                   children: [
                                     Text(
+                                      snapshot.data!.docs[index]['brand'] +
+                                          snapshot.data!.docs[index]['model'],
+                                      style: GoogleFonts.prompt(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 24,
+                                          color: Colors.black),
+                                    ),
+                                    Text(
                                       snapshot.data!.docs[index]['carId'],
                                       style: GoogleFonts.prompt(
                                           fontWeight: FontWeight.w400,
@@ -225,7 +236,7 @@ class _myCarScreenState extends State<myCarScreen> {
                                       snapshot.data!.docs[index]['provinces'],
                                       style: GoogleFonts.prompt(
                                           fontWeight: FontWeight.w400,
-                                          fontSize: 24,
+                                          fontSize: 20,
                                           color: Colors.black),
                                     ),
                                   ],
@@ -243,7 +254,7 @@ class _myCarScreenState extends State<myCarScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    nextScreenReplace(context, const addCarScreen());
+                    nextScreen(context, const addCarScreen());
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -287,7 +298,8 @@ class _myCarScreenState extends State<myCarScreen> {
             children: [
               InkWell(
                 onTap: () {
-                  nextScreenReplace(context, HomePage());
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
                 },
                 child: Container(
                   width: 60,
@@ -313,7 +325,8 @@ class _myCarScreenState extends State<myCarScreen> {
               ),
               InkWell(
                 onTap: () {
-                  print("kuy peng na hee");
+                  nextScreenReplace(
+                      context, const checkScreen(carId: '', car: ''));
                 },
                 child: Container(
                   width: 60,
@@ -359,7 +372,8 @@ class _myCarScreenState extends State<myCarScreen> {
               ),
               InkWell(
                 onTap: () {
-                  //nextScreenReplace(context, changeTest());
+                  nextScreenReplace(
+                      context, const changeTest(carId: '', car: ''));
                 },
                 child: Container(
                   width: 60,
@@ -385,7 +399,7 @@ class _myCarScreenState extends State<myCarScreen> {
               ),
               InkWell(
                 onTap: () {
-                  nextScreenReplace(context, ProfileScreen());
+                  nextScreenReplace(context, const ProfileScreen());
                 },
                 child: Container(
                   width: 60,
