@@ -26,8 +26,6 @@ class _FpaymentState extends State<Fpayment> {
   }
 
   Future<void> _getstatus() async {
-    print("earth na heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-
     await FirebaseFirestore.instance
         .collection('requests')
         .doc(widget.ID)
@@ -265,7 +263,7 @@ class _FpaymentState extends State<Fpayment> {
                                       GestureDetector(
                                         onTap: () {
                                           _getstatus();
-                                          nextScreen(
+                                          nextScreenReplace(
                                               context, Waiting(uid: widget.ID));
                                         },
                                         child: Container(

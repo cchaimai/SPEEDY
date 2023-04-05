@@ -429,8 +429,8 @@ class WaitingState extends State<Waiting> {
                                               .collection('requests')
                                               .doc(widget.uid)
                                               .delete();
-                                          nextScreen(
-                                              context, const MapSample());
+                                          nextScreenReplace(
+                                              context, MapSample());
                                         },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor:
