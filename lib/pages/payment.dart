@@ -68,10 +68,6 @@ class _PaymentState extends State<Payment> {
           (num.parse(widget.price) - (num.parse(widget.price) * widget.dis))
               .toStringAsFixed(0);
     }
-    await FirebaseFirestore.instance
-        .collection("requests")
-        .doc(widget.ID)
-        .update({'price': totalprice});
   }
 
   @override
