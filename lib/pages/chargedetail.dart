@@ -9,6 +9,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets/widgets.dart';
 import 'addcar.dart';
+import 'auth/profile_beam.dart';
+import 'change_test.dart';
+import 'check_main.dart';
+import 'home_page.dart';
 import 'mycar.dart';
 
 class ChargeDetail extends StatefulWidget {
@@ -428,16 +432,16 @@ class _ChargeDetailState extends State<ChargeDetail> {
         shape: const CircularNotchedRectangle(),
         color: const Color.fromARGB(255, 31, 31, 31),
         notchMargin: 5,
-        child: Container(
+        child: SizedBox(
           height: 75,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               InkWell(
                 onTap: () {
-                  print("kuy peng na hee");
+                  nextScreenReplace(context, const HomePage());
                 },
-                child: Container(
+                child: SizedBox(
                   width: 60,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -461,9 +465,9 @@ class _ChargeDetailState extends State<ChargeDetail> {
               ),
               InkWell(
                 onTap: () {
-                  print("kuy peng na hee");
+                  nextScreenReplace(context, checkScreen(carId: '', car: ''));
                 },
-                child: Container(
+                child: SizedBox(
                   width: 60,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -485,7 +489,7 @@ class _ChargeDetailState extends State<ChargeDetail> {
                   ),
                 ),
               ),
-              Container(
+              SizedBox(
                 width: 60,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -507,9 +511,9 @@ class _ChargeDetailState extends State<ChargeDetail> {
               ),
               InkWell(
                 onTap: () {
-                  print("kuy peng na hee");
+                  nextScreenReplace(context, changeTest(carId: '', car: ''));
                 },
-                child: Container(
+                child: SizedBox(
                   width: 60,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -533,9 +537,9 @@ class _ChargeDetailState extends State<ChargeDetail> {
               ),
               InkWell(
                 onTap: () {
-                  print("kuy peng na hee");
+                  nextScreenReplace(context, ProfileScreen());
                 },
-                child: Container(
+                child: SizedBox(
                   width: 60,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

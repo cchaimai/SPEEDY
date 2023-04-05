@@ -23,6 +23,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image/image.dart' as Im;
 
+import 'auth/profile_beam.dart';
+import 'change_test.dart';
+import 'check_main.dart';
+import 'home_page.dart';
+
 class Payment extends StatefulWidget {
   const Payment(
       {super.key, required this.price, required this.ID, required this.dis});
@@ -274,31 +279,31 @@ class _PaymentState extends State<Payment> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        color: Color.fromARGB(255, 31, 31, 31),
+        shape: const CircularNotchedRectangle(),
+        color: const Color.fromARGB(255, 31, 31, 31),
         notchMargin: 5,
-        child: Container(
+        child: SizedBox(
           height: 75,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               InkWell(
                 onTap: () {
-                  print("kuy peng na hee");
+                  nextScreenReplace(context, const HomePage());
                 },
-                child: Container(
+                child: SizedBox(
                   width: 60,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.house_outlined,
                         color: Colors.white,
                       ),
                       Text(
                         'หน้าหลัก',
                         style: GoogleFonts.prompt(
-                          textStyle: TextStyle(
+                          textStyle: const TextStyle(
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
                               fontSize: 11),
@@ -310,21 +315,21 @@ class _PaymentState extends State<Payment> {
               ),
               InkWell(
                 onTap: () {
-                  print("kuy peng na hee");
+                  nextScreenReplace(context, checkScreen(carId: '', car: ''));
                 },
-                child: Container(
+                child: SizedBox(
                   width: 60,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.fact_check_outlined,
                         color: Colors.white,
                       ),
                       Text(
                         'เช็ค',
                         style: GoogleFonts.prompt(
-                          textStyle: TextStyle(
+                          textStyle: const TextStyle(
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
                               fontSize: 11),
@@ -334,7 +339,7 @@ class _PaymentState extends State<Payment> {
                   ),
                 ),
               ),
-              Container(
+              SizedBox(
                 width: 60,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -344,7 +349,7 @@ class _PaymentState extends State<Payment> {
                       child: Text(
                         'Charge',
                         style: GoogleFonts.prompt(
-                          textStyle: TextStyle(
+                          textStyle: const TextStyle(
                               fontWeight: FontWeight.w500,
                               color: Colors.green,
                               fontSize: 17),
@@ -356,21 +361,21 @@ class _PaymentState extends State<Payment> {
               ),
               InkWell(
                 onTap: () {
-                  print("kuy peng na hee");
+                  nextScreenReplace(context, changeTest(carId: '', car: ''));
                 },
-                child: Container(
+                child: SizedBox(
                   width: 60,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.change_circle_outlined,
                         color: Colors.white,
                       ),
                       Text(
                         'เปลี่ยน',
                         style: GoogleFonts.prompt(
-                          textStyle: TextStyle(
+                          textStyle: const TextStyle(
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
                               fontSize: 11),
@@ -382,21 +387,21 @@ class _PaymentState extends State<Payment> {
               ),
               InkWell(
                 onTap: () {
-                  print("kuy peng na hee");
+                  nextScreenReplace(context, ProfileScreen());
                 },
-                child: Container(
+                child: SizedBox(
                   width: 60,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.account_circle_outlined,
                         color: Colors.white,
                       ),
                       Text(
                         'โปรไฟล์',
                         style: GoogleFonts.prompt(
-                          textStyle: TextStyle(
+                          textStyle: const TextStyle(
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
                               fontSize: 11),
