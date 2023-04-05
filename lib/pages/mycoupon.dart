@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ticket_widget/ticket_widget.dart';
 
 class MyCoupon extends StatefulWidget {
   const MyCoupon({super.key});
@@ -61,12 +62,7 @@ class _MyCouponState extends State<MyCoupon> {
                   fontSize: 20, fontWeight: FontWeight.w500)),
           backgroundColor: const Color.fromRGBO(31, 31, 31, 1),
           toolbarHeight: 84, //ความสูง bar บน
-          centerTitle: true,
-          leading: IconButton(
-              onPressed: () {
-                nextScreenReplace(context, const ProfileScreen());
-              },
-              icon: const Icon(Icons.home)),
+          centerTitle: true, //กลาง
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.confirmation_num_outlined),
@@ -74,17 +70,18 @@ class _MyCouponState extends State<MyCoupon> {
                 CouPon(context);
               },
             ),
-          ], //กลาง
+          ],
         ),
         body: Container(
             padding: const EdgeInsets.only(left: 0, top: 0, right: 0),
-            decoration: BoxDecoration(color: Color.fromRGBO(41, 41, 41, 1)),
+            decoration:
+                const BoxDecoration(color: Color.fromRGBO(41, 41, 41, 1)),
             child: Stack(children: <Widget>[
               Positioned(
                   child: Container(
                 width: 411,
                 height: 411,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     color: Color.fromRGBO(31, 31, 31, 1),
                     borderRadius:
                         BorderRadius.all(Radius.elliptical(411, 411))),
@@ -95,7 +92,7 @@ class _MyCouponState extends State<MyCoupon> {
                   child: Container(
                     width: 500,
                     height: 500,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         color: Color.fromRGBO(31, 31, 31, 1),
                         borderRadius:
                             BorderRadius.all(Radius.elliptical(500, 500))),
@@ -118,50 +115,38 @@ class _MyCouponState extends State<MyCoupon> {
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           return Container(
-                            width: double.infinity,
-                            height: 100,
-                            margin: const EdgeInsets.only(top: 5, bottom: 5),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                //Text("1x"),
-                                SizedBox(
-                                  width: 20,
+                            child: TicketWidget(
+                              width: 100,
+                              height: 130,
+                              margin:
+                                  const EdgeInsets.only(top: 10, bottom: 10),
+                              isCornerRounded: true,
+                              child: Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const SizedBox(
+                                      width: 20,
+                                    ),
+                                    Expanded(
+                                        child: coupon[index]['dis'] >= 1
+                                            ? Text(
+                                                'ส่วนลดค่าชาร์จ ${(coupon[index]['dis']).toString()}฿',
+                                                style: GoogleFonts.prompt(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20),
+                                              )
+                                            : Text(
+                                                'ส่วนลดค่าชาร์จ ${(coupon[index]['dis'] * 100).toStringAsFixed(0)}%',
+                                                style: GoogleFonts.prompt(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20),
+                                              )),
+                                  ],
                                 ),
-                                Expanded(
-                                    child: coupon[index]['dis'] >= 1
-                                        ? Text(
-                                            coupon[index]['dis'].toString(),
-                                            style: GoogleFonts.prompt(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20),
-                                          )
-                                        : Text(
-                                            '${(coupon[index]['dis'] * 100).toStringAsFixed(0)}%',
-                                            style: GoogleFonts.prompt(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20),
-                                          )),
-                                TextButton(
-                                  onPressed: () {
-                                    //Navigator.pop(context);
-                                  },
-                                  child: Text(
-                                    "Apply",
-                                    style:
-                                        GoogleFonts.prompt(color: Colors.white),
-                                  ),
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            Color(0xFFF53BE1E)),
-                                  ),
-                                )
-                              ],
+                              ),
                             ),
                           );
                         },

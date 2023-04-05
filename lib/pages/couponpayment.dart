@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ticket_widget/ticket_widget.dart';
 
 class Couponpayment extends StatefulWidget {
   const Couponpayment({super.key, required this.price, required this.ID});
@@ -132,59 +133,122 @@ class _CouponpaymentState extends State<Couponpayment> {
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           return Container(
-                            width: double.infinity,
-                            height: 100,
-                            margin: const EdgeInsets.only(top: 5, bottom: 5),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                //Text("1x"),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Expanded(
-                                    child: coupon[index]['dis'] >= 1
-                                        ? Text(
-                                            coupon[index]['dis'].toString(),
-                                            style: GoogleFonts.prompt(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20),
-                                          )
-                                        : Text(
-                                            '${(coupon[index]['dis'] * 100).toStringAsFixed(0)}%',
-                                            style: GoogleFonts.prompt(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20),
-                                          )),
-                                TextButton(
-                                  onPressed: () {
-                                    nextScreenReplace(
-                                        context,
-                                        Payment(
-                                            price: widget.price,
-                                            ID: widget.ID,
-                                            dis: coupon[index]['dis']));
+                            child: TicketWidget(
+                              width: 100,
+                              height: 130,
+                              margin:
+                                  const EdgeInsets.only(top: 10, bottom: 10),
+                              isCornerRounded: true,
+                              child: Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const SizedBox(
+                                      width: 20,
+                                    ),
+                                    Expanded(
+                                        child: coupon[index]['dis'] >= 1
+                                            ? Text(
+                                                'ส่วนลดค่าชาร์จ ${(coupon[index]['dis']).toString()}฿',
+                                                style: GoogleFonts.prompt(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20),
+                                              )
+                                            : Text(
+                                                'ส่วนลดค่าชาร์จ ${(coupon[index]['dis'] * 100).toStringAsFixed(0)}%',
+                                                style: GoogleFonts.prompt(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20),
+                                              )),
+                                    Row(
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            nextScreenReplace(
+                                                context,
+                                                Payment(
+                                                    price: widget.price,
+                                                    ID: widget.ID,
+                                                    dis: coupon[index]['dis']));
 
-                                    print(totalprice);
-                                  },
-                                  child: Text(
-                                    "Apply",
-                                    style:
-                                        GoogleFonts.prompt(color: Colors.white),
-                                  ),
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            Color(0xFFF53BE1E)),
-                                  ),
-                                )
-                              ],
+                                            print(totalprice);
+                                          },
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all<
+                                                    Color>(Color(0xFFF53BE1E)),
+                                          ),
+                                          child: Text(
+                                            "Apply",
+                                            style: GoogleFonts.prompt(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10)
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
                             ),
                           );
+                          // return Container(
+                          //   width: double.infinity,
+                          //   height: 100,
+                          //   margin: const EdgeInsets.only(top: 5, bottom: 5),
+                          //   decoration: BoxDecoration(
+                          //     color: Colors.white,
+                          //     borderRadius: BorderRadius.circular(16),
+                          //   ),
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //     children: [
+                          //       //Text("1x"),
+                          //       SizedBox(
+                          //         width: 20,
+                          //       ),
+                          //       Expanded(
+                          //           child: coupon[index]['dis'] >= 1
+                          //               ? Text(
+                          //                   coupon[index]['dis'].toString(),
+                          //                   style: GoogleFonts.prompt(
+                          //                       fontWeight: FontWeight.bold,
+                          //                       fontSize: 20),
+                          //                 )
+                          //               : Text(
+                          //                   '${(coupon[index]['dis'] * 100).toStringAsFixed(0)}%',
+                          //                   style: GoogleFonts.prompt(
+                          //                       fontWeight: FontWeight.bold,
+                          //                       fontSize: 20),
+                          //                 )),
+
+                          //       TextButton(
+                          //         onPressed: () {
+                          //           nextScreenReplace(
+                          //               context,
+                          //               Payment(
+                          //                   price: widget.price,
+                          //                   ID: widget.ID,
+                          //                   dis: coupon[index]['dis']));
+
+                          //           print(totalprice);
+                          //         },
+                          //         child: Text(
+                          //           "Apply",
+                          //           style:
+                          //               GoogleFonts.prompt(color: Colors.white),
+                          //         ),
+                          //         style: ButtonStyle(
+                          //           backgroundColor:
+                          //               MaterialStateProperty.all<Color>(
+                          //                   Color(0xFFF53BE1E)),
+                          //         ),
+                          //       )
+                          //     ],
+                          //   ),
+                          // );
                         },
                       ))
                     ]),
