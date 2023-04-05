@@ -113,7 +113,8 @@ class _HomePageState extends State<HomePage> {
             onPressed: () async {
               bool isLoggedIn =
                   await AuthService().checkUserLoginStatus(context);
-              if (isLoggedIn) {}
+              if (isLoggedIn) {
+              } else {}
             },
             icon: const Icon(Icons.notifications_active)),
         actions: [
@@ -122,6 +123,8 @@ class _HomePageState extends State<HomePage> {
                 bool isLoggedIn =
                     await AuthService().checkUserLoginStatus(context);
                 if (isLoggedIn) {
+                  nextScreenReplace(context, ProfileScreen());
+                } else {
                   nextScreenReplace(context, ProfileScreen());
                 }
               },
@@ -275,6 +278,9 @@ class _HomePageState extends State<HomePage> {
                                       if (isLoggedIn) {
                                         nextScreenReplace(
                                             context, selectCarCheck());
+                                      } else {
+                                        nextScreenReplace(
+                                            context, selectCarCheck());
                                       }
                                     },
                                     child: SizedBox(
@@ -317,6 +323,8 @@ class _HomePageState extends State<HomePage> {
                                       if (isLoggedIn) {
                                         nextScreenReplace(
                                             context, const selectCar());
+                                      } else {
+                                        nextScreenReplace(context, selectCar());
                                       }
                                     },
                                     child: SizedBox(
@@ -357,6 +365,9 @@ class _HomePageState extends State<HomePage> {
                                       bool isLoggedIn = await AuthService()
                                           .checkUserLoginStatus(context);
                                       if (isLoggedIn) {
+                                        nextScreenReplace(
+                                            context, myCarScreen());
+                                      } else {
                                         nextScreenReplace(
                                             context, myCarScreen());
                                       }

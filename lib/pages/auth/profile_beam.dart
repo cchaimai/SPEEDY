@@ -2,6 +2,7 @@ import 'package:chat_test/pages/auth/login.social.dart';
 import 'package:chat_test/pages/bank_page.dart';
 import 'package:chat_test/pages/help_center.dart';
 import 'package:chat_test/pages/mycoupon.dart';
+import 'package:chat_test/pages/queue.dart';
 import 'package:chat_test/pages/show_profile.dart';
 
 import 'package:chat_test/widgets/widgets.dart';
@@ -160,6 +161,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const Expanded(
                         child: Text(
                       "บัญชีธนาคาร",
+                      style: TextStyle(color: Colors.black),
+                    )),
+                  ],
+                ),
+              ),
+            ),
+            //ดูคิว
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: GoogleFonts.prompt(color: Colors.black),
+                  padding: const EdgeInsets.all(20),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                ),
+                onPressed: () {
+                  nextScreenReplace(
+                      context,
+                      const queueScreen(
+                        eventsId: '',
+                        carId: '',
+                        date: '',
+                        model: '',
+                        time: '',
+                        type: '',
+                      ));
+                },
+                child: Row(
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    const Icon(
+                      Icons.list_alt,
+                      size: 22,
+                      color: Colors.black,
+                    ),
+                    const SizedBox(width: 20),
+                    const Expanded(
+                        child: Text(
+                      "การจองคิว",
                       style: TextStyle(color: Colors.black),
                     )),
                   ],

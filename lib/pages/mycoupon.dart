@@ -9,6 +9,8 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ticket_widget/ticket_widget.dart';
 
+import 'home_page.dart';
+
 class MyCoupon extends StatefulWidget {
   const MyCoupon({super.key});
 
@@ -63,6 +65,13 @@ class _MyCouponState extends State<MyCoupon> {
           backgroundColor: const Color.fromRGBO(31, 31, 31, 1),
           toolbarHeight: 84, //ความสูง bar บน
           centerTitle: true, //กลาง
+          leading: IconButton(
+          onPressed: () => nextScreenReplace(context, const ProfileScreen()),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.confirmation_num_outlined),

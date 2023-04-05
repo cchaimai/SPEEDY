@@ -315,10 +315,11 @@ class _confirmChangeState extends State<confirmChange> {
 
   popUpDialog(BuildContext context) {
     showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(builder: ((context, setState) {
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: ((context, setState) {
             return AlertDialog(
               title: Text(
                 "ยกเลิกการจองคิว",
@@ -371,7 +372,9 @@ class _confirmChangeState extends State<confirmChange> {
                 )
               ],
             );
-          }));
-        });
+          }),
+        );
+      },
+    );
   }
 }

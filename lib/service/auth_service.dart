@@ -174,6 +174,7 @@ class AuthService extends ChangeNotifier {
     required File profilePic,
     required List<String> cards,
     required List<String> events,
+    required List<String> coupon,
     required Function onSuccess,
   }) async {
     _isLoading = true;
@@ -186,6 +187,7 @@ class AuthService extends ChangeNotifier {
         userModel.cards =
             cards; // กำหนดค่าของ cards จาก parameter ให้กับ userModel
         userModel.events = events;
+        userModel.coupon = coupon;
         userModel.phoneNumber = _firebaseAuth.currentUser!.phoneNumber!;
         userModel.uid = _firebaseAuth.currentUser!.uid;
       });

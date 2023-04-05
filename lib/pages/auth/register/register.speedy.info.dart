@@ -4,6 +4,7 @@ import 'package:chat_test/pages/auth/register/register.speedy.finish.dart';
 import 'package:chat_test/service/auth_service.dart';
 import 'package:chat_test/widgets/user.model.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chat_test/widgets/widgets.dart';
@@ -340,7 +341,7 @@ class _RegisterInformationState extends State<RegisterInformation> {
     final ap = Provider.of<AuthService>(context, listen: false);
     List<String> cards = [];
     List<String> events = [];
-    List<String> groups = [];
+    List<String> coupon = [];
     UserModel userModel = UserModel(
       firstName: fnameController.text.trim(),
       lastName: lnameController.text.trim(),
@@ -351,6 +352,7 @@ class _RegisterInformationState extends State<RegisterInformation> {
       chat: "",
       cards: [],
       events: [],
+      coupon: [],
     );
     if (image != null) {
       ap.saveUserDataToFirebase(
@@ -367,9 +369,10 @@ class _RegisterInformationState extends State<RegisterInformation> {
         },
         cards: cards.toList(),
         events: events.toList(),
+        coupon: coupon.toList(),
       );
     } else {
-      print("Please upload your profile photo");
+      Fluttertoast.showToast(msg: "Please upload your profile photo");
     }
   }
 }

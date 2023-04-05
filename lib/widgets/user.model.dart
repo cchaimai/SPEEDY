@@ -7,6 +7,7 @@ class UserModel {
   String chat;
   String phoneNumber;
   List<String> cards;
+  List<String> coupon;
   List<String> events;
 
   UserModel({
@@ -19,6 +20,7 @@ class UserModel {
     required this.phoneNumber,
     required this.cards,
     required this.events,
+    required this.coupon,
   });
 
   //from map
@@ -33,6 +35,7 @@ class UserModel {
       phoneNumber: map['phoneNumber'] ?? '',
       cards: List<String>.from(map['cards'] ?? []),
       events: List<String>.from(map['events'] ?? []),
+      coupon: List<String>.from(map['coupon'] ?? []),
   
     );
   }
@@ -49,6 +52,7 @@ class UserModel {
       "cards": cards,
       "events": events,
       "chat": chat,
+      "coupon": coupon,
     };
   }
 }

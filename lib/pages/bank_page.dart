@@ -96,11 +96,13 @@ class _BankPageState extends State<BankPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-            onPressed: () {
-              nextScreenReplace(context, const HomePage());
-            },
-            icon: const Icon(Icons.home)),
+       leading: IconButton(
+          onPressed: () => nextScreenReplace(context, const ProfileScreen()),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
         actions: [
           IconButton(
               onPressed: () {},

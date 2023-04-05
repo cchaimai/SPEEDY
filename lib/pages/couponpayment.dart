@@ -10,6 +10,8 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ticket_widget/ticket_widget.dart';
 
+import 'home_page.dart';
+
 class Couponpayment extends StatefulWidget {
   const Couponpayment({super.key, required this.price, required this.ID});
   final String price;
@@ -79,9 +81,10 @@ class _CouponpaymentState extends State<Couponpayment> {
           centerTitle: true,
           leading: IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                nextScreenReplace(context, const HomePage());
               },
-              icon: const Icon(Icons.arrow_back_ios)),
+              icon: const Icon(Icons.home)),
+
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.confirmation_num_outlined),
@@ -226,6 +229,7 @@ class _CouponpaymentState extends State<Couponpayment> {
       builder: (context) => AlertDialog(
             title: Text("Coupon", style: GoogleFonts.prompt()),
             content: TextField(
+                cursorColor: Colors.green,
                 controller: textController,
                 autofocus: true, //แสดงTextField
                 decoration:

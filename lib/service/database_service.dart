@@ -113,6 +113,7 @@ class DatabaseService {
       "lastName": lname,
       "type": type,
       "model": model,
+      "owner": uid,
       "carId": carId,
       "status": "กำลังดำเนินการ"
     });

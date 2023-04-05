@@ -69,7 +69,7 @@ class _cancelCheckState extends State<cancelCheck> {
               "CHECK",
               style: GoogleFonts.prompt(
                   color: const Color.fromARGB(255, 41, 41, 41),
-                  fontSize: 90,
+                  fontSize: 100,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 10),
             ),
@@ -301,7 +301,5 @@ class _cancelCheckState extends State<cancelCheck> {
     FirebaseFirestore.instance.collection('date').doc(dateId).update({
       widget.time: FieldValue.arrayRemove([widget.eventsId])
     });
-
-    nextScreenReplace(context, HomePage());
   }
 }
