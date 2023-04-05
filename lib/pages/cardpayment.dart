@@ -18,10 +18,12 @@ class Cardpayment extends StatefulWidget {
       {super.key,
       required this.price,
       required this.ID,
-      required this.totalprice});
+      required this.totalprice,
+      required this.couponID});
   final String price;
   final String ID;
   final String totalprice;
+  final String couponID;
   @override
   State<Cardpayment> createState() => _CardpaymentState();
 }
@@ -224,6 +226,7 @@ class _CardpaymentState extends State<Cardpayment> {
                                         price: widget.price,
                                         ID: widget.ID,
                                         totalprice: '',
+                                        couponID: widget.couponID,
                                       ));
                                 },
                                 child: Container(

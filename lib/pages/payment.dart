@@ -30,10 +30,15 @@ import 'home_page.dart';
 
 class Payment extends StatefulWidget {
   const Payment(
-      {super.key, required this.price, required this.ID, required this.dis});
+      {super.key,
+      required this.price,
+      required this.ID,
+      required this.dis,
+      required this.couponID});
   final String price;
   final String ID;
   final num dis;
+  final String couponID;
   @override
   State<Payment> createState() => _PaymentState();
 }
@@ -151,6 +156,7 @@ class _PaymentState extends State<Payment> {
                                     price: widget.price,
                                     ID: widget.ID,
                                     totalprice: totalprice,
+                                    couponID: widget.couponID,
                                   ));
                             },
                             child: Column(
@@ -186,6 +192,7 @@ class _PaymentState extends State<Payment> {
                                     price: widget.price,
                                     ID: widget.ID,
                                     totalprice: totalprice,
+                                    couponID: widget.couponID,
                                   ));
                             },
                             child: Column(

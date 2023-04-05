@@ -81,9 +81,9 @@ class _CouponpaymentState extends State<Couponpayment> {
           centerTitle: true,
           leading: IconButton(
               onPressed: () {
-                nextScreenReplace(context, const HomePage());
+                Navigator.pop(context);
               },
-              icon: const Icon(Icons.home)),
+              icon: const Icon(Icons.arrow_back_ios)),
 
           actions: <Widget>[
             IconButton(
@@ -172,9 +172,12 @@ class _CouponpaymentState extends State<Couponpayment> {
                                             nextScreenReplace(
                                                 context,
                                                 Payment(
-                                                    price: widget.price,
-                                                    ID: widget.ID,
-                                                    dis: coupon[index]['dis']));
+                                                  price: widget.price,
+                                                  ID: widget.ID,
+                                                  dis: coupon[index]['dis'],
+                                                  couponID: coupon[index]
+                                                      ['couponId'],
+                                                ));
 
                                             print(totalprice);
                                           },

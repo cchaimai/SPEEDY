@@ -302,6 +302,8 @@ class _ChargeDetailState extends State<ChargeDetail> {
                                                                               .ID,
                                                                           dis:
                                                                               0,
+                                                                          couponID:
+                                                                              '',
                                                                         )));
                                                           },
                                                           style: ElevatedButton

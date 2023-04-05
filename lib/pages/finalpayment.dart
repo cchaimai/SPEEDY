@@ -14,10 +14,12 @@ class Fpayment extends StatefulWidget {
       {super.key,
       required this.price,
       required this.ID,
-      required this.totalprice});
+      required this.totalprice,
+      required this.couponID});
   final String price;
   final String ID;
   final String totalprice;
+  final String couponID;
   @override
   State<Fpayment> createState() => _FpaymentState();
 }
@@ -26,15 +28,20 @@ class _FpaymentState extends State<Fpayment> {
   @override
   void initState() {
     // getworkID();
-    print(widget.ID);
+    print(widget.couponID);
     super.initState();
   }
 
   Future<void> _getstatus() async {
+    final docUser = FirebaseFirestore.instance.collection('mUsers').doc(userId);
     await FirebaseFirestore.instance
         .collection('requests')
         .doc(widget.ID)
         .set({'status': 'Wait'}, SetOptions(merge: true));
+    docUser.update({
+      // ignore: prefer_interpolation_to_compose_strings
+      'coupon': FieldValue.arrayRemove([widget.couponID])
+    });
   }
 
   final userId = FirebaseAuth.instance.currentUser!.uid;
@@ -267,6 +274,7 @@ class _FpaymentState extends State<Fpayment> {
                                       GestureDetector(
                                         onTap: () {
                                           _getstatus();
+
                                           nextScreenReplace(
                                               context, Waiting(uid: widget.ID));
                                         },
