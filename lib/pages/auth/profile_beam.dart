@@ -1,6 +1,5 @@
 import 'package:chat_test/pages/auth/login.social.dart';
 import 'package:chat_test/pages/bank_page.dart';
-import 'package:chat_test/pages/coupon_screen.dart';
 import 'package:chat_test/pages/help_center.dart';
 import 'package:chat_test/pages/mycoupon.dart';
 import 'package:chat_test/pages/show_profile.dart';

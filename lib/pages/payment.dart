@@ -35,8 +35,6 @@ class Payment extends StatefulWidget {
 
 class _PaymentState extends State<Payment> {
   final Completer<GoogleMapController> mapcontroller = Completer();
-  static const LatLng sourceLocation = LatLng(13.120465, 100.918712);
-  static const LatLng destination = LatLng(13.114072, 100.926349);
 
   List<LatLng> polyLinecoordinates = [];
   Lo.LocationData? currentLocation;
@@ -85,60 +83,18 @@ class _PaymentState extends State<Payment> {
 
   final userId = FirebaseAuth.instance.currentUser!.uid;
 
-  var uuid = Uuid();
-  String _sessionToken = '122344';
-  List<dynamic> _placesList = [];
-
   @override
   void initState() {
     getCurrentLocation();
     discount();
 
     super.initState();
-    _controller.addListener(() {
-      onChange();
-    });
   }
 
-  void onChange() {
-    if (_sessionToken == null) {
-      setState(() {
-        _sessionToken = uuid.v4();
-      });
-    }
-
-    getSuggestion(_controller.text);
-  }
-
-  void getSuggestion(String input) async {
-    String Place_api_key = 'AIzaSyBw4oNuCPipSEZZWT10Zq3uhLCvzNx2o1I';
-    String baseURL =
-        'https://maps.googleapis.com/maps/api/place/autocomplete/json';
-    String request =
-        '$baseURL?input=$input&key=$Place_api_key&sessiontoken=$_sessionToken';
-
-    var response = await http.get(Uri.parse(request));
-    var data = response.body.toString;
-    print(response);
-
-    if (response.statusCode == 200) {
-      setState(() {
-        _placesList = jsonDecode(response.body.toString())['prediction'];
-      });
-    } else {
-      throw Exception('Failed to load data');
-    }
-  }
-
-  TextEditingController _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      // appBar: AppBar(
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0,
-      // ),
       body: currentLocation == null
           ? const Center(
               child: Text("Loading"),
@@ -286,12 +242,6 @@ class _PaymentState extends State<Payment> {
                         indent: 15,
                         endIndent: 15,
                       ),
-                      // Container(
-                      //   width: double.infinity,
-                      //   height: 1,
-                      //   color: Colors.black,
-                      // ),
-
                       Text(
                         '$totalprice฿',
                         style: GoogleFonts.prompt(
@@ -303,31 +253,6 @@ class _PaymentState extends State<Payment> {
                       SizedBox(
                         height: 10,
                       ),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.center,
-                      //   children: [
-                      //     Icon(
-                      //       Icons.star,
-                      //       size: 30,
-                      //     ),
-                      //     Icon(
-                      //       Icons.star,
-                      //       size: 30,
-                      //     ),
-                      //     Icon(
-                      //       Icons.star_border,
-                      //       size: 30,
-                      //     ),
-                      //     Icon(
-                      //       Icons.star_border,
-                      //       size: 30,
-                      //     ),
-                      //     Icon(
-                      //       Icons.star_border,
-                      //       size: 30,
-                      //     ),
-                      //   ],
-                      // ),
                     ],
                   ),
                 ),

@@ -66,30 +66,13 @@ class WaitingState extends State<Waiting> {
       },
     );
 
-    //GoogleMapController googleMapController = await mapcontroller.future;
-
     location.onLocationChanged.listen(
       (newloc) {
         currentLocation = newloc;
-        // googleMapController.animateCamera(
-        //   CameraUpdate.newCameraPosition(
-        //     CameraPosition(
-        //       zoom: 15,
-        //       target: LatLng(
-        //         newloc.latitude!,
-        //         newloc.longitude!,
-        //       ),
-        //     ),
-        //   ),
-        // );
-        //setState(() {});
+        setState(() {});
       },
     );
   }
-
-  var uuid = const Uuid();
-  String _sessionToken = '122344';
-  List<dynamic> _placesList = [];
 
   @override
   void initState() {
@@ -99,14 +82,11 @@ class WaitingState extends State<Waiting> {
         '----------------------------------${widget.uid}----------------------------------');
   }
 
-  // Future<void> gettingChat() async {
-  //   final CollectionReference reqCollection =
-  //       FirebaseFirestore.instance.collection("requests");
-
-  //   final DocumentSnapshot snapshot = await reqCollection.doc(widget.uid).get();
-  //   phone = snapshot.get('dPhone');
-  //   chatId = snapshot.get('chatID');
-  // }
+  @override
+  void dispose() {
+    super.dispose();
+    _locationSubscription?.cancel();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -213,52 +193,13 @@ class WaitingState extends State<Waiting> {
                                   ),
                                 ),
                               ),
-                              // Row(
-                              //   mainAxisAlignment: MainAxisAlignment.center,
-                              //   children: [
-                              //     Icon(
-                              //       Icons.star,
-                              //       size: 30,
-                              //     ),
-                              //     Icon(
-                              //       Icons.star,
-                              //       size: 30,
-                              //     ),
-                              //     Icon(
-                              //       Icons.star_border,
-                              //       size: 30,
-                              //     ),
-                              //     Icon(
-                              //       Icons.star_border,
-                              //       size: 30,
-                              //     ),
-                              //     Icon(
-                              //       Icons.star_border,
-                              //       size: 30,
-                              //     ),
-                              //   ],
-                              // ),
                             ],
                           ),
                         ),
                       ),
                       const Align(
                         alignment: Alignment(0, 0.52),
-                        child:
-                            // Container(
-                            //   height: 70,
-                            //   width: 70,
-                            //   margin: const EdgeInsets.only(left: 30, right: 30),
-                            //   decoration: const BoxDecoration(
-                            //       shape: BoxShape.circle,
-                            //       image: DecorationImage(
-                            //           fit: BoxFit.cover,
-                            //           image:
-                            //               AssetImage("user_map/assets/images/Image3.png"))),
-                            // ),
-
-                            CircleAvatar(
-                          // backgroundImage: AssetImage('assets/images/Image3.png'),
+                        child: CircleAvatar(
                           backgroundColor: Color.fromRGBO(217, 217, 217, 1),
                           radius: 40,
                           child: Icon(
@@ -352,32 +293,6 @@ class WaitingState extends State<Waiting> {
                                   ),
                                 ),
                               ),
-
-                              // Row(
-                              //   mainAxisAlignment: MainAxisAlignment.center,
-                              //   children: [
-                              //     Icon(
-                              //       Icons.star,
-                              //       size: 30,
-                              //     ),
-                              //     Icon(
-                              //       Icons.star,
-                              //       size: 30,
-                              //     ),
-                              //     Icon(
-                              //       Icons.star_border,
-                              //       size: 30,
-                              //     ),
-                              //     Icon(
-                              //       Icons.star_border,
-                              //       size: 30,
-                              //     ),
-                              //     Icon(
-                              //       Icons.star_border,
-                              //       size: 30,
-                              //     ),
-                              //   ],
-                              // ),
                             ],
                           ),
                         ),
@@ -385,7 +300,6 @@ class WaitingState extends State<Waiting> {
                       const Align(
                         alignment: Alignment(0, 0.42),
                         child: CircleAvatar(
-                          // backgroundImage: AssetImage('assets/images/Image3.png'),
                           backgroundColor: Color.fromRGBO(217, 217, 217, 1),
                           radius: 40,
                           child: Icon(
@@ -470,21 +384,7 @@ class WaitingState extends State<Waiting> {
                     ),
                     const Align(
                       alignment: Alignment(0, 0.52),
-                      child:
-                          // Container(
-                          //   height: 70,
-                          //   width: 70,
-                          //   margin: const EdgeInsets.only(left: 30, right: 30),
-                          //   decoration: const BoxDecoration(
-                          //       shape: BoxShape.circle,
-                          //       image: DecorationImage(
-                          //           fit: BoxFit.cover,
-                          //           image:
-                          //               AssetImage("user_map/assets/images/Image3.png"))),
-                          // ),
-
-                          CircleAvatar(
-                        // backgroundImage: AssetImage('assets/images/Image3.png'),
+                      child: CircleAvatar(
                         backgroundColor: Color.fromRGBO(217, 217, 217, 1),
                         radius: 40,
                         child: Icon(
@@ -645,7 +545,7 @@ class WaitingState extends State<Waiting> {
               ),
               InkWell(
                 onTap: () {
-                  print("kuy peng na hee");
+                  // nextScreen(context, )
                 },
                 child: SizedBox(
                   width: 60,
@@ -702,9 +602,7 @@ class WaitingState extends State<Waiting> {
                 ),
               ),
               InkWell(
-                onTap: () {
-                  print("kuy peng na hee");
-                },
+                onTap: () {},
                 child: SizedBox(
                   width: 60,
                   child: Column(

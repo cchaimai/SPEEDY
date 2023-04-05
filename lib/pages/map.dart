@@ -34,7 +34,6 @@ class MapSampleState extends State<MapSample> {
   static const LatLng sourceLocation = LatLng(13.120465, 100.918712);
   static const LatLng destination = LatLng(13.114072, 100.926349);
 
-  List<LatLng> polyLinecoordinates = [];
   Lo.LocationData? currentLocation;
   StreamSubscription<Lo.LocationData>? _locationSubscription;
 
@@ -53,19 +52,6 @@ class MapSampleState extends State<MapSample> {
         setState(() {});
       },
     );
-  }
-
-  Future<bool> checkRequestStatus(String requestId) async {
-    final requestDoc =
-        FirebaseFirestore.instance.collection('request').doc(requestId);
-    final requestSnapshot = await requestDoc.get();
-    final status = requestSnapshot.get('status');
-
-    if (status == 'accepted') {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   final userId = FirebaseAuth.instance.currentUser!.uid;
@@ -106,37 +92,11 @@ class MapSampleState extends State<MapSample> {
     return requestDocumentReference.id.toString();
   }
 
-  // Future<String?> _getLocation() async {
-  //   Lo.Location location = Lo.Location();
-  //   try {
-  //     final Lo.LocationData _locationResult = await location.getLocation();
-  //     final docRef = FirebaseFirestore.instance
-  //         .collection('request')
-  //         .doc(); // กำหนด Document ID ว่างเปล่า
-  //     await docRef.set({
-  //       'latitude': _locationResult.latitude,
-  //       'longitude': _locationResult.longitude,
-  //       'name': 'john'
-  //     });
-  //     return docRef.id; // คืนค่า Document ID ที่เพิ่งถูกเก็บ
-  //   } catch (e) {
-  //     print(e);
-  //     return null;
-  //   }
-  // }
-
-  var uuid = const Uuid();
-  String _sessionToken = '122344';
-  List<dynamic> _placesList = [];
-
   @override
   void initState() {
     getUserData();
     getCurrentLocation();
     super.initState();
-    _controller.addListener(() {
-      onChange();
-    });
   }
 
   @override
@@ -145,45 +105,10 @@ class MapSampleState extends State<MapSample> {
     _locationSubscription?.cancel();
   }
 
-  void onChange() {
-    if (_sessionToken == null) {
-      setState(() {
-        _sessionToken = uuid.v4();
-      });
-    }
-
-    getSuggestion(_controller.text);
-  }
-
-  void getSuggestion(String input) async {
-    String Place_api_key = 'AIzaSyBw4oNuCPipSEZZWT10Zq3uhLCvzNx2o1I';
-    String baseURL =
-        'https://maps.googleapis.com/maps/api/place/autocomplete/json';
-    String request =
-        '$baseURL?input=$input&key=$Place_api_key&sessiontoken=$_sessionToken';
-
-    var response = await http.get(Uri.parse(request));
-    var data = response.body.toString;
-    print(response);
-
-    if (response.statusCode == 200) {
-      setState(() {
-        _placesList = jsonDecode(response.body.toString())['prediction'];
-      });
-    } else {
-      throw Exception('Failed to load data');
-    }
-  }
-
-  final TextEditingController _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      // appBar: AppBar(
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0,
-      // ),
       body: currentLocation == null
           ? const Center(
               child: Text("Loading"),
@@ -194,14 +119,6 @@ class MapSampleState extends State<MapSample> {
                     target: LatLng(currentLocation!.latitude!,
                         currentLocation!.longitude!),
                     zoom: 14.5),
-                polylines: {
-                  Polyline(
-                    polylineId: const PolylineId("route"),
-                    points: polyLinecoordinates,
-                    color: Colors.green,
-                    width: 5,
-                  ),
-                },
                 markers: {
                   Marker(
                     markerId: const MarkerId("CurrentLocation"),
@@ -238,15 +155,6 @@ class MapSampleState extends State<MapSample> {
                               ID: value,
                             )));
               });
-
-              // _getLocation();
-              // String uid = await _getLocation();
-              // Navigator.pushReplacement(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (context) => Waiting(
-              //               uid: uid,
-              //             )));
             },
             child: const Icon(
               Icons.bolt,
@@ -395,21 +303,6 @@ class MapSampleState extends State<MapSample> {
           ),
         ),
       ),
-
-      // Padding(
-      //       padding: const EdgeInsets.all(defaultPadding),
-      //       child: const TextFormField(
-      //         textInputAction: TextInputAction.search,
-      //         decoration: InputDecoration(
-      //           hintText: "หาตำแหน่งของฉัน",
-      //           prefixIcon: Padding(
-      //             padding: const EdgeInsets.symmetric(vertical: 12),
-      //             child: Icon(Icons.search),
-
-      //           ),
-      //         ),
-      //       ),
-      //   );
     );
   }
 }
