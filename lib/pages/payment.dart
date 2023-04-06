@@ -149,7 +149,6 @@ class _PaymentState extends State<Payment> {
                         children: [
                           InkWell(
                             onTap: () {
-                              print('kuy earth na heeeeeeeeee');
                               nextScreenReplace(
                                   context,
                                   Fpayment(

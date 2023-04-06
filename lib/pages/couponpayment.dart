@@ -58,17 +58,6 @@ class _CouponpaymentState extends State<Couponpayment> {
     fetchUserCoupon();
   }
 
-  String totalprice = '';
-
-  Future<void> discount(num dis) async {
-    if (dis >= 1) {
-      totalprice = (num.parse(widget.price) - dis).toString();
-    } else {
-      totalprice = (num.parse(widget.price) - (num.parse(widget.price) * dis))
-          .toStringAsFixed(0);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -178,8 +167,6 @@ class _CouponpaymentState extends State<Couponpayment> {
                                                   couponID: coupon[index]
                                                       ['couponId'],
                                                 ));
-
-                                            print(totalprice);
                                           },
                                           style: ButtonStyle(
                                             backgroundColor:

@@ -257,6 +257,7 @@ class _EditProfileState extends State<EditProfile> {
                   padding: const EdgeInsets.only(bottom: 35.0),
                   child: TextField(
                     controller: phoneController,
+                    keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: const Color(0xFFD9D9D9),
